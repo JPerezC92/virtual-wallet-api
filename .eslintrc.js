@@ -15,5 +15,7 @@ module.exports = {
     "import/first": "error",
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["off"],
   },
 };

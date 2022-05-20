@@ -10,4 +10,5 @@ module.exports = {
   },
   testMatch: ["**/test/**/*.spec.(ts|js)"],
   testEnvironment: "node",
+  setupFiles: ["<rootDir>/jest.setup.ts"],
 };
