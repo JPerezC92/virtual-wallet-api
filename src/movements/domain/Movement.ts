@@ -23,8 +23,10 @@ export class Movement {
     this.type = movementProps.type;
   }
 
-  public static createNew(movementProps: MovementProps): Movement {
-    const movement = new Movement(movementProps);
+  public static createNew(
+    movementProps: Omit<MovementProps, "date">
+  ): Movement {
+    const movement = new Movement({ ...movementProps, date: new Date() });
     return movement;
   }
 }

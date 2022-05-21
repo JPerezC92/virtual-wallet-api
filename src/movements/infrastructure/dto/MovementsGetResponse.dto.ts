@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import {
   JsendStatus,
   JsendSuccess,
-} from "../../../shared/infrastructure/EndpointResponse";
+} from "../../../shared/infrastructure/endpointResponse";
 import { Movement } from "../../domain/Movement";
 import { MovementDomainToEndpoint } from "../mappers/MovementDomainToEndpoint";
 import { MovementEndpointDto } from "./MovementEndpoint.dto";
