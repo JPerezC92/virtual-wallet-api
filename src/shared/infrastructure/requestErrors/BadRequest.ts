@@ -1,12 +1,12 @@
 import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
-import { JsendFail, JsendStatus } from "../endpointResponse";
-import { RequestError } from "./RequestError";
+import { JsendFail, JsendStatus } from "../endpointResponse/Jsend";
+import { RequestError } from "../endpointResponse/RequestError";
 
 export class BadRequest implements RequestError {
-  readonly message: string;
-  readonly status: JsendStatus.fail;
-  readonly statusCode: number;
+  message: string;
+  status: JsendStatus.fail;
+  statusCode: number;
 
   constructor(message?: string) {
     this.message = message || ReasonPhrases.BAD_REQUEST;

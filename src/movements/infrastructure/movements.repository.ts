@@ -8,16 +8,36 @@ import { MovementPersistence } from "./Movement.persistence";
 
 export const TypeOrmMovementsRepository: (props: {
   db: EntityManager;
-}) => MovementsRepository = ({ db: entityManager }) => {
+}) => MovementsRepository = ({ db }) => {
   return {
     getAll: async () => {
-      const movementsList = await entityManager.find(MovementPersistence);
+      const movementsList = await db.find(MovementPersistence);
       return movementsList.map(MovementPersistenceToDomain);
     },
 
     persist: async (movement: Movement) => {
       const movementPersistence = MovementDomainToPersistence(movement);
-      await entityManager.save(MovementPersistence, movementPersistence);
+      await db.save(MovementPersistence, movementPersistence);
+    },
+
+    update: async (movement: Movement): Promise<void> => {
+      const movementPersistence = MovementDomainToPersistence(movement);
+
+      await db.update(
+        MovementPersistence,
+        { id: movement.id },
+        movementPersistence
+      );
+    },
+
+    getById: async (id: string): Promise<Movement | undefined> => {
+      const movementPersistence = await db.findOneBy(MovementPersistence, {
+        id,
+      });
+
+      if (!movementPersistence) return;
+
+      return MovementPersistenceToDomain(movementPersistence);
     },
   };
 };

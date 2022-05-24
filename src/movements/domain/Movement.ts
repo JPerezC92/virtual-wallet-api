@@ -1,6 +1,6 @@
 import { BudgetMovementType } from "./BudgetMovementType";
 
-interface MovementProps {
+export interface MovementProps {
   id: string;
   concept: string;
   amount: number;
@@ -28,5 +28,11 @@ export class Movement {
   ): Movement {
     const movement = new Movement({ ...movementProps, date: new Date() });
     return movement;
+  }
+
+  public modify(props: Pick<MovementProps, "concept" | "amount" | "date">) {
+    this.concept = props.concept;
+    this.amount = props.amount;
+    this.date = props.date;
   }
 }

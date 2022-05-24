@@ -10,11 +10,11 @@ import { movementsRouterPath } from "../../../../src/movements/infrastructure/mo
 import { BadRequest } from "../../../../src/shared/infrastructure/requestErrors/BadRequest";
 import { MockMovementsRepository } from "../../fixtures/MockMovementsRepository";
 
-const repo = MockMovementsRepository();
+const movementsRepository = MockMovementsRepository();
 
 jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
-  .mockImplementation(() => repo);
+  .mockImplementation(() => movementsRepository);
 
 describe("Test on MovementPostController", () => {
   test("should create a new movement", async () => {

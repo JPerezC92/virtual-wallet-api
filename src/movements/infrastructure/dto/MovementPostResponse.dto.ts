@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import {
   JsendStatus,
   JsendSuccess,
-} from "../../../shared/infrastructure/endpointResponse";
+} from "../../../shared/infrastructure/endpointResponse/Jsend";
 
 export class MovementPostResponseDto implements JsendSuccess {
   status: JsendStatus.success;

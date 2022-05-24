@@ -25,8 +25,8 @@ export const MovementPostValidator = async (
   const { error, value } = reqBodySchema.validate(req.body);
 
   if (error || !value) {
-    const badRequestError = new BadRequest(error?.message);
-    return res.status(badRequestError.statusCode).json(badRequestError.json());
+    const badRequest = new BadRequest(error?.message);
+    return res.status(badRequest.statusCode).json(badRequest.json());
   }
 
   req.body = new MovementCreateDto(value);

@@ -12,5 +12,17 @@ export const MockMovementsRepository: () => MovementsRepository = () => {
     persist: async (movement): Promise<void> => {
       movementList = [...movementList, movement];
     },
+    getById: async (id): Promise<Movement | undefined> => {
+      return movementList.find((movement) => movement.id === id);
+    },
+    update: async (movement): Promise<void> => {
+      const index = movementList.findIndex(
+        (movement) => movement.id === movement.id
+      );
+
+      if (index === -1) return;
+
+      movementList[index] = movement;
+    },
   };
 };
