@@ -24,5 +24,8 @@ export const MockMovementsRepository: () => MovementsRepository = () => {
 
       movementList[index] = movement;
     },
+    delete: async (id): Promise<void> => {
+      movementList = movementList.filter((movement) => movement.id !== id);
+    },
   };
 };

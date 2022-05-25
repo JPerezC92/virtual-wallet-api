@@ -39,5 +39,9 @@ export const TypeOrmMovementsRepository: (props: {
 
       return MovementPersistenceToDomain(movementPersistence);
     },
+
+    delete: async (id: string): Promise<void> => {
+      await db.delete(MovementPersistence, { id });
+    },
   };
 };
