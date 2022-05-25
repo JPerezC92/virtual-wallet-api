@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 
-import { loadApiEndpoints } from "./controllers/api";
+import { loadApiEndpoints } from "./routes/loadApiEndpoints";
 
 // Create Express server
 const app = express();

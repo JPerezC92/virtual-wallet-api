@@ -2,11 +2,11 @@ import { ReasonPhrases } from "http-status-codes";
 import request from "supertest";
 
 import app from "../../../../src/app";
-import { mainRouterPath } from "../../../../src/controllers/api";
 import { BudgetMovementType } from "../../../../src/movements/domain/BudgetMovementType";
 import { MovementPostResponseDto } from "../../../../src/movements/infrastructure/dto/MovementPostResponse.dto";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
-import { movementsRouterPath } from "../../../../src/movements/infrastructure/movements.routes";
+import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
+import { movementsRouterPath } from "../../../../src/routes/movements.routes";
 import { BadRequest } from "../../../../src/shared/infrastructure/requestErrors/BadRequest";
 import { MockMovementsRepository } from "../../fixtures/MockMovementsRepository";
 

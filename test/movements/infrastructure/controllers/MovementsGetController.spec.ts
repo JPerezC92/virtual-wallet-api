@@ -1,10 +1,10 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
-import { mainRouterPath } from "../../../../src/controllers/api";
 import { MovementsGetResponseDTO } from "../../../../src/movements/infrastructure/dto/MovementsGetResponse.dto";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
-import { movementsRouterPath } from "../../../../src/movements/infrastructure/movements.routes";
+import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
+import { movementsRouterPath } from "../../../../src/routes/movements.routes";
 import { MockMovementsRepository } from "../../fixtures/MockMovementsRepository";
 import { movementMockList } from "../../fixtures/movementMockList";
 

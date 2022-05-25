@@ -1,10 +1,10 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
-import { mainRouterPath } from "../../../../src/controllers/api";
 import { MovementPutResponse } from "../../../../src/movements/infrastructure/controllers/MovementPutController/MovementPutResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
-import { movementsRouterPath } from "../../../../src/movements/infrastructure/movements.routes";
+import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
+import { movementsRouterPath } from "../../../../src/routes/movements.routes";
 import { JsUuidGenerator } from "../../../../src/shared/infrastructure/JsUuidGenerator";
 import { BadRequest } from "../../../../src/shared/infrastructure/requestErrors/BadRequest";
 import { NotFound } from "../../../../src/shared/infrastructure/requestErrors/NotFound";
