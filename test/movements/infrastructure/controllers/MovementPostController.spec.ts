@@ -3,7 +3,7 @@ import request from "supertest";
 
 import app from "../../../../src/app";
 import { BudgetMovementType } from "../../../../src/movements/domain/BudgetMovementType";
-import { MovementPostResponseDto } from "../../../../src/movements/infrastructure/dto/MovementPostResponse.dto";
+import { MovementPostResponse } from "../../../../src/movements/infrastructure/controllers/MovementPostController/MovementPostResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
 import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
 import { movementsRouterPath } from "../../../../src/routes/movements.routes";
@@ -16,7 +16,7 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(() => movementsRepository);
 
-describe("Test on MovementPostController", () => {
+describe(`POST ${mainRouterPath}${movementsRouterPath}`, () => {
   test("should create a new movement", async () => {
     const response = await request(app)
       .post(`${mainRouterPath}${movementsRouterPath}`)
@@ -26,13 +26,10 @@ describe("Test on MovementPostController", () => {
         type: BudgetMovementType.INCOME,
       });
 
-    const movementPostResponseDto = new MovementPostResponseDto();
+    const movementPostResponseDto = new MovementPostResponse();
 
     expect(response.status).toBe(movementPostResponseDto.statusCode);
-    expect(response.body).toStrictEqual({
-      ...movementPostResponseDto,
-      data: null,
-    });
+    expect(response.body).toStrictEqual(movementPostResponseDto.json());
   });
 
   test("should return a validation error response", async () => {

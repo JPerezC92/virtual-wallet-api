@@ -4,8 +4,8 @@ import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { JsUuidGenerator } from "../../../../shared/infrastructure/JsUuidGenerator";
 import { MovementCreate } from "../../../application/MovementCreate";
 import { MovementCreateDto } from "../../dto/MovementCreate.dto";
-import { MovementPostResponseDto } from "../../dto/MovementPostResponse.dto";
 import { TypeOrmMovementsRepository } from "../../movements.repository";
+import { MovementPostResponse } from "./MovementPostResponse";
 
 export const MovementPostController = async (
   req: Request,
@@ -26,9 +26,9 @@ export const MovementPostController = async (
     });
   });
 
-  const movementPostResponseDto = new MovementPostResponseDto();
+  const movementPostResponse = new MovementPostResponse();
 
   return res
-    .status(movementPostResponseDto.statusCode)
-    .json(movementPostResponseDto);
+    .status(movementPostResponse.statusCode)
+    .json(movementPostResponse.json());
 };
