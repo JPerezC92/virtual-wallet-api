@@ -18,8 +18,7 @@ export class BudgetBalanceGetResponse implements RequestSuccess {
       balance,
     };
   }
-
-  json(): JsendSuccess {
+  json(): JsendSuccess<this["data"]> {
     return { status: this.status, data: this.data };
   }
 }

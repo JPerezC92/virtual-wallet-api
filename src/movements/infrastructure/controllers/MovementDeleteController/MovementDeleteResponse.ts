@@ -7,7 +7,7 @@ import { RequestSuccess } from "../../../../shared/infrastructure/endpointRespon
 export class MovementDeleteResponse implements RequestSuccess {
   status: JsendStatus.success;
   statusCode: number;
-  data: unknown;
+  data: null;
 
   constructor() {
     this.status = JsendStatus.success;
@@ -15,7 +15,7 @@ export class MovementDeleteResponse implements RequestSuccess {
     this.data = null;
   }
 
-  json(): JsendSuccess {
+  public json(): JsendSuccess<this["data"]> {
     return { status: this.status, data: this.data };
   }
 }

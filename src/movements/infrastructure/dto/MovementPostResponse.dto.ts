@@ -8,7 +8,7 @@ import {
 export class MovementPostResponseDto implements JsendSuccess {
   status: JsendStatus.success;
   statusCode: StatusCodes.CREATED;
-  data: unknown;
+  data: null;
 
   constructor() {
     this.status = JsendStatus.success;

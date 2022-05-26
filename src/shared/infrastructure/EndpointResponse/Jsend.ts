@@ -4,9 +4,9 @@ export enum JsendStatus {
   error = "error",
 }
 
-export interface JsendSuccess {
+export interface JsendSuccess<Data = null> {
   status: JsendStatus.success;
-  data: unknown;
+  data: Data;
 }
 
 export interface JsendFail {

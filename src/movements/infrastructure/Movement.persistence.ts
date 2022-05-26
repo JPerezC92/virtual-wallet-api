@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 import { BudgetMovementType } from "../domain/BudgetMovementType";
 
@@ -21,4 +27,10 @@ export class MovementPersistence {
     enum: BudgetMovementType,
   })
   type: BudgetMovementType;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

@@ -1,7 +1,7 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
-import { MovementsGetResponseDTO } from "../../../../src/movements/infrastructure/dto/MovementsGetResponse.dto";
+import { MovementsGetResponse } from "../../../../src/movements/infrastructure/controllers/MovementGetController/MovementsGetResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
 import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
 import { movementsRouterPath } from "../../../../src/routes/movements.routes";
@@ -12,23 +12,24 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(MockMovementsRepository);
 
-describe("test on movements", () => {
-  test("should return all movements", async () => {
+describe(`GET ${mainRouterPath}${movementsRouterPath}`, () => {
+  test("should execute the request successfully and return all movements", async () => {
     const response = await request(app).get(
       `${mainRouterPath}${movementsRouterPath}`
     );
-    const body = response.body as MovementsGetResponseDTO;
 
-    const movementsGetResponseDTO = new MovementsGetResponseDTO(
-      movementMockList
-    );
+    const body = response.body as ReturnType<MovementsGetResponse["json"]>;
 
-    expect(response.status).toBe(movementsGetResponseDTO.statusCode);
-    expect(body.data.length).toBe(movementsGetResponseDTO.data.length);
-    expect(body).toStrictEqual<MovementsGetResponseDTO>({
-      statusCode: movementsGetResponseDTO.statusCode,
-      status: movementsGetResponseDTO.status,
-      data: movementMockList.map((m) => ({ ...m, date: expect.any(String) })),
+    const movementsGetResponse = new MovementsGetResponse(movementMockList);
+
+    expect(response.status).toBe(movementsGetResponse.statusCode);
+    expect(body.data.length).toBe(movementsGetResponse.data.length);
+    expect(body).toStrictEqual({
+      ...movementsGetResponse.json(),
+      data: movementsGetResponse.data.map((m) => ({
+        ...m,
+        date: expect.any(String),
+      })),
     });
   });
 });
