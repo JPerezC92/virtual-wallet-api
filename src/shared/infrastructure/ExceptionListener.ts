@@ -10,11 +10,12 @@ interface ExceptionMapping {
   [key: string]: RequestErrorClass;
 }
 
-export const ExceptionListener = (mapping: ExceptionMapping) => {
+export const ExceptionListener = (mapping?: ExceptionMapping) => {
   const defaultError = new InternalServerError();
+  const exceptions = { ...mapping };
 
   const onException = (error: Error): RequestError => {
-    const exception: RequestErrorClass | undefined = mapping[error.name];
+    const exception: RequestErrorClass | undefined = exceptions[error.name];
 
     if (!DomainError.isDomainError(error) || !exception) return defaultError;
 
