@@ -18,7 +18,9 @@ export const BudgetBalanceGetController = async (
       movementsRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
     });
 
-    const balance = await budgetCalculateBalance.execute();
+    const balance = await uow.transactional(
+      async () => await budgetCalculateBalance.execute()
+    );
 
     const budgetBalanceGetResponse = new BudgetBalanceGetResponse(balance);
 

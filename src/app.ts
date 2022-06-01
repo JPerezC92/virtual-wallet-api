@@ -1,3 +1,4 @@
+import cors from "cors";
 import express from "express";
 import path from "path";
 
@@ -6,8 +7,10 @@ import { loadApiEndpoints } from "./routes/loadApiEndpoints";
 // Create Express server
 const app = express();
 
+app.use(cors());
+
 // Express configuration
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT || 5000);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

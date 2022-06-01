@@ -22,7 +22,7 @@ export function Uow() {
         await queryRunner.rollbackTransaction();
         throw error;
       } finally {
-        queryRunner.release();
+        await queryRunner.release();
       }
     },
   };
