@@ -6,6 +6,7 @@ import { OrderType } from "../domain/OrderType";
 import { MovementDomainToPersistence } from "./mappers/MovementDomainToPersistence";
 import { MovementPersistenceToDomain } from "./mappers/MovementPersistenceToDomain";
 import { MovementPersistence } from "./Movement.persistence";
+import { calculateSkip } from "./utils/calculateSkip";
 
 export const TypeOrmMovementsRepository: (props: {
   db: EntityManager;
@@ -21,11 +22,10 @@ export const TypeOrmMovementsRepository: (props: {
       limit: number;
       order: OrderType;
     }) => {
-      let skip: number | undefined;
-      let take: number | undefined;
-
+      let skip = 0;
+      let take = 0;
       if (props) {
-        skip = (props.page - 1) * props.limit;
+        skip = calculateSkip({ page: props.page, limit: props.limit });
         take = props.limit;
       }
 
