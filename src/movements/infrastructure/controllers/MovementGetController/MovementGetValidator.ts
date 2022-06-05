@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 
 import { BadRequest } from "../../../../shared/infrastructure/requestErrors/BadRequest";
+import { BudgetMovementType } from "../../../domain/BudgetMovementType";
 import { OrderType } from "../../../domain/OrderType";
 import { MovementGetDto } from "../../dto/MovementGet.dto";
 
@@ -10,6 +11,7 @@ interface Schema {
     page: number;
     limit: number;
     order: OrderType;
+    "movement-type"?: BudgetMovementType;
   };
 }
 
@@ -18,6 +20,10 @@ export const validatorSchema = Joi.object<Schema>({
     page: Joi.number().positive(),
     limit: Joi.number().positive(),
     order: Joi.string().valid(OrderType.ASC, OrderType.DESC),
+    "movement-type": Joi.string().valid(
+      BudgetMovementType.INCOME,
+      BudgetMovementType.EXPENSE
+    ),
   },
 });
 
@@ -39,6 +45,7 @@ export const MovementGetValidator = (
     limit: value.query.limit,
     page: value.query.page,
     order: value.query.order,
+    movementType: value.query?.["movement-type"],
   });
 
   return next();

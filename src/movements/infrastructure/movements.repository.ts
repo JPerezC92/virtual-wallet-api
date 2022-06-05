@@ -1,5 +1,6 @@
 import { EntityManager } from "typeorm";
 
+import { BudgetMovementType } from "../domain/BudgetMovementType";
 import { Movement } from "../domain/Movement";
 import { MovementsRepository } from "../domain/MovementsRepository";
 import { OrderType } from "../domain/OrderType";
@@ -21,6 +22,7 @@ export const TypeOrmMovementsRepository: (props: {
       page: number;
       limit: number;
       order: OrderType;
+      movementType: BudgetMovementType;
     }) => {
       let skip = 0;
       let take = 0;
@@ -32,6 +34,7 @@ export const TypeOrmMovementsRepository: (props: {
       const movementsList = await db.find(MovementPersistence, {
         skip,
         take,
+        where: { type: props?.movementType },
         order: {
           createdAt: props?.order,
         },

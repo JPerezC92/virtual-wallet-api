@@ -24,6 +24,7 @@ export const MovementGetController = async (
         limit: movementGetDto.limit,
         page: movementGetDto.page,
         order: movementGetDto.order,
+        movementType: movementGetDto.movementType,
       })
   );
 

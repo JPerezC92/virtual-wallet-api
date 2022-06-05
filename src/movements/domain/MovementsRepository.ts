@@ -1,3 +1,4 @@
+import { BudgetMovementType } from "./BudgetMovementType";
 import { Movement } from "./Movement";
 import { OrderType } from "./OrderType";
 
@@ -8,6 +9,7 @@ export interface MovementsRepository {
     page: number;
     limit: number;
     order: OrderType;
+    movementType?: BudgetMovementType;
   }): Promise<Movement[]>;
   getById(id: string): Promise<Movement | undefined>;
   persist(movement: Movement): Promise<void>;
