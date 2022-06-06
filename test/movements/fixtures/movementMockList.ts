@@ -12,7 +12,7 @@ export const movementMockList: Movement[] = [
   }),
 
   new Movement({
-    id: JsUuidGenerator().generate(),
+    id: "2887bd86-567b-468b-8ccf-1cc815d4ab65",
     concept: "Rent",
     amount: 500,
     date: new Date(),

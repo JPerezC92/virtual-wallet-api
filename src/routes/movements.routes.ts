@@ -4,6 +4,8 @@ import { MovementDeleteController } from "../movements/infrastructure/controller
 import { MovementDeleteValidator } from "../movements/infrastructure/controllers/MovementDeleteController/MovementDeleteValidator";
 import { MovementGetController } from "../movements/infrastructure/controllers/MovementGetController/MovementGetController";
 import { MovementGetValidator } from "../movements/infrastructure/controllers/MovementGetController/MovementGetValidator";
+import { MovementIdGetController } from "../movements/infrastructure/controllers/MovementIdGetController/MovementIdGetController";
+import { MovementIdGetValidator } from "../movements/infrastructure/controllers/MovementIdGetController/MovementIdGetValidator";
 import { MovementPostController } from "../movements/infrastructure/controllers/MovementPostController/MovementPostController";
 import { MovementPostValidator } from "../movements/infrastructure/controllers/MovementPostController/MovementPostValidator";
 import { MovementPutController } from "../movements/infrastructure/controllers/MovementPutController/MovementPutController";
@@ -22,6 +24,12 @@ movementsRouter.post(
   movementsRouterPath,
   [MovementPostValidator],
   MovementPostController
+);
+
+movementsRouter.get(
+  `${movementsRouterPath}/:id`,
+  [MovementIdGetValidator],
+  MovementIdGetController
 );
 
 movementsRouter.put(
