@@ -7,7 +7,7 @@ export function MovementPersistenceToDomain(
   return new Movement({
     id: movementPersistence.id,
     concept: movementPersistence.concept,
-    amount: movementPersistence.amount,
+    amount: parseFloat(movementPersistence.amount),
     date: movementPersistence.date,
     type: movementPersistence.type,
   });

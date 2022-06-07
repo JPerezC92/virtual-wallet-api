@@ -4,14 +4,14 @@ export class MovementEndpointDto {
   public id: string;
   public concept: string;
   public amount: number;
-  public date: Date;
+  public date: string;
   public type: BudgetMovementType;
 
   constructor(props: {
     id: string;
     concept: string;
     amount: number;
-    date: Date;
+    date: string;
     type: BudgetMovementType;
   }) {
     this.id = props.id;

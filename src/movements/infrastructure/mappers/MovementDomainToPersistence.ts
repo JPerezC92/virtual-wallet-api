@@ -7,7 +7,7 @@ export function MovementDomainToPersistence(
   const movementPersistence = new MovementPersistence();
 
   movementPersistence.id = movement.id;
-  movementPersistence.amount = movement.amount;
+  movementPersistence.amount = movement.amount.toString();
   movementPersistence.concept = movement.concept;
   movementPersistence.date = movement.date;
   movementPersistence.type = movement.type;

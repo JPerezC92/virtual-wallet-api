@@ -7,7 +7,7 @@ export const movementMockList: Movement[] = [
     id: JsUuidGenerator().generate(),
     concept: "Salary",
     amount: 1000,
-    date: new Date(),
+    date: new Date().toISOString(),
     type: BudgetMovementType.INCOME,
   }),
 
@@ -15,7 +15,7 @@ export const movementMockList: Movement[] = [
     id: "2887bd86-567b-468b-8ccf-1cc815d4ab65",
     concept: "Rent",
     amount: 500,
-    date: new Date(),
+    date: new Date().toISOString(),
     type: BudgetMovementType.EXPENSE,
   }),
 
@@ -23,7 +23,7 @@ export const movementMockList: Movement[] = [
     id: JsUuidGenerator().generate(),
     concept: "Food",
     amount: 100,
-    date: new Date(),
+    date: new Date().toISOString(),
     type: BudgetMovementType.EXPENSE,
   }),
 ];

@@ -16,11 +16,11 @@ export class MovementPersistence {
   @Column()
   concept: string;
 
-  @Column()
-  amount: number;
+  @Column({ type: "decimal", precision: 15, scale: 2 })
+  amount: string;
 
-  @Column()
-  date: Date;
+  @Column({ type: "date" })
+  date: string;
 
   @Column({
     type: "enum",

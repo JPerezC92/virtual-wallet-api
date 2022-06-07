@@ -2,13 +2,13 @@ export class MovementUpdateDto {
   id: string;
   concept: string;
   amount: number;
-  date: Date;
+  date: string;
 
   constructor(props: {
     id: string;
     concept: string;
     amount: number;
-    date: Date;
+    date: string;
   }) {
     this.id = props.id;
     this.concept = props.concept;

@@ -4,7 +4,7 @@ export interface MovementProps {
   id: string;
   concept: string;
   amount: number;
-  date: Date;
+  date: string;
   type: BudgetMovementType;
 }
 
@@ -12,7 +12,7 @@ export class Movement {
   id: string;
   concept: string;
   amount: number;
-  date: Date;
+  date: string;
   type: BudgetMovementType;
 
   constructor(movementProps: MovementProps) {
@@ -26,7 +26,10 @@ export class Movement {
   public static createNew(
     movementProps: Omit<MovementProps, "date">
   ): Movement {
-    const movement = new Movement({ ...movementProps, date: new Date() });
+    const movement = new Movement({
+      ...movementProps,
+      date: new Date().toISOString(),
+    });
     return movement;
   }
 
