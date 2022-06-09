@@ -24,6 +24,7 @@ describe(`POST ${mainRouterPath}${movementsRouterPath}`, () => {
         amount: 1000,
         concept: "Salary",
         type: BudgetMovementType.INCOME,
+        date: "2020-01-01",
       });
 
     const movementPostResponseDto = new MovementPostResponse();

@@ -15,6 +15,7 @@ const reqBodySchema = Joi.object<MovementCreateDto>({
       BudgetMovementType.INCOME.toLowerCase()
     )
     .required(),
+  date: Joi.date().required(),
 });
 
 export const MovementPostValidator = async (
