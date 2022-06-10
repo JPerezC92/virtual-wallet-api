@@ -1,14 +1,17 @@
+import JoiDate from "@joi/date";
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 
 import { BadRequest } from "../../../../shared/infrastructure/requestErrors/BadRequest";
 import { MovementUpdateDto } from "../../dto/MovementUpdateDto";
 
-const validatorSchema = Joi.object<MovementUpdateDto>({
-  id: Joi.string().uuid().required(),
-  concept: Joi.string().max(250).required(),
-  amount: Joi.number().min(0).required(),
-  date: Joi.date().required(),
+const JoiExtended = Joi.extend(JoiDate) as typeof Joi;
+
+const validatorSchema = JoiExtended.object<MovementUpdateDto>({
+  id: JoiExtended.string().uuid().required(),
+  concept: JoiExtended.string().max(250).required(),
+  amount: JoiExtended.number().min(0).required(),
+  date: JoiExtended.date().format("YYYY-MM-DD").required(),
 });
 
 export const MovementPutValidator = (

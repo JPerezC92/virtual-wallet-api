@@ -13,21 +13,23 @@ import { movementMockList } from "../../fixtures/movementMockList";
 
 const movementsRepository = MockMovementsRepository();
 
+const movementData = {
+  date: "2020-01-01",
+  concept: "Salary edited",
+  amount: 2000,
+};
+
 jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(() => movementsRepository);
 
-describe("Test on MovementPutController", () => {
+describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
   test("should modify the movement successfully", async () => {
     const movementMock = { ...movementMockList[0] };
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
-      .send({
-        date: new Date(),
-        concept: "Salary edited",
-        amount: 2000,
-      });
+      .send(movementData);
 
     const body = response.body as MovementPutResponse;
     const movementPutResponse = new MovementPutResponse();
@@ -39,7 +41,7 @@ describe("Test on MovementPutController", () => {
   test("should return an error response if the id is invalid", async () => {
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/123`)
-      .send({ date: new Date(), concept: "Salary edited", amount: 2000 });
+      .send(movementData);
 
     const body = response.body as MovementPutResponse;
     const badRequest = new BadRequest();
@@ -56,7 +58,7 @@ describe("Test on MovementPutController", () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
-      .send({ concept: "Salary edited", amount: 2000 });
+      .send({ concept: movementData.concept, amount: movementData.amount });
 
     const body = response.body as MovementPutResponse;
     const badRequest = new BadRequest();
@@ -73,7 +75,7 @@ describe("Test on MovementPutController", () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
-      .send({ date: new Date(), amount: 2000 });
+      .send({ date: movementData.date, amount: movementData.amount });
 
     const body = response.body as MovementPutResponse;
     const badRequest = new BadRequest();
@@ -90,7 +92,7 @@ describe("Test on MovementPutController", () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
-      .send({ date: new Date(), concept: "Salary edited" });
+      .send({ date: movementData.date, concept: movementData.concept });
 
     const body = response.body as MovementPutResponse;
     const badRequest = new BadRequest();
@@ -109,7 +111,7 @@ describe("Test on MovementPutController", () => {
       .put(
         `${mainRouterPath}${movementsRouterPath}/${JsUuidGenerator().generate()}`
       )
-      .send({ date: new Date(), concept: "Salary edited", amount: 2000 });
+      .send(movementData);
 
     const body = response.body as MovementPutResponse;
     const notFound = new NotFound();
