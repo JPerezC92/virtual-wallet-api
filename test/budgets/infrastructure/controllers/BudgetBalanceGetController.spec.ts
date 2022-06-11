@@ -14,7 +14,7 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementationOnce(MockMovementsRepository)
   .mockImplementationOnce(() => {
-    throw new Error("MockError");
+    throw new Error();
   });
 
 describe(`GET ${mainRouterPath}${budgetBalancePath}`, () => {
