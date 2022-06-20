@@ -1,51 +1,65 @@
 import { UseCase } from "../../shared/domain/UseCase";
+import { UuidGenerator } from "../../shared/domain/UuidGenerator";
 import { User } from "../../users/domain/User";
 import { UsersRepository } from "../../users/domain/UsersRepository";
-import { AuthPayload } from "../domain/AuthPayload";
-import { AuthRepository } from "../domain/AuthRepository";
+import { AccessCredentials } from "../domain/AccessCredentials";
+import { AuthAccessPayload } from "../domain/AuthAccessPayload";
+import { AuthRefreshPayload } from "../domain/AuthRefreshPayload";
 import { PasswordEncryptor } from "../domain/PasswordEncryptor";
 import { TokenEncoder } from "../domain/TokenEncryptor";
 import { UserAlreadyExists } from "../domain/UserAlreadyExists";
 
-type Input = User;
+type Input = Pick<User, "firstName" | "lastName" | "email" | "password">;
+
+interface Output extends AccessCredentials {
+  user: User;
+}
 
 export const AuthRegister: (props: {
-  authRepository: AuthRepository;
   passwordEncryptor: PasswordEncryptor;
-  tokenEncoder: TokenEncoder<AuthPayload>;
+  tokenAccessEncoder: TokenEncoder<AuthAccessPayload>;
+  tokenRefreshEncoder: TokenEncoder<AuthRefreshPayload>;
   usersRepository: UsersRepository;
-}) => UseCase<Promise<string>, Input> = ({
-  authRepository,
+  uuidGenerator: UuidGenerator;
+}) => UseCase<Promise<Output>, Input> = ({
   passwordEncryptor,
-  tokenEncoder,
+  tokenAccessEncoder,
+  tokenRefreshEncoder,
   usersRepository,
+  uuidGenerator,
 }) => {
   return {
-    execute: async ({ id, firstName, lastName, email, password }) => {
+    execute: async ({ firstName, lastName, email, password }) => {
       const user = await usersRepository.findByEmail(email);
 
       if (user) throw new UserAlreadyExists();
 
       const passwordEncrypted = await passwordEncryptor.encrypt(password);
 
+      const refreshToken = tokenRefreshEncoder.encode({
+        id: uuidGenerator.generate(),
+        email,
+      });
+
       const newUser = new User({
-        id,
+        id: uuidGenerator.generate(),
         firstName,
         lastName,
         email,
         password: passwordEncrypted,
+        refreshToken,
       });
 
-      await authRepository.register(newUser);
+      await usersRepository.persist(newUser);
 
-      const authPayload: AuthPayload = {
+      const authPayload: AuthAccessPayload = {
         id: newUser.id,
         email: newUser.email,
       };
 
-      const accessToken = tokenEncoder.encode(authPayload);
+      const accessToken = tokenAccessEncoder.encode(authPayload);
 
-      return accessToken;
+      return { accessToken, refreshToken, user: newUser };
     },
   };
 };

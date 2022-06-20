@@ -10,5 +10,6 @@ export function UserPersistenceToDomain(
     lastName: UserPersistence.lastName,
     email: UserPersistence.email,
     password: UserPersistence.password,
+    refreshToken: UserPersistence.refreshToken,
   });
 }

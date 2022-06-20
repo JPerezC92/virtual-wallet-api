@@ -10,18 +10,18 @@ import { UserDomainToEndpoint } from "../../../../users/infrastructure/mappers/U
 import { AccessCredentials } from "../../../domain/AccessCredentials";
 import { UserEndpointDto } from "../../dto/UserEndpointDto";
 
-export class AuthLoginPostResponse implements RequestSuccess {
+export class AuthRefreshTokenGetResponse implements RequestSuccess {
   status: JsendStatus.success;
   statusCode: number;
   data: AccessCredentials & { user: UserEndpointDto };
 
-  constructor(props: AccessCredentials & { user: User }) {
+  constructor(data: AccessCredentials & { user: User }) {
     this.status = JsendStatus.success;
     this.statusCode = StatusCodes.OK;
     this.data = {
-      accessToken: props.accessToken,
-      refreshToken: props.refreshToken,
-      user: UserDomainToEndpoint(props.user),
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      user: UserDomainToEndpoint(data.user),
     };
   }
 

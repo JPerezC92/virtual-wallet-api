@@ -16,4 +16,7 @@ export class UserPersistence {
 
   @Column()
   password: string;
+
+  @Column()
+  refreshToken: string;
 }

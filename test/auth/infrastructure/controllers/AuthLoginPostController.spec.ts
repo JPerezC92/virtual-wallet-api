@@ -14,7 +14,8 @@ import { User } from "../../../../src/users/domain/User";
 import { UsersRepository } from "../../../../src/users/domain/UsersRepository";
 import * as TypeOrmUsersRepository from "../../../../src/users/infrastructure/TypeOrmUsers.repository";
 
-process.env.JWT_SECRET = "secret";
+process.env.JWT_ACCESSS_TOKEN_SECRET = "ACCESSS_TOKEN_SECRET";
+process.env.JWT_REFRESH_TOKEN_SECRET = "REFRESH_TOKEN_SECRET";
 
 const mockUser = new User({
   id: "123456789",
@@ -22,6 +23,7 @@ const mockUser = new User({
   password: "123456789",
   firstName: "John",
   lastName: "Doe",
+  refreshToken: "refreshToken",
 });
 
 const authLoginDto = new AuthLoginDto({
@@ -34,7 +36,8 @@ const usersRepository: UsersRepository = {
     .fn()
     .mockResolvedValue(mockUser)
     .mockResolvedValueOnce(null),
-} as UsersRepository;
+  update: jest.fn(),
+} as unknown as UsersRepository;
 
 const passwordEncryptor: PasswordEncryptor = {
   compare: jest.fn().mockResolvedValue(true).mockResolvedValueOnce(false),
@@ -98,6 +101,7 @@ describe(`POST ${pathRoute}`, () => {
     const authLoginPostResponse = new AuthLoginPostResponse({
       user: mockUser,
       accessToken: "accessToken",
+      refreshToken: "refreshToken",
     });
 
     const loginResponse = authLoginPostResponse.json();
@@ -108,6 +112,7 @@ describe(`POST ${pathRoute}`, () => {
       data: {
         user: { ...loginResponse.data.user },
         accessToken: expect.any(String),
+        refreshToken: expect.any(String),
       },
     });
   });

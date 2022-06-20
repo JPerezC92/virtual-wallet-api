@@ -1,5 +1,5 @@
-import { User } from "../../../users/domain/User";
-import { UserPersistence } from "../../../users/infrastructure/Users.persistence";
+import { User } from "../../domain/User";
+import { UserPersistence } from "../Users.persistence";
 
 export function UserDomainToPersistence(user: User) {
   const userPersistence = new UserPersistence();
@@ -9,6 +9,7 @@ export function UserDomainToPersistence(user: User) {
   userPersistence.lastName = user.lastName;
   userPersistence.email = user.email;
   userPersistence.password = user.password;
+  userPersistence.refreshToken = user.refreshToken;
 
   return userPersistence;
 }

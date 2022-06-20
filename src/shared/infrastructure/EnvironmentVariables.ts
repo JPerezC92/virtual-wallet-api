@@ -5,7 +5,8 @@ interface EnvironmentVariables {
   DATABASE_USERNAME: string;
   DATABASE_PASSWORD: string;
   DATABASE_NAME: string;
-  JWT_SECRET: string;
+  JWT_ACCESSS_TOKEN_SECRET: string;
+  JWT_REFRESH_TOKEN_SECRET: string;
 }
 
 export const environmentVariables =

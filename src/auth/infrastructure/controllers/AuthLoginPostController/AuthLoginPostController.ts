@@ -2,12 +2,14 @@ import { Request, Response } from "express";
 
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { ExceptionListener } from "../../../../shared/infrastructure/ExceptionListener";
+import { JsUuidGenerator } from "../../../../shared/infrastructure/JsUuidGenerator";
 import { UnprocessableEntity } from "../../../../shared/infrastructure/requestErrors/UnprocessableEntity";
 import { TypeOrmUsersRepository } from "../../../../users/infrastructure/TypeOrmUsers.repository";
 import { AuthLogin } from "../../../application/AuthLogin";
 import { InvalidCredentials } from "../../../domain/InvalidCredentials";
 import { AuthLoginDto } from "../../dto/AuthLogin.dto";
-import { AuthTokenEncoder } from "../../service/AuthTokenEncoder";
+import { AuthAccessTokenEncoder } from "../../service/AuthAccessTokenEncoder";
+import { AuthRefreshTokenEncoder } from "../../service/AuthRefreshTokenEncoder";
 import { BcryptPasswordEncryptor } from "../../service/BcryptPasswordEncryptor";
 import { AuthLoginPostResponse } from "./AuthLoginPostResponse";
 
@@ -19,15 +21,18 @@ export const AuthLoginPostController = async (req: Request, res: Response) => {
     const authLogin = AuthLogin({
       usersRepository: TypeOrmUsersRepository({ db: uow.connection() }),
       passwordEncryptor: BcryptPasswordEncryptor(),
-      tokenEncoder: AuthTokenEncoder(),
+      tokenAccessEncoder: AuthAccessTokenEncoder(),
+      tokenRefreshEncoder: AuthRefreshTokenEncoder(),
+      uuidGenerator: JsUuidGenerator(),
     });
 
-    const { accessToken, user } = await uow.transactional(
+    const { accessToken, refreshToken, user } = await uow.transactional(
       async () => await authLogin.execute(authLoginDto)
     );
 
     const authLoginPostResponse = new AuthLoginPostResponse({
       accessToken,
+      refreshToken,
       user,
     });
 
