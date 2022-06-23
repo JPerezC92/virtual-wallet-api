@@ -41,6 +41,6 @@ movementsRouter.put(
 
 movementsRouter.delete(
   `${movementsRouterPath}/:id`,
-  [MovementDeleteValidator],
+  [MovementDeleteValidator, VerifyAccessToken],
   MovementDeleteController
 );

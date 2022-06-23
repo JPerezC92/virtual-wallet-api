@@ -14,14 +14,14 @@ export const MovementDeleteController = async (
   res: Response,
   _: NextFunction
 ) => {
-  const movementDeleteDto = req.body as MovementDeleteDto;
-  const uow = Uow();
-
-  const movementDelete = MovementDelete({
-    movementRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
-  });
-
   try {
+    const movementDeleteDto = req.body.movementDeleteDto as MovementDeleteDto;
+    const uow = Uow();
+
+    const movementDelete = MovementDelete({
+      movementRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
+    });
+
     await uow.transactional(
       async () =>
         await movementDelete.execute({ movementId: movementDeleteDto.id })
