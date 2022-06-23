@@ -2,10 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 
 import { BadRequest } from "../../../../shared/infrastructure/requestErrors/BadRequest";
-
-function parseBearerToken(token: string) {
-  return token.split(" ")[1];
-}
+import { parseBearerToken } from "../../../../shared/infrastructure/utils/parseBearerToken";
 
 interface Schema {
   headers: {

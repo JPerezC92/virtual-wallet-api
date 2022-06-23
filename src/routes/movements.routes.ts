@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { VerifyAccessToken } from "../auth/infrastructure/middlewares/VerifyAccessToken";
 import { MovementDeleteController } from "../movements/infrastructure/controllers/MovementDeleteController/MovementDeleteController";
 import { MovementDeleteValidator } from "../movements/infrastructure/controllers/MovementDeleteController/MovementDeleteValidator";
 import { MovementGetController } from "../movements/infrastructure/controllers/MovementGetController/MovementGetController";
@@ -16,7 +17,7 @@ export const movementsRouterPath = "/movements";
 
 movementsRouter.get(
   movementsRouterPath,
-  [MovementGetValidator],
+  [MovementGetValidator, VerifyAccessToken],
   MovementGetController
 );
 

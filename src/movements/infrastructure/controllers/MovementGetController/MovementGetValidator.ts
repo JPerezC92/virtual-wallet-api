@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 
 import { BadRequest } from "../../../../shared/infrastructure/requestErrors/BadRequest";
+import { parseBearerToken } from "../../../../shared/infrastructure/utils/parseBearerToken";
 import { BudgetMovementType } from "../../../domain/BudgetMovementType";
 import { OrderType } from "../../../domain/OrderType";
 import { MovementGetDto } from "../../dto/MovementGet.dto";
@@ -13,6 +14,7 @@ interface Schema {
     order: OrderType;
     "movement-type"?: BudgetMovementType;
   };
+  headers: { authorization: string };
 }
 
 export const validatorSchema = Joi.object<Schema>({
@@ -25,6 +27,7 @@ export const validatorSchema = Joi.object<Schema>({
       BudgetMovementType.EXPENSE
     ),
   },
+  headers: { authorization: Joi.string().required() },
 });
 
 export const MovementGetValidator = (
@@ -34,6 +37,7 @@ export const MovementGetValidator = (
 ) => {
   const { error, value } = validatorSchema.validate({
     query: req.query,
+    headers: { authorization: req.headers.authorization },
   });
 
   if (error || !value) {
@@ -41,12 +45,14 @@ export const MovementGetValidator = (
     return res.status(badRequest.statusCode).json(badRequest.json());
   }
 
-  req.body = new MovementGetDto({
+  req.body.movementGetDto = new MovementGetDto({
     limit: value.query.limit,
     page: value.query.page,
     order: value.query.order,
     movementType: value.query?.["movement-type"],
   });
+
+  req.body.accessToken = parseBearerToken(value.headers.authorization);
 
   return next();
 };
