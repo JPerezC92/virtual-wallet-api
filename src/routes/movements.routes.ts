@@ -23,7 +23,7 @@ movementsRouter.get(
 
 movementsRouter.post(
   movementsRouterPath,
-  [MovementPostValidator],
+  [MovementPostValidator, VerifyAccessToken],
   MovementPostController
 );
 

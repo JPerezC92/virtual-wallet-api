@@ -21,7 +21,7 @@ describe(`GET ${mainRouterPath}${movementsRouterPath}`, () => {
   test("should execute the request successfully and return all movements", async () => {
     const response = await request(app)
       .get(`${mainRouterPath}${movementsRouterPath}`)
-      .auth("Authorization", { type: "bearer" });
+      .auth("token", { type: "bearer" });
 
     const body = response.body as ReturnType<MovementsGetResponse["json"]>;
 

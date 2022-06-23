@@ -12,7 +12,7 @@ export const MovementPostController = async (
   res: Response,
   _: NextFunction
 ) => {
-  const movementCreateDto = req.body as MovementCreateDto;
+  const movementCreateDto = req.body.movementCreateDto as MovementCreateDto;
   const uow = Uow();
 
   const movementCreate = MovementCreate({

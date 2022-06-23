@@ -2,6 +2,7 @@ import { ReasonPhrases } from "http-status-codes";
 import request from "supertest";
 
 import app from "../../../../src/app";
+import * as AuthAccessTokenEncoder from "../../../../src/auth/infrastructure/service/AuthAccessTokenEncoder";
 import { BudgetMovementType } from "../../../../src/movements/domain/BudgetMovementType";
 import { MovementPostResponse } from "../../../../src/movements/infrastructure/controllers/MovementPostController/MovementPostResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
@@ -16,10 +17,16 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(() => movementsRepository);
 
+jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
+  decode: jest.fn(),
+  encode: jest.fn(),
+});
+
 describe(`POST ${mainRouterPath}${movementsRouterPath}`, () => {
   test("should create a new movement", async () => {
     const response = await request(app)
       .post(`${mainRouterPath}${movementsRouterPath}`)
+      .auth("token", { type: "bearer" })
       .send({
         amount: 1000,
         concept: "Salary",
@@ -34,9 +41,9 @@ describe(`POST ${mainRouterPath}${movementsRouterPath}`, () => {
   });
 
   test("should return a validation error response", async () => {
-    const response = await request(app).post(
-      `${mainRouterPath}${movementsRouterPath}`
-    );
+    const response = await request(app)
+      .post(`${mainRouterPath}${movementsRouterPath}`)
+      .auth("token", { type: "bearer" });
 
     const body = response.body as ReturnType<BadRequest["json"]>;
 
