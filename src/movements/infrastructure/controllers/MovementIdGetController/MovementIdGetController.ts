@@ -14,7 +14,7 @@ export const MovementIdGetController = async (
   res: Response,
   _: NextFunction
 ) => {
-  const movementGetDto = req.body as MovementIdGetDto;
+  const movementGetDto = req.body.movementIdGetDto as MovementIdGetDto;
   const uow = Uow();
 
   const movementFind = MovementFind({

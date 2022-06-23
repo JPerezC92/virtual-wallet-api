@@ -29,7 +29,7 @@ movementsRouter.post(
 
 movementsRouter.get(
   `${movementsRouterPath}/:id`,
-  [MovementIdGetValidator],
+  [MovementIdGetValidator, VerifyAccessToken],
   MovementIdGetController
 );
 

@@ -1,6 +1,7 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
+import * as AuthAccessTokenEncoder from "../../../../src/auth/infrastructure/service/AuthAccessTokenEncoder";
 import { Movement } from "../../../../src/movements/domain/Movement";
 import { MovementIdGetResponse } from "../../../../src/movements/infrastructure/controllers/MovementIdGetController/MovementIdGetResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
@@ -16,12 +17,18 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(MockMovementsRepository);
 
+jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
+  decode: jest.fn(),
+  encode: jest.fn(),
+});
+
 const movementId = "2887bd86-567b-468b-8ccf-1cc815d4ab65";
 
 describe(`GET ${mainRouterPath}${movementsRouterPath}/${movementId}`, () => {
   test("should execute the request successfully", async () => {
     const result = await request(app)
       .get(`${mainRouterPath}${movementsRouterPath}/${movementId}`)
+      .auth("token", { type: "bearer" })
       .send();
 
     const movement = movementMockList.find(({ id }) => id === movementId);
@@ -45,6 +52,7 @@ describe(`GET ${mainRouterPath}${movementsRouterPath}/${movementId}`, () => {
       .get(
         `${mainRouterPath}${movementsRouterPath}/${JsUuidGenerator().generate()}`
       )
+      .auth("token", { type: "bearer" })
       .send();
 
     const notFound = new NotFound();
@@ -59,6 +67,7 @@ describe(`GET ${mainRouterPath}${movementsRouterPath}/${movementId}`, () => {
   test("should return 400 if the movement id is not a valid uuid", async () => {
     const result = await request(app)
       .get(`${mainRouterPath}${movementsRouterPath}/invalid-uuid`)
+      .auth("token", { type: "bearer" })
       .send();
 
     const badRequest = new BadRequest();
