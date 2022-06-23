@@ -14,13 +14,14 @@ export const MovementPutController = async (
   res: Response,
   _: NextFunction
 ) => {
-  const uow = Uow();
-  const movementModify = MovementModify({
-    movementsRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
-  });
-  const movementUpdateDto = req.body as MovementUpdateDto;
-
   try {
+    const movementUpdateDto = req.body.movementUpdateDto as MovementUpdateDto;
+    const uow = Uow();
+
+    const movementModify = MovementModify({
+      movementsRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
+    });
+
     await uow.transactional(async () => {
       await movementModify.execute(movementUpdateDto);
     });

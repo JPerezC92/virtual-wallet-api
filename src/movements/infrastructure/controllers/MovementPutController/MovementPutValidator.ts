@@ -3,15 +3,25 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 
 import { BadRequest } from "../../../../shared/infrastructure/requestErrors/BadRequest";
+import { parseBearerToken } from "../../../../shared/infrastructure/utils/parseBearerToken";
 import { MovementUpdateDto } from "../../dto/MovementUpdateDto";
 
 const JoiExtended = Joi.extend(JoiDate) as typeof Joi;
 
-const validatorSchema = JoiExtended.object<MovementUpdateDto>({
-  id: JoiExtended.string().uuid().required(),
-  concept: JoiExtended.string().max(250).required(),
-  amount: JoiExtended.number().min(0).required(),
-  date: JoiExtended.date().format("YYYY-MM-DD").required(),
+interface Schema {
+  body: MovementUpdateDto;
+  headers: { authorization: string };
+  params: { id: string };
+}
+
+const validatorSchema = JoiExtended.object<Schema>({
+  headers: { authorization: Joi.string().required() },
+  body: {
+    concept: JoiExtended.string().max(250).required(),
+    amount: JoiExtended.number().min(0).required(),
+    date: JoiExtended.date().format("YYYY-MM-DD").required(),
+  },
+  params: { id: JoiExtended.string().uuid().required() },
 });
 
 export const MovementPutValidator = (
@@ -20,8 +30,9 @@ export const MovementPutValidator = (
   next: NextFunction
 ) => {
   const { error, value } = validatorSchema.validate({
-    ...req.body,
-    ...req.params,
+    body: { ...req.body },
+    headers: { authorization: req.headers.authorization },
+    params: { ...req.params },
   });
 
   if (error || !value) {
@@ -29,7 +40,12 @@ export const MovementPutValidator = (
     return res.status(badRequest.statusCode).json(badRequest.json());
   }
 
-  req.body = new MovementUpdateDto(value);
+  req.body.movementUpdateDto = new MovementUpdateDto({
+    ...value.params,
+    ...value.body,
+  });
+
+  req.body.accessToken = parseBearerToken(value.headers.authorization);
 
   return next();
 };

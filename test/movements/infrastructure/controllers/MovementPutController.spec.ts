@@ -1,6 +1,7 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
+import * as AuthAccessTokenEncoder from "../../../../src/auth/infrastructure/service/AuthAccessTokenEncoder";
 import { MovementPutResponse } from "../../../../src/movements/infrastructure/controllers/MovementPutController/MovementPutResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
 import { mainRouterPath } from "../../../../src/routes/loadApiEndpoints";
@@ -23,12 +24,18 @@ jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(() => movementsRepository);
 
+jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
+  decode: jest.fn(),
+  encode: jest.fn(),
+});
+
 describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
   test("should modify the movement successfully", async () => {
     const movementMock = { ...movementMockList[0] };
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
+      .auth("token", { type: "bearer" })
       .send(movementData);
 
     const body = response.body as MovementPutResponse;
@@ -41,6 +48,7 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
   test("should return an error response if the id is invalid", async () => {
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/123`)
+      .auth("token", { type: "bearer" })
       .send(movementData);
 
     const body = response.body as MovementPutResponse;
@@ -58,6 +66,7 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
+      .auth("token", { type: "bearer" })
       .send({ concept: movementData.concept, amount: movementData.amount });
 
     const body = response.body as MovementPutResponse;
@@ -75,6 +84,7 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
+      .auth("token", { type: "bearer" })
       .send({ date: movementData.date, amount: movementData.amount });
 
     const body = response.body as MovementPutResponse;
@@ -92,6 +102,7 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
 
     const response = await request(app)
       .put(`${mainRouterPath}${movementsRouterPath}/${movementMock.id}`)
+      .auth("token", { type: "bearer" })
       .send({ date: movementData.date, concept: movementData.concept });
 
     const body = response.body as MovementPutResponse;
@@ -111,6 +122,7 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
       .put(
         `${mainRouterPath}${movementsRouterPath}/${JsUuidGenerator().generate()}`
       )
+      .auth("token", { type: "bearer" })
       .send(movementData);
 
     const body = response.body as MovementPutResponse;

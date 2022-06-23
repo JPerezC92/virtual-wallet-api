@@ -35,7 +35,7 @@ movementsRouter.get(
 
 movementsRouter.put(
   `${movementsRouterPath}/:id`,
-  [MovementPutValidator],
+  [MovementPutValidator, VerifyAccessToken],
   MovementPutController
 );
 
