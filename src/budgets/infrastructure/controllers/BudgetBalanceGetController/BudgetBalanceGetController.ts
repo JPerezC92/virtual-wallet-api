@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { AuthAccessPayload } from "../../../../auth/domain/AuthAccessPayload";
 import { TypeOrmMovementsRepository } from "../../../../movements/infrastructure/movements.repository";
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { ExceptionListener } from "../../../../shared/infrastructure/ExceptionListener";
@@ -12,6 +13,7 @@ export const BudgetBalanceGetController = async (
   _: NextFunction
 ) => {
   try {
+    const accessPayload = req.body.accessPayload as AuthAccessPayload;
     const uow = Uow();
 
     const budgetCalculateBalance = BudgetCalculateBalance({

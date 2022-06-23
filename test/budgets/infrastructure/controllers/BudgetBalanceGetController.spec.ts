@@ -1,6 +1,7 @@
 import request from "supertest";
 
 import app from "../../../../src/app";
+import * as AuthAccessTokenEncoder from "../../../../src/auth/infrastructure/service/AuthAccessTokenEncoder";
 import { Budget } from "../../../../src/budgets/domain/Budget";
 import { BudgetBalanceGetResponse } from "../../../../src/budgets/infrastructure/controllers/BudgetBalanceGetController/BudgetBalanceGetResponse";
 import * as TypeOrmMovementsRepository from "../../../../src/movements/infrastructure/movements.repository";
@@ -17,10 +18,16 @@ jest
     throw new Error();
   });
 
+jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
+  decode: jest.fn(),
+  encode: jest.fn(),
+});
+
 describe(`GET ${mainRouterPath}${budgetBalancePath}`, () => {
   test("should execute the request successfully", async () => {
     const response = await request(app)
       .get(`${mainRouterPath}${budgetBalancePath}`)
+      .auth("token", { type: "bearer" })
       .send();
 
     const budgetBalanceGetResponse = new BudgetBalanceGetResponse(
@@ -34,6 +41,7 @@ describe(`GET ${mainRouterPath}${budgetBalancePath}`, () => {
   test("should return an internal server error response", async () => {
     const response = await request(app)
       .get(`${mainRouterPath}${budgetBalancePath}`)
+      .auth("token", { type: "bearer" })
       .send();
 
     const internalServerError = new InternalServerError();
