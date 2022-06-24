@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { AuthAccessPayload } from "../../../../auth/domain/AuthAccessPayload";
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { ExceptionListener } from "../../../../shared/infrastructure/ExceptionListener";
 import { NotFound } from "../../../../shared/infrastructure/requestErrors/NotFound";
@@ -16,6 +17,7 @@ export const MovementPutController = async (
 ) => {
   try {
     const movementUpdateDto = req.body.movementUpdateDto as MovementUpdateDto;
+    const accessPayload = req.body.accessPayload as AuthAccessPayload;
     const uow = Uow();
 
     const movementModify = MovementModify({
@@ -23,7 +25,11 @@ export const MovementPutController = async (
     });
 
     await uow.transactional(async () => {
-      await movementModify.execute(movementUpdateDto);
+      await movementModify.execute({
+        ...movementUpdateDto,
+        movementId: movementUpdateDto.id,
+        userId: accessPayload.id,
+      });
     });
 
     const movementPutResponse = new MovementPutResponse();

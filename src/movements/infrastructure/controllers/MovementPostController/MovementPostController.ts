@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { AuthAccessPayload } from "../../../../auth/domain/AuthAccessPayload";
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { JsUuidGenerator } from "../../../../shared/infrastructure/JsUuidGenerator";
 import { MovementCreate } from "../../../application/MovementCreate";
@@ -13,6 +14,8 @@ export const MovementPostController = async (
   _: NextFunction
 ) => {
   const movementCreateDto = req.body.movementCreateDto as MovementCreateDto;
+  const accessPayload = req.body.accessPayload as AuthAccessPayload;
+
   const uow = Uow();
 
   const movementCreate = MovementCreate({
@@ -22,7 +25,8 @@ export const MovementPostController = async (
   await uow.transactional(async () => {
     await movementCreate.execute({
       ...movementCreateDto,
-      id: JsUuidGenerator().generate(),
+      movementId: JsUuidGenerator().generate(),
+      userId: accessPayload.id,
     });
   });
 

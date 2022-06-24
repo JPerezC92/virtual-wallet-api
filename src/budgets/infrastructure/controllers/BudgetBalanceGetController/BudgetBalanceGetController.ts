@@ -21,7 +21,8 @@ export const BudgetBalanceGetController = async (
     });
 
     const balance = await uow.transactional(
-      async () => await budgetCalculateBalance.execute()
+      async () =>
+        await budgetCalculateBalance.execute({ userId: accessPayload.id })
     );
 
     const budgetBalanceGetResponse = new BudgetBalanceGetResponse(balance);

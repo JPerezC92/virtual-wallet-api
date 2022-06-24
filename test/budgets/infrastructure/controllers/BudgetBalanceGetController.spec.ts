@@ -19,7 +19,7 @@ jest
   });
 
 jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
-  decode: jest.fn(),
+  decode: jest.fn().mockReturnValue({ id: "123", email: "user@example.com" }),
   encode: jest.fn(),
 });
 

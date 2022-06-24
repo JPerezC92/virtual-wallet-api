@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { AuthAccessPayload } from "../../../../auth/domain/AuthAccessPayload";
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { ExceptionListener } from "../../../../shared/infrastructure/ExceptionListener";
 import { NotFound } from "../../../../shared/infrastructure/requestErrors/NotFound";
@@ -14,16 +15,21 @@ export const MovementIdGetController = async (
   res: Response,
   _: NextFunction
 ) => {
-  const movementGetDto = req.body.movementIdGetDto as MovementIdGetDto;
-  const uow = Uow();
-
-  const movementFind = MovementFind({
-    movementRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
-  });
-
   try {
+    const movementGetDto = req.body.movementIdGetDto as MovementIdGetDto;
+    const accessPayload = req.body.accessPayload as AuthAccessPayload;
+    const uow = Uow();
+
+    const movementFind = MovementFind({
+      movementRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
+    });
+
     const movement = await uow.transactional(
-      async () => await movementFind.execute(movementGetDto)
+      async () =>
+        await movementFind.execute({
+          ...movementGetDto,
+          userId: accessPayload.id,
+        })
     );
 
     const movementIdGetResponse = new MovementIdGetResponse(movement);

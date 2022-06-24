@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
+import { AuthAccessPayload } from "../../../../auth/domain/AuthAccessPayload";
 import { Uow } from "../../../../shared/infrastructure/database/uow";
 import { MovementQuery } from "../../../application/MovementQuery";
 import { MovementGetDto } from "../../dto/MovementGet.dto";
@@ -12,6 +13,7 @@ export const MovementGetController = async (
   _: NextFunction
 ) => {
   const movementGetDto = req.body.movementGetDto as MovementGetDto;
+  const accessPayload = req.body.accessPayload as AuthAccessPayload;
   const uow = Uow();
 
   const movementQuery = MovementQuery({
@@ -25,6 +27,7 @@ export const MovementGetController = async (
         page: movementGetDto.page,
         order: movementGetDto.order,
         movementType: movementGetDto.movementType,
+        userId: accessPayload.id,
       })
   );
 

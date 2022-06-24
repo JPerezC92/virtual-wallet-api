@@ -15,9 +15,11 @@ import { movementMockList } from "../../fixtures/movementMockList";
 jest
   .spyOn(TypeOrmMovementsRepository, "TypeOrmMovementsRepository")
   .mockImplementation(MockMovementsRepository);
-jest
-  .spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder")
-  .mockReturnValue({ decode: jest.fn(), encode: jest.fn() });
+
+jest.spyOn(AuthAccessTokenEncoder, "AuthAccessTokenEncoder").mockReturnValue({
+  decode: jest.fn().mockReturnValue({ id: "123", email: "user@example.com" }),
+  encode: jest.fn(),
+});
 
 describe(`DELETE ${mainRouterPath}${movementsRouterPath}/:id`, () => {
   test("should execute the request successfully", async () => {

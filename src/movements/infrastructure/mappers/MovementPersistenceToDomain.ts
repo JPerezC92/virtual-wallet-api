@@ -10,5 +10,6 @@ export function MovementPersistenceToDomain(
     amount: parseFloat(movementPersistence.amount),
     date: movementPersistence.date,
     type: movementPersistence.type,
+    userId: movementPersistence.userId,
   });
 }

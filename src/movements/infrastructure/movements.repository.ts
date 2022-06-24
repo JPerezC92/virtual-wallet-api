@@ -13,16 +13,20 @@ export const TypeOrmMovementsRepository: (props: {
   db: EntityManager;
 }) => MovementsRepository = ({ db }) => {
   return {
-    getAll: async () => {
-      const movementsList = await db.find(MovementPersistence);
+    getAll: async ({ userId }) => {
+      console.log({ userId });
+      const movementsList = await db.find(MovementPersistence, {
+        where: { user: { id: userId } },
+      });
       return movementsList.map(MovementPersistenceToDomain);
     },
 
-    query: async (props?: {
+    query: async (props: {
       page: number;
       limit: number;
       order: OrderType;
       movementType: BudgetMovementType;
+      userId: string;
     }) => {
       let skip = 0;
       let take = 0;
@@ -34,7 +38,7 @@ export const TypeOrmMovementsRepository: (props: {
       const movementsList = await db.find(MovementPersistence, {
         skip,
         take,
-        where: { type: props?.movementType },
+        where: { type: props.movementType, user: { id: props.userId } },
         order: {
           createdAt: props?.order,
         },
@@ -58,9 +62,10 @@ export const TypeOrmMovementsRepository: (props: {
       );
     },
 
-    getById: async (id: string): Promise<Movement | undefined> => {
+    findOne: async ({ id, userId }): Promise<Movement | undefined> => {
       const movementPersistence = await db.findOneBy(MovementPersistence, {
         id,
+        user: { id: userId },
       });
 
       if (!movementPersistence) return;

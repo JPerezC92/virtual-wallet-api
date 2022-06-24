@@ -2,10 +2,13 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryColumn,
+  RelationId,
   UpdateDateColumn,
 } from "typeorm";
 
+import { UserPersistence } from "../../users/infrastructure/Users.persistence";
 import { BudgetMovementType } from "../domain/BudgetMovementType";
 
 @Entity({ name: "Movements" })
@@ -21,6 +24,12 @@ export class MovementPersistence {
 
   @Column({ type: "date" })
   date: string;
+
+  @ManyToOne(() => UserPersistence, { nullable: false })
+  user: UserPersistence;
+
+  @RelationId((movement: MovementPersistence) => movement.user)
+  userId: string;
 
   @Column({
     type: "enum",

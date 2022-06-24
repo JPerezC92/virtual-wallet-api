@@ -1,20 +1,25 @@
 import { UseCase } from "../../shared/domain/UseCase";
+import { User } from "../../users/domain/User";
 import { Movement } from "../domain/Movement";
 import { MovementsRepository } from "../domain/MovementsRepository";
 
-type Input = Pick<Movement, "id" | "concept" | "amount" | "type" | "date">;
+interface Input extends Pick<Movement, "concept" | "amount" | "type" | "date"> {
+  movementId: Movement["id"];
+  userId: User["id"];
+}
 
 export const MovementCreate: (props: {
   movementsRepository: MovementsRepository;
 }) => UseCase<Promise<void>, Input> = ({ movementsRepository }) => {
   return {
-    execute: async ({ id, amount, concept, type, date }) => {
+    execute: async ({ movementId, amount, concept, type, date, userId }) => {
       const movement = Movement.createNew({
+        id: movementId,
         amount,
         concept,
         date,
-        id,
         type,
+        userId,
       });
 
       await movementsRepository.persist(movement);

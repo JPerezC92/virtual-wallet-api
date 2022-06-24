@@ -6,6 +6,7 @@ export interface MovementProps {
   amount: number;
   date: string;
   type: BudgetMovementType;
+  userId: string;
 }
 
 export class Movement {
@@ -14,6 +15,7 @@ export class Movement {
   amount: number;
   date: string;
   type: BudgetMovementType;
+  userId: string;
 
   constructor(movementProps: MovementProps) {
     this.id = movementProps.id;
@@ -21,6 +23,7 @@ export class Movement {
     this.amount = movementProps.amount;
     this.date = movementProps.date;
     this.type = movementProps.type;
+    this.userId = movementProps.userId;
   }
 
   public static createNew(movementProps: MovementProps): Movement {
