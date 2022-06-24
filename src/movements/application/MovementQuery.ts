@@ -12,12 +12,17 @@ interface Input {
   userId: string;
 }
 
+interface Output {
+  movementList: Movement[];
+  pages: number;
+}
+
 export const MovementQuery: (props: {
   movementsRepository: MovementsRepository;
-}) => UseCase<Promise<Movement[]>, Input> = ({ movementsRepository }) => {
+}) => UseCase<Promise<Output>, Input> = ({ movementsRepository }) => {
   return {
     execute: async ({ page, limit, order, movementType, userId }) => {
-      const movementList = await movementsRepository.query({
+      const { movementList, pages } = await movementsRepository.query({
         page,
         limit,
         order,
@@ -25,7 +30,7 @@ export const MovementQuery: (props: {
         userId,
       });
 
-      return movementList;
+      return { movementList, pages };
     },
   };
 };

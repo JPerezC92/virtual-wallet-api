@@ -26,16 +26,24 @@ describe(`GET ${mainRouterPath}${movementsRouterPath}`, () => {
 
     const body = response.body as ReturnType<MovementsGetResponse["json"]>;
 
-    const movementsGetResponse = new MovementsGetResponse(movementMockList);
+    const movementsGetResponse = new MovementsGetResponse({
+      movementList: movementMockList,
+      pages: 1,
+    });
 
     expect(response.status).toBe(movementsGetResponse.statusCode);
-    expect(body.data.length).toBe(movementsGetResponse.data.length);
+    expect(body.data.movementList.length).toBe(
+      movementsGetResponse.data.movementList.length
+    );
     expect(body).toStrictEqual({
       ...movementsGetResponse.json(),
-      data: movementsGetResponse.data.map((m) => ({
-        ...m,
-        date: expect.any(String),
-      })),
+      data: {
+        movementList: movementsGetResponse.data.movementList.map((m) => ({
+          ...m,
+          date: expect.any(String),
+        })),
+        pages: 1,
+      },
     });
   });
 });

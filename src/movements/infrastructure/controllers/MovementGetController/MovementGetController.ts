@@ -20,7 +20,7 @@ export const MovementGetController = async (
     movementsRepository: TypeOrmMovementsRepository({ db: uow.connection() }),
   });
 
-  const movementList = await uow.transactional(
+  const { movementList, pages } = await uow.transactional(
     async () =>
       await movementQuery.execute({
         limit: movementGetDto.limit,
@@ -31,7 +31,10 @@ export const MovementGetController = async (
       })
   );
 
-  const movementsGetResponse = new MovementsGetResponse(movementList);
+  const movementsGetResponse = new MovementsGetResponse({
+    movementList,
+    pages,
+  });
 
   return res
     .status(movementsGetResponse.statusCode)

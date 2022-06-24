@@ -9,6 +9,13 @@ import { MovementPersistenceToDomain } from "./mappers/MovementPersistenceToDoma
 import { MovementPersistence } from "./Movement.persistence";
 import { calculateSkip } from "./utils/calculateSkip";
 
+function calculatePages(count: number, limit: number) {
+  if (limit === 0) {
+    return 1;
+  }
+  return Math.ceil(count / limit);
+}
+
 export const TypeOrmMovementsRepository: (props: {
   db: EntityManager;
 }) => MovementsRepository = ({ db }) => {
@@ -25,7 +32,7 @@ export const TypeOrmMovementsRepository: (props: {
       page: number;
       limit: number;
       order: OrderType;
-      movementType: BudgetMovementType;
+      movementType?: BudgetMovementType;
       userId: string;
     }) => {
       let skip = 0;
@@ -34,6 +41,10 @@ export const TypeOrmMovementsRepository: (props: {
         skip = calculateSkip({ page: props.page, limit: props.limit });
         take = props.limit;
       }
+
+      const movementCount = await db.count(MovementPersistence, {
+        where: { user: { id: props.userId }, type: props.movementType },
+      });
 
       const movementsList = await db.find(MovementPersistence, {
         skip,
@@ -44,7 +55,10 @@ export const TypeOrmMovementsRepository: (props: {
         },
       });
 
-      return movementsList.map(MovementPersistenceToDomain);
+      return {
+        movementList: movementsList.map(MovementPersistenceToDomain),
+        pages: calculatePages(movementCount, props.limit),
+      };
     },
 
     persist: async (movement: Movement) => {

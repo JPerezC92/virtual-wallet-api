@@ -13,8 +13,8 @@ export const MockMovementsRepository: () => MovementsRepository = () => {
     query: async (props: {
       page: number;
       limit: number;
-    }): Promise<Movement[]> => {
-      return movementList;
+    }): Promise<{ movementList: Movement[]; pages: number }> => {
+      return { movementList, pages: 1 };
     },
 
     persist: async (movement): Promise<void> => {

@@ -11,7 +11,7 @@ export interface MovementsRepository {
     order: OrderType;
     movementType?: BudgetMovementType;
     userId: string;
-  }): Promise<Movement[]>;
+  }): Promise<{ movementList: Movement[]; pages: number }>;
   findOne(
     props: Pick<Movement, "id" | "userId">
   ): Promise<Movement | undefined>;
