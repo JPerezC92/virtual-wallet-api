@@ -25,4 +25,8 @@ export class User {
   public updateRefreshToken(refreshToken: string): void {
     this.refreshToken = refreshToken;
   }
+
+  public logout() {
+    this.refreshToken = "";
+  }
 }

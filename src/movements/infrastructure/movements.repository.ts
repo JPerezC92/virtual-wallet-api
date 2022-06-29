@@ -21,7 +21,6 @@ export const TypeOrmMovementsRepository: (props: {
 }) => MovementsRepository = ({ db }) => {
   return {
     getAll: async ({ userId }) => {
-      console.log({ userId });
       const movementsList = await db.find(MovementPersistence, {
         where: { user: { id: userId } },
       });

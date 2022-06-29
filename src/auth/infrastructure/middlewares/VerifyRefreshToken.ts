@@ -34,6 +34,10 @@ export const VerifyRefreshToken = async (
     );
 
     if (internalRefreshTokenPayload.id !== refreshTokenPayload.id) {
+      user.logout();
+
+      await typeOrmUsersRepository.update(user);
+
       return res.status(badRequest.statusCode).json(badRequest.json());
     }
 
