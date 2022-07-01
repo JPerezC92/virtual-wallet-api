@@ -1,48 +1,106 @@
-# TypeScript Express API Bootstrap (base / project starter)
+# Administración de presupuesto personal
 
-This is a repository intended to serve as a starting point if you want to bootstrap a express API project in TypeScript.
+Esta es una solución para el reto Full Stack de Alkemy.
 
-## Features
+## Relacionado
 
-- [TypeScript](https://www.typescriptlang.org/) (v4)
-- [ts-node-dev](https://github.com/wclr/ts-node-dev)
-- [Prettier](https://prettier.io/)
-- [ESLint](https://eslint.org/) with:
-  - [Simple Import Sort](https://github.com/lydell/eslint-plugin-simple-import-sort/)
-  - [Import plugin](https://github.com/benmosher/eslint-plugin-import/)
-- [Jest](https://jestjs.io) with [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/intro)
-- [GitHub Action workflows](https://github.com/features/actions) set up to run tests and linting on push
+El proyecto esta dividido en 2 repositorios
 
-## Running the app
+- [Frontend](https://github.com/JPerezC92/challenge-full-stack-alkemy-frontend)
+- [Backend](https://github.com/JPerezC92/challenge-full-stack-alkemy-backend)
 
+## Variables de entorno
+
+Para iniciar este proyecto, tendras que añadir las siguientes variables de entorno a tu archivo .env
+
+`PORT`
+
+### DATABASE
+
+`DATABASE_HOST`
+
+`DATABASE_PORT`
+
+`DATABASE_USERNAME`
+
+`DATABASE_PASSWORD`
+
+`DATABASE_NAME`
+
+### Tokens secrets
+
+`JWT_ACCESSS_TOKEN_SECRET`
+
+`JWT_REFRESH_TOKEN_SECRET`
+
+## Como iniciar el proyecto
+
+Clonar el proyecto
+
+```bash
+  git clone https://github.com/JPerezC92/challenge-full-stack-alkemy-backend.git
 ```
-# install dependencies
-npm install
 
-# run in dev mode on port 3000
-npm run dev
+Ir al directorio del proyecto
 
-# generate production build
-npm run build
-
-# run generated content in dist folder on port 3000
-npm run start
+```bash
+  cd challenge-full-stack-alkemy-backend
 ```
 
-## Testing
+Instalar las dependencias
 
-### Jest with supertest
-
-```
-npm run test
+```bash
+  npm install
 ```
 
-## Linting
+Iniciar la aplicación
 
+```bash
+  npm run dev
 ```
-# run linter
-npm run lint
 
-# fix lint issues
-npm run lint:fix
-```
+## Requerimientos
+
+- Deberás desarrollar una API en Node.js junto a cualquiera de los siguientes frameworks, en sus versiones estables:
+
+  - Express
+  - Adonis
+  - Koa
+
+- En el caso de querer utilizar otro framework es posible, pero debe consultarse con anterioridad.
+
+- Los datos mostrados deben ser persistidos en una base de datos relacional. El esquema de
+  datos puede armarse según se considere apropiado en base a los requerimientos del
+  negocio. La API deberá exponer URLS que devuelvan datos en JSON.
+
+- Estos datos en JSON deberán ser consumidos por un cliente, a través de peticiones AJAX.
+- El cliente puede ser armado con React.js.
+- El trabajo realizado se subirá a un repositorio.
+
+- Esta es un tipo de aplicación con la que podemos practicar diseños de UI más elaborados. Intenta hacerla bonita y con animaciones!
+
+## Secciones
+
+### Home
+
+- La pantalla de inicio deberá mostrar el balance actual, es decir, el resultante de los ingresos y egresos de dinero cargados, y un listado de los últimos 10 registrados.
+
+### ABM de operaciones (ingresos y egresos)
+
+- La aplicación deberá contener:
+  - Formulario de registro de operación. El mismo deberá contener:
+    - Concepto
+    - Monto
+    - Fecha
+    - Tipo (ingreso o egreso)
+  - Listado de operaciones registradas según su tipo (ingreso o egreso).
+  - Desde el listado, se debe poder modificar o eliminar una operación registrada previamente. No debe ser posible modificar el tipo de operación (ingreso o egreso) una vez creada.
+
+## Bonus
+
+### Autenticación de usuarios
+
+Agregar un formulario de registro y login para permitir identificar al usuario que utiliza la
+aplicación, y vincular las operaciones registradas al usuario autenticado en el sistema,
+tanto para el listado y creación de nuevos registros. Los datos indispensables para permitir
+el ingreso deben ser un email y contraseña, pudiendo agregar los que se deseen.
