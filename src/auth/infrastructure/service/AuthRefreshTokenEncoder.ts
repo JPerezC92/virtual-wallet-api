@@ -1,29 +1,28 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { environmentVariables } from "../../../shared/infrastructure/EnvironmentVariables";
-import { AuthRefreshPayload } from "../../domain/AuthRefreshPayload";
-import { TokenEncoder } from "../../domain/TokenEncryptor";
+import { AuthRefreshPayload, TokenEncoder } from "@/Auth/domain";
+import { environmentVariables } from "@/Shared/infrastructure/EnvironmentVariables";
 
 export const AuthRefreshTokenEncoder: () => TokenEncoder<AuthRefreshPayload> =
-  () => {
-    return {
-      encode: (payload) => {
-        const token = jwt.sign(
-          { data: payload },
-          environmentVariables.JWT_REFRESH_TOKEN_SECRET,
-          { expiresIn: "24h" }
-        );
+	() => {
+		return {
+			encode: (payload) => {
+				const token = jwt.sign(
+					{ data: payload },
+					environmentVariables.JWT_REFRESH_TOKEN_SECRET,
+					{ expiresIn: "24h" }
+				);
 
-        return token;
-      },
+				return token;
+			},
 
-      decode: (token) => {
-        const payload = jwt.verify(
-          token,
-          environmentVariables.JWT_REFRESH_TOKEN_SECRET
-        ) as JwtPayload & { data: AuthRefreshPayload };
+			decode: (token) => {
+				const payload = jwt.verify(
+					token,
+					environmentVariables.JWT_REFRESH_TOKEN_SECRET
+				) as JwtPayload & { data: AuthRefreshPayload };
 
-        return payload.data;
-      },
-    };
-  };
+				return payload.data;
+			},
+		};
+	};

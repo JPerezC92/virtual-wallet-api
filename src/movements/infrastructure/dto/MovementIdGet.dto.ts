@@ -1,7 +1,7 @@
 export class MovementIdGetDto {
-  movementId: string;
+	movementId: string;
 
-  constructor({ movementId }: { movementId: string }) {
-    this.movementId = movementId;
-  }
+	constructor({ movementId }: { movementId: string }) {
+		this.movementId = movementId;
+	}
 }

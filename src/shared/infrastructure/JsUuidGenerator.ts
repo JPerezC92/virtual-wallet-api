@@ -1,9 +1,9 @@
 import { v4 } from "uuid";
 
-import { UuidGenerator } from "../domain/UuidGenerator";
+import { UuidGenerator } from "@/Shared/domain";
 
 export const JsUuidGenerator = (): UuidGenerator => {
-  return {
-    generate: () => v4(),
-  };
+	return {
+		generate: () => v4(),
+	};
 };

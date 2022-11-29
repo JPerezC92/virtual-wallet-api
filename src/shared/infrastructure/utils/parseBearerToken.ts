@@ -1,3 +1,3 @@
 export function parseBearerToken(token: string) {
-  return token.split(" ")[1];
+	return token.split(" ")[1];
 }

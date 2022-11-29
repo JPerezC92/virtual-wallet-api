@@ -1,4 +1,4 @@
 export interface AuthRefreshPayload {
-  id: string;
-  email: string;
+	id: string;
+	email: string;
 }

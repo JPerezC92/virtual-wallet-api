@@ -1,14 +1,14 @@
-import { Movement } from "../../domain/Movement";
-import { MovementEndpointDto } from "../dto/MovementEndpoint.dto";
+import { Movement } from "@/Movements/domain";
+import { MovementEndpointDto } from "@/Movements/infrastructure/dto";
 
 export function MovementDomainToEndpoint(
-  movement: Movement
+	movement: Movement
 ): MovementEndpointDto {
-  return new MovementEndpointDto({
-    id: movement.id,
-    concept: movement.concept,
-    amount: movement.amount,
-    date: movement.date,
-    type: movement.type,
-  });
+	return new MovementEndpointDto({
+		id: movement.id,
+		concept: movement.concept,
+		amount: movement.amount,
+		date: movement.date,
+		type: movement.type,
+	});
 }

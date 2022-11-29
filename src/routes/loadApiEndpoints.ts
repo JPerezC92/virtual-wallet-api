@@ -13,5 +13,5 @@ mainRouter.use(budgetsRouter);
 mainRouter.use(authRouter);
 
 export const loadApiEndpoints = (app: Application): void => {
-  app.use(mainRouterPath, mainRouter);
+	app.use(mainRouterPath, mainRouter);
 };

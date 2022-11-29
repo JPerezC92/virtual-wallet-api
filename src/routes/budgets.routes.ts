@@ -9,7 +9,7 @@ export const budgetsRouterPath = "/budgets";
 export const budgetBalancePath = `${budgetsRouterPath}/balance`;
 
 budgetsRouter.get(
-  budgetBalancePath,
-  [BudgetBalanceGetValidator, VerifyAccessToken],
-  BudgetBalanceGetController
+	budgetBalancePath,
+	[BudgetBalanceGetValidator, VerifyAccessToken],
+	BudgetBalanceGetController
 );

@@ -16,31 +16,31 @@ export const movementsRouter = Router();
 export const movementsRouterPath = "/movements";
 
 movementsRouter.get(
-  movementsRouterPath,
-  [MovementGetValidator, VerifyAccessToken],
-  MovementGetController
+	movementsRouterPath,
+	[MovementGetValidator, VerifyAccessToken],
+	MovementGetController
 );
 
 movementsRouter.post(
-  movementsRouterPath,
-  [MovementPostValidator, VerifyAccessToken],
-  MovementPostController
+	movementsRouterPath,
+	[MovementPostValidator, VerifyAccessToken],
+	MovementPostController
 );
 
 movementsRouter.get(
-  `${movementsRouterPath}/:id`,
-  [MovementIdGetValidator, VerifyAccessToken],
-  MovementIdGetController
+	`${movementsRouterPath}/:id`,
+	[MovementIdGetValidator, VerifyAccessToken],
+	MovementIdGetController
 );
 
 movementsRouter.put(
-  `${movementsRouterPath}/:id`,
-  [MovementPutValidator, VerifyAccessToken],
-  MovementPutController
+	`${movementsRouterPath}/:id`,
+	[MovementPutValidator, VerifyAccessToken],
+	MovementPutController
 );
 
 movementsRouter.delete(
-  `${movementsRouterPath}/:id`,
-  [MovementDeleteValidator, VerifyAccessToken],
-  MovementDeleteController
+	`${movementsRouterPath}/:id`,
+	[MovementDeleteValidator, VerifyAccessToken],
+	MovementDeleteController
 );

@@ -1,6 +1,6 @@
-import { DomainError } from "../../shared/domain/DomainError";
+import { DomainError } from "@/Shared/domain";
 
 export class UserAlreadyExists extends DomainError {
-  message = "User already exists";
-  name = "UserAlreadyExists";
+	message = "User already exists";
+	name = "UserAlreadyExists";
 }

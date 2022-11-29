@@ -1,7 +1,7 @@
 export class MovementDeleteDto {
-  readonly id: string;
+	readonly id: string;
 
-  constructor(props: { id: string }) {
-    this.id = props.id;
-  }
+	constructor(props: { id: string }) {
+		this.id = props.id;
+	}
 }

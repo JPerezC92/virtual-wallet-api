@@ -1,6 +1,6 @@
-import { DomainError } from "../../shared/domain/DomainError";
+import { DomainError } from "@/Shared/domain";
 
 export class InvalidCredentials extends DomainError {
-  name = "InvalidCredentials";
-  message = "Invalid username or password";
+	name = "InvalidCredentials";
+	message = "Invalid username or password";
 }

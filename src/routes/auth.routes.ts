@@ -19,25 +19,25 @@ export const authLogoutPath = `${authRouterPath}/logout`;
 export const authRefreshTokenPath = `${authRouterPath}/refresh-token`;
 
 authRouter.post(
-  authRegisterPath,
-  [AuthRegisterPostValidator],
-  AuthRegisterPostController
+	authRegisterPath,
+	[AuthRegisterPostValidator],
+	AuthRegisterPostController
 );
 
 authRouter.post(
-  authLoginPath,
-  [AuthLoginPostValidator],
-  AuthLoginPostController
+	authLoginPath,
+	[AuthLoginPostValidator],
+	AuthLoginPostController
 );
 
 authRouter.get(
-  authLogoutPath,
-  [AuthLogoutGetValidator, VerifyAccessToken],
-  AuthLogoutGetController
+	authLogoutPath,
+	[AuthLogoutGetValidator, VerifyAccessToken],
+	AuthLogoutGetController
 );
 
 authRouter.get(
-  authRefreshTokenPath,
-  [AuthRefreshTokenGetValidator, VerifyRefreshToken],
-  AuthRefreshTokenGetController
+	authRefreshTokenPath,
+	[AuthRefreshTokenGetValidator, VerifyRefreshToken],
+	AuthRefreshTokenGetController
 );

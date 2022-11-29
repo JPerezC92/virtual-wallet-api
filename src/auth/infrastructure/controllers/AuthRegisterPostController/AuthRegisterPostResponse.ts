@@ -1,37 +1,37 @@
 import { StatusCodes } from "http-status-codes";
 
+import { AccessCredentials } from "@/Auth/domain";
+import { UserEndpointDto } from "@/Auth/infrastructure/dto";
 import {
-  JsendStatus,
-  JsendSuccess,
-} from "../../../../shared/infrastructure/endpointResponse/Jsend";
-import { RequestSuccess } from "../../../../shared/infrastructure/endpointResponse/RequestSuccess";
-import { User } from "../../../../users/domain/User";
-import { UserDomainToEndpoint } from "../../../../users/infrastructure/mappers/UserDomainToEndpoint";
-import { AccessCredentials } from "../../../domain/AccessCredentials";
-import { UserEndpointDto } from "../../dto/UserEndpointDto";
+	JsendStatus,
+	JsendSuccess,
+} from "@/Shared/infrastructure/endpointResponse/Jsend";
+import { RequestSuccess } from "@/Shared/infrastructure/endpointResponse/RequestSuccess";
+import { User } from "@/Users/domain";
+import { UserDomainToEndpoint } from "@/Users/infrastructure/mappers/UserDomainToEndpoint";
 
 export class AuthRegisterPostResponse implements RequestSuccess {
-  status: JsendStatus.success;
-  statusCode: number;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-    user: UserEndpointDto;
-  };
+	status: JsendStatus.success;
+	statusCode: number;
+	data: {
+		accessToken: string;
+		refreshToken: string;
+		user: UserEndpointDto;
+	};
 
-  constructor(accessCredentials: AccessCredentials & { user: User }) {
-    this.data = {
-      ...accessCredentials,
-      user: UserDomainToEndpoint(accessCredentials.user),
-    };
-    this.statusCode = StatusCodes.CREATED;
-    this.status = JsendStatus.success;
-  }
+	constructor(accessCredentials: AccessCredentials & { user: User }) {
+		this.data = {
+			...accessCredentials,
+			user: UserDomainToEndpoint(accessCredentials.user),
+		};
+		this.statusCode = StatusCodes.CREATED;
+		this.status = JsendStatus.success;
+	}
 
-  public json(): JsendSuccess<this["data"]> {
-    return {
-      status: this.status,
-      data: this.data,
-    };
-  }
+	public json(): JsendSuccess<this["data"]> {
+		return {
+			status: this.status,
+			data: this.data,
+		};
+	}
 }

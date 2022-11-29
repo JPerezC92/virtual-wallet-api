@@ -1,29 +1,28 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 
-import { environmentVariables } from "../../../shared/infrastructure/EnvironmentVariables";
-import { AuthAccessPayload } from "../../domain/AuthAccessPayload";
-import { TokenEncoder } from "../../domain/TokenEncryptor";
+import { AuthAccessPayload, TokenEncoder } from "@/Auth/domain";
+import { environmentVariables } from "@/Shared/infrastructure/EnvironmentVariables";
 
 export const AuthAccessTokenEncoder: () => TokenEncoder<AuthAccessPayload> =
-  () => {
-    return {
-      encode: (payload) => {
-        const token = jwt.sign(
-          { data: payload },
-          environmentVariables.JWT_ACCESSS_TOKEN_SECRET,
-          { expiresIn: "1h" }
-        );
+	() => {
+		return {
+			encode: (payload) => {
+				const token = jwt.sign(
+					{ data: payload },
+					environmentVariables.JWT_ACCESSS_TOKEN_SECRET,
+					{ expiresIn: "1h" }
+				);
 
-        return token;
-      },
+				return token;
+			},
 
-      decode: (token) => {
-        const payload = jwt.verify(
-          token,
-          environmentVariables.JWT_ACCESSS_TOKEN_SECRET
-        ) as JwtPayload & { data: AuthAccessPayload };
+			decode: (token) => {
+				const payload = jwt.verify(
+					token,
+					environmentVariables.JWT_ACCESSS_TOKEN_SECRET
+				) as JwtPayload & { data: AuthAccessPayload };
 
-        return payload.data;
-      },
-    };
-  };
+				return payload.data;
+			},
+		};
+	};

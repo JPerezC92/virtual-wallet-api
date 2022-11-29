@@ -1,21 +1,21 @@
-import { MovementsRepository } from "../../movements/domain/MovementsRepository";
-import { UseCase } from "../../shared/domain/UseCase";
-import { User } from "../../users/domain/User";
-import { Budget } from "../domain/Budget";
+import { Budget } from "@/Budgets/domain";
+import { MovementsRepository } from "@/Movements/domain";
+import { UseCase } from "@/Shared/domain";
+import { User } from "@/Users/domain";
 
 interface Input {
-  userId: User["id"];
+	userId: User["id"];
 }
 
 export const BudgetCalculateBalance: (props: {
-  movementsRepository: MovementsRepository;
+	movementsRepository: MovementsRepository;
 }) => UseCase<Promise<number>, Input> = ({ movementsRepository }) => {
-  return {
-    execute: async ({ userId }) => {
-      const movementsList = await movementsRepository.getAll({ userId });
-      const budget = new Budget({ movementsList });
+	return {
+		execute: async ({ userId }) => {
+			const movementsList = await movementsRepository.getAll({ userId });
+			const budget = new Budget({ movementsList });
 
-      return budget.calculateBalance();
-    },
-  };
+			return budget.calculateBalance();
+		},
+	};
 };

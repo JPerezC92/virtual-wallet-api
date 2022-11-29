@@ -1,44 +1,43 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Uow } from "../../../../shared/infrastructure/database/uow";
-import { ExceptionListener } from "../../../../shared/infrastructure/ExceptionListener";
-import { NotFound } from "../../../../shared/infrastructure/requestErrors/NotFound";
-import { TypeOrmUsersRepository } from "../../../../users/infrastructure/TypeOrmUsers.repository";
-import { AuthLogout } from "../../../application/AuthLogout";
-import { AuthAccessPayload } from "../../../domain/AuthAccessPayload";
-import { UserNotFound } from "../../../domain/UserNotFound";
-import { AuthLogoutGetResponse } from "./AuthLogoutGetResponse";
+import { AuthLogout } from "@/Auth/application/AuthLogout";
+import { AuthAccessPayload, UserNotFound } from "@/Auth/domain";
+import { AuthLogoutGetResponse } from "@/Auth/infrastructure/controllers/AuthLogoutGetController/AuthLogoutGetResponse";
+import { Uow } from "@/Shared/infrastructure/database/uow";
+import { ExceptionListener } from "@/Shared/infrastructure/ExceptionListener";
+import { NotFound } from "@/Shared/infrastructure/requestErrors/NotFound";
+import { TypeOrmUsersRepository } from "@/Users/infrastructure/TypeOrmUsers.repository";
 
 export const AuthLogoutGetController = async (
-  req: Request,
-  res: Response,
-  _: NextFunction
+	req: Request,
+	res: Response,
+	_: NextFunction
 ) => {
-  try {
-    const accessPayload = req.body.accessPayload as AuthAccessPayload;
+	try {
+		const accessPayload = req.body.accessPayload as AuthAccessPayload;
 
-    const uow = Uow();
+		const uow = Uow();
 
-    const authLogout = AuthLogout({
-      usersRepository: TypeOrmUsersRepository({ db: uow.connection() }),
-    });
+		const authLogout = AuthLogout({
+			usersRepository: TypeOrmUsersRepository({ db: uow.connection() }),
+		});
 
-    await uow.transactional(
-      async () => await authLogout.execute(accessPayload)
-    );
+		await uow.transactional(
+			async () => await authLogout.execute(accessPayload)
+		);
 
-    const authLogoutGetResponse = new AuthLogoutGetResponse();
+		const authLogoutGetResponse = new AuthLogoutGetResponse();
 
-    return res
-      .status(authLogoutGetResponse.statusCode)
-      .json(authLogoutGetResponse.json());
-  } catch (error) {
-    const exceptionListener = ExceptionListener({
-      [`${UserNotFound.name}`]: NotFound,
-    });
+		return res
+			.status(authLogoutGetResponse.statusCode)
+			.json(authLogoutGetResponse.json());
+	} catch (error) {
+		const exceptionListener = ExceptionListener({
+			[`${UserNotFound.name}`]: NotFound,
+		});
 
-    const errorResponse = exceptionListener.onException(error as Error);
+		const errorResponse = exceptionListener.onException(error as Error);
 
-    return res.status(errorResponse.statusCode).json(errorResponse.json());
-  }
+		return res.status(errorResponse.statusCode).json(errorResponse.json());
+	}
 };

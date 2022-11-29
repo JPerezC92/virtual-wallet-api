@@ -1,6 +1,6 @@
-import { DomainError } from "../../shared/domain/DomainError";
+import { DomainError } from "@/Shared/domain";
 
 export class MovementNotFound extends DomainError {
-  message = "Movement not found";
-  name = "MovementNotFound";
+	message = "Movement not found";
+	name = "MovementNotFound";
 }
