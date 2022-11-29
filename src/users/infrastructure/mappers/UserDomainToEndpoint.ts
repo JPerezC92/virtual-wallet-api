@@ -1,5 +1,5 @@
-import { UserEndpointDto } from "../../../auth/infrastructure/dto/UserEndpoint.dto";
-import { User } from "../../../users/domain/User";
+import { UserEndpointDto } from "@/Auth/infrastructure/dto";
+import { User } from "@/Users/domain";
 
 export function UserDomainToEndpoint(user: User) {
 	return new UserEndpointDto({

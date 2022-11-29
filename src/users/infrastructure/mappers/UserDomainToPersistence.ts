@@ -1,5 +1,5 @@
-import { User } from "../../domain/User";
-import { UserPersistence } from "../Users.persistence";
+import { User } from "@/Users/domain";
+import { UserPersistence } from "@/Users/infrastructure/Users.persistence";
 
 export function UserDomainToPersistence(user: User) {
 	const userPersistence = new UserPersistence();

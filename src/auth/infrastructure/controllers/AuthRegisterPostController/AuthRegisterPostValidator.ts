@@ -36,5 +36,5 @@ export const AuthRegisterPostValidator = (
 
 	req.body = new UserCreateDto(value.body);
 
-	next();
+	return next();
 };

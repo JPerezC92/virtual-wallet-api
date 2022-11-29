@@ -43,7 +43,7 @@ export const VerifyRefreshToken = async (
 
 		req.body.userEmail = user.email;
 
-		next();
+		return next();
 	} catch (error) {
 		return res.status(badRequest.statusCode).json(badRequest.json());
 	} finally {

@@ -1,8 +1,10 @@
 import { Router } from "express";
 
-import { VerifyAccessToken } from "../auth/infrastructure/middlewares/VerifyAccessToken";
-import { BudgetBalanceGetController } from "../budgets/infrastructure/controllers/BudgetBalanceGetController/BudgetBalanceGetController";
-import { BudgetBalanceGetValidator } from "../budgets/infrastructure/controllers/BudgetBalanceGetController/BudgetBalanceGetValidator";
+import { VerifyAccessToken } from "@/Auth/infrastructure/middlewares";
+import {
+	BudgetBalanceGetController,
+	BudgetBalanceGetValidator,
+} from "@/Budgets/infrastructure/controllers/BudgetBalanceGetController";
 
 export const budgetsRouter = Router();
 export const budgetsRouterPath = "/budgets";

@@ -3,20 +3,20 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 @Entity({ name: "Users" })
 export class UserPersistence {
 	@PrimaryColumn({ type: "uuid" })
-	id: string;
+	id!: string;
 
 	@Column()
-	firstName: string;
+	firstName!: string;
 
 	@Column()
-	lastName: string;
+	lastName!: string;
 
 	@Column({ unique: true })
-	email: string;
+	email!: string;
 
 	@Column()
-	password: string;
+	password!: string;
 
 	@Column()
-	refreshToken: string;
+	refreshToken!: string;
 }

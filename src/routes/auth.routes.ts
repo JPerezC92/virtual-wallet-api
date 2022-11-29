@@ -1,15 +1,25 @@
 import { Router } from "express";
 
-import { AuthLoginPostController } from "../auth/infrastructure/controllers/AuthLoginPostController/AuthLoginPostController";
-import { AuthLoginPostValidator } from "../auth/infrastructure/controllers/AuthLoginPostController/AuthLoginPostValidator";
-import { AuthLogoutGetController } from "../auth/infrastructure/controllers/AuthLogoutGetController/AuthLogoutGetController";
-import { AuthLogoutGetValidator } from "../auth/infrastructure/controllers/AuthLogoutGetController/AuthLogoutGetValidator";
-import { AuthRefreshTokenGetController } from "../auth/infrastructure/controllers/AuthRefreshTokenGetController/AuthRefreshTokenGetController";
-import { AuthRefreshTokenGetValidator } from "../auth/infrastructure/controllers/AuthRefreshTokenGetController/AuthRefreshTokenGetValidator";
-import { AuthRegisterPostController } from "../auth/infrastructure/controllers/AuthRegisterPostController/AuthRegisterPostController";
-import { AuthRegisterPostValidator } from "../auth/infrastructure/controllers/AuthRegisterPostController/AuthRegisterPostValidator";
-import { VerifyAccessToken } from "../auth/infrastructure/middlewares/VerifyAccessToken";
-import { VerifyRefreshToken } from "../auth/infrastructure/middlewares/VerifyRefreshToken";
+import {
+	AuthLoginPostController,
+	AuthLoginPostValidator,
+} from "@/Auth/infrastructure/controllers/AuthLoginPostController";
+import {
+	AuthLogoutGetController,
+	AuthLogoutGetValidator,
+} from "@/Auth/infrastructure/controllers/AuthLogoutGetController";
+import {
+	AuthRefreshTokenGetController,
+	AuthRefreshTokenGetValidator,
+} from "@/Auth/infrastructure/controllers/AuthRefreshTokenGetController";
+import {
+	AuthRegisterPostController,
+	AuthRegisterPostValidator,
+} from "@/Auth/infrastructure/controllers/AuthRegisterPostController";
+import {
+	VerifyAccessToken,
+	VerifyRefreshToken,
+} from "@/Auth/infrastructure/middlewares";
 
 export const authRouter = Router();
 export const authRouterPath = "/auth";

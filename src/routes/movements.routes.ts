@@ -1,16 +1,26 @@
 import { Router } from "express";
 
-import { VerifyAccessToken } from "../auth/infrastructure/middlewares/VerifyAccessToken";
-import { MovementDeleteController } from "../movements/infrastructure/controllers/MovementDeleteController/MovementDeleteController";
-import { MovementDeleteValidator } from "../movements/infrastructure/controllers/MovementDeleteController/MovementDeleteValidator";
-import { MovementGetController } from "../movements/infrastructure/controllers/MovementGetController/MovementGetController";
-import { MovementGetValidator } from "../movements/infrastructure/controllers/MovementGetController/MovementGetValidator";
-import { MovementIdGetController } from "../movements/infrastructure/controllers/MovementIdGetController/MovementIdGetController";
-import { MovementIdGetValidator } from "../movements/infrastructure/controllers/MovementIdGetController/MovementIdGetValidator";
-import { MovementPostController } from "../movements/infrastructure/controllers/MovementPostController/MovementPostController";
-import { MovementPostValidator } from "../movements/infrastructure/controllers/MovementPostController/MovementPostValidator";
-import { MovementPutController } from "../movements/infrastructure/controllers/MovementPutController/MovementPutController";
-import { MovementPutValidator } from "../movements/infrastructure/controllers/MovementPutController/MovementPutValidator";
+import { VerifyAccessToken } from "@/Auth/infrastructure/middlewares";
+import {
+	MovementDeleteController,
+	MovementDeleteValidator,
+} from "@/Movements/infrastructure/controllers/MovementDeleteController";
+import {
+	MovementGetController,
+	MovementGetValidator,
+} from "@/Movements/infrastructure/controllers/MovementGetController";
+import {
+	MovementIdGetController,
+	MovementIdGetValidator,
+} from "@/Movements/infrastructure/controllers/MovementIdGetController";
+import {
+	MovementPostController,
+	MovementPostValidator,
+} from "@/Movements/infrastructure/controllers/MovementPostController";
+import {
+	MovementPutController,
+	MovementPutValidator,
+} from "@/Movements/infrastructure/controllers/MovementPutController";
 
 export const movementsRouter = Router();
 export const movementsRouterPath = "/movements";

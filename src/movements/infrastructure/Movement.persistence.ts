@@ -14,32 +14,32 @@ import { UserPersistence } from "@/Users/infrastructure/Users.persistence";
 @Entity({ name: "Movements" })
 export class MovementPersistence {
 	@PrimaryColumn({ type: "uuid" })
-	id: string;
+	id!: string;
 
 	@Column()
-	concept: string;
+	concept!: string;
 
 	@Column({ type: "decimal", precision: 15, scale: 2 })
-	amount: string;
+	amount!: string;
 
 	@Column({ type: "date" })
-	date: string;
+	date!: string;
 
 	@ManyToOne(() => UserPersistence, { nullable: false })
-	user: UserPersistence;
+	user!: UserPersistence;
 
 	@RelationId((movement: MovementPersistence) => movement.user)
-	userId: string;
+	userId!: string;
 
 	@Column({
 		type: "enum",
 		enum: BudgetMovementType,
 	})
-	type: BudgetMovementType;
+	type!: BudgetMovementType;
 
 	@UpdateDateColumn()
-	updatedAt: Date;
+	updatedAt!: Date;
 
 	@CreateDateColumn()
-	createdAt: Date;
+	createdAt!: Date;
 }

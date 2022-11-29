@@ -35,5 +35,5 @@ export const AuthRefreshTokenGetValidator = (
 
 	req.body.refreshToken = parseBearerToken(value.headers["x-refresh-token"]);
 
-	next();
+	return next();
 };

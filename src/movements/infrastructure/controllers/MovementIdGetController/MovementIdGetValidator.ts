@@ -36,5 +36,5 @@ export const MovementIdGetValidator = (
 
 	req.body.accessToken = parseBearerToken(value.headers.authorization);
 
-	next();
+	return next();
 };

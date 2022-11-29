@@ -38,5 +38,5 @@ export const AuthLoginPostValidator = (
 
 	req.body = authLoginDto;
 
-	next();
+	return next();
 };

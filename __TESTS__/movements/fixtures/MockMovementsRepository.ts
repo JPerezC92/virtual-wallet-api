@@ -10,7 +10,7 @@ export const MockMovementsRepository: () => MovementsRepository = () => {
 			return movementList;
 		},
 
-		query: async (props: {
+		query: async (_props: {
 			page: number;
 			limit: number;
 		}): Promise<{ movementList: Movement[]; pages: number }> => {
@@ -20,7 +20,7 @@ export const MockMovementsRepository: () => MovementsRepository = () => {
 		persist: async (movement): Promise<void> => {
 			movementList = [...movementList, movement];
 		},
-		findOne: async ({ id, userId }): Promise<Movement | undefined> => {
+		findOne: async ({ id, userId: _userId }): Promise<Movement | undefined> => {
 			return movementList.find((movement) => movement.id === id);
 		},
 		update: async (movement): Promise<void> => {

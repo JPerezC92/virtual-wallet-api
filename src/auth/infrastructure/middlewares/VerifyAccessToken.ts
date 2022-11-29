@@ -16,7 +16,7 @@ export const VerifyAccessToken = async (
 
 		req.body.accessPayload = accessTokenPayload;
 
-		next();
+		return next();
 	} catch (error) {
 		const badRequest = new BadRequest();
 

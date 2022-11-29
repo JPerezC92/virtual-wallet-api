@@ -116,8 +116,6 @@ describe(`PUT ${mainRouterPath}${movementsRouterPath}/:id`, () => {
 	});
 
 	test("should return an error response if the movement is not found", async () => {
-		const movementMock = { ...movementMockList[0] };
-
 		const response = await request(app)
 			.put(
 				`${mainRouterPath}${movementsRouterPath}/${JsUuidGenerator().generate()}`

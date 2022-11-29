@@ -28,5 +28,5 @@ export const AuthLogoutGetValidator = (
 
 	req.body.accessToken = parseBearerToken(value.headers.authorization);
 
-	next();
+	return next();
 };
