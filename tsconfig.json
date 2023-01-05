@@ -1,32 +1,25 @@
 {
 	"compilerOptions": {
-		"target": "es2016",
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
 		"module": "commonjs",
-		"moduleResolution": "node",
-		"resolveJsonModule": true,
+		"declaration": true,
+		"removeComments": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "es2017",
 		"sourceMap": true,
 		"outDir": "./dist",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": false,
-		"strict": true,
-		"strictPropertyInitialization": true,
+		"baseUrl": "./",
+		"incremental": true,
 		"skipLibCheck": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noImplicitReturns": true,
-		"noFallthroughCasesInSwitch": true,
-		"baseUrl": ".",
+		"strictNullChecks": false,
+		"noImplicitAny": false,
+		"strictBindCallApply": false,
+		"forceConsistentCasingInFileNames": false,
+		"noFallthroughCasesInSwitch": false,
 		"paths": {
-			"@/Users/*": ["src/users/*"],
-			"@/Movements/*": ["src/movements/*"],
-			"@/Routes/*": ["src/routes/*"],
-			"@/Shared/*": ["src/shared/*"],
-			"@/Budgets/*": ["src/budgets/*"],
-			"@/Auth/*": ["src/auth/*"]
+			"@/Auth/*": ["src/auth/*"],
+			"@/*": ["*"]
 		}
-	},
-	"include": ["src/**/*", "__TESTS__"],
-	"exclude": ["node_modules", "dist", "jest.config.ts"]
+	}
 }

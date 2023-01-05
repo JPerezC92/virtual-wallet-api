@@ -1,106 +1,73 @@
-# Administración de presupuesto personal
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
-Esta es una solución para el reto Full Stack de Alkemy.
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-## Relacionado
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-El proyecto esta dividido en 2 repositorios
+## Description
 
-- [Frontend](https://github.com/JPerezC92/challenge-full-stack-alkemy-frontend)
-- [Backend](https://github.com/JPerezC92/challenge-full-stack-alkemy-backend)
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Variables de entorno
-
-Para iniciar este proyecto, tendras que añadir las siguientes variables de entorno a tu archivo .env
-
-`PORT`
-
-### DATABASE
-
-`DATABASE_HOST`
-
-`DATABASE_PORT`
-
-`DATABASE_USERNAME`
-
-`DATABASE_PASSWORD`
-
-`DATABASE_NAME`
-
-### Tokens secrets
-
-`JWT_ACCESSS_TOKEN_SECRET`
-
-`JWT_REFRESH_TOKEN_SECRET`
-
-## Como iniciar el proyecto
-
-Clonar el proyecto
+## Installation
 
 ```bash
-  git clone https://github.com/JPerezC92/challenge-full-stack-alkemy-backend.git
+$ pnpm install
 ```
 
-Ir al directorio del proyecto
+## Running the app
 
 ```bash
-  cd challenge-full-stack-alkemy-backend
+# development
+$ pnpm run start
+
+# watch mode
+$ pnpm run start:dev
+
+# production mode
+$ pnpm run start:prod
 ```
 
-Instalar las dependencias
+## Test
 
 ```bash
-  npm install
+# unit tests
+$ pnpm run test
+
+# e2e tests
+$ pnpm run test:e2e
+
+# test coverage
+$ pnpm run test:cov
 ```
 
-Iniciar la aplicación
+## Support
 
-```bash
-  npm run dev
-```
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
-## Requerimientos
+## Stay in touch
 
-- Deberás desarrollar una API en Node.js junto a cualquiera de los siguientes frameworks, en sus versiones estables:
+- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-  - Express
-  - Adonis
-  - Koa
+## License
 
-- En el caso de querer utilizar otro framework es posible, pero debe consultarse con anterioridad.
-
-- Los datos mostrados deben ser persistidos en una base de datos relacional. El esquema de
-  datos puede armarse según se considere apropiado en base a los requerimientos del
-  negocio. La API deberá exponer URLS que devuelvan datos en JSON.
-
-- Estos datos en JSON deberán ser consumidos por un cliente, a través de peticiones AJAX.
-- El cliente puede ser armado con React.js.
-- El trabajo realizado se subirá a un repositorio.
-
-- Esta es un tipo de aplicación con la que podemos practicar diseños de UI más elaborados. Intenta hacerla bonita y con animaciones!
-
-## Secciones
-
-### Home
-
-- La pantalla de inicio deberá mostrar el balance actual, es decir, el resultante de los ingresos y egresos de dinero cargados, y un listado de los últimos 10 registrados.
-
-### ABM de operaciones (ingresos y egresos)
-
-- La aplicación deberá contener:
-  - Formulario de registro de operación. El mismo deberá contener:
-    - Concepto
-    - Monto
-    - Fecha
-    - Tipo (ingreso o egreso)
-  - Listado de operaciones registradas según su tipo (ingreso o egreso).
-  - Desde el listado, se debe poder modificar o eliminar una operación registrada previamente. No debe ser posible modificar el tipo de operación (ingreso o egreso) una vez creada.
-
-## Bonus
-
-### Autenticación de usuarios
-
-Agregar un formulario de registro y login para permitir identificar al usuario que utiliza la
-aplicación, y vincular las operaciones registradas al usuario autenticado en el sistema,
-tanto para el listado y creación de nuevos registros. Los datos indispensables para permitir
-el ingreso deben ser un email y contraseña, pudiendo agregar los que se deseen.
+Nest is [MIT licensed](LICENSE).
