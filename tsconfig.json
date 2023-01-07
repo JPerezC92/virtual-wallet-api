@@ -12,13 +12,23 @@
 		"baseUrl": "./",
 		"incremental": true,
 		"skipLibCheck": true,
-		"strictNullChecks": false,
-		"noImplicitAny": false,
+		"strictNullChecks": true,
+		"noImplicitAny": true,
 		"strictBindCallApply": false,
 		"forceConsistentCasingInFileNames": false,
-		"noFallthroughCasesInSwitch": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
+		"noFallthroughCasesInSwitch": true,
+		"strictPropertyInitialization": true,
+		"noUncheckedIndexedAccess": true,
+		"strict": true,
 		"paths": {
+			"@/Users/*": ["src/users/*"],
+			"@/Shared/*": ["src/shared/*"],
+			"@/Database/*": ["src/database/*"],
 			"@/Auth/*": ["src/auth/*"],
+			"@/Test/*": ["test/*"],
 			"@/*": ["*"]
 		}
 	}
