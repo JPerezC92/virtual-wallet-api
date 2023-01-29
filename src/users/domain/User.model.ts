@@ -8,6 +8,7 @@ interface UserProps {
 	readonly lastName: string;
 	readonly email: string;
 	readonly password: string;
+	readonly tokens: Record<string, string>;
 
 	readonly createdAt: Date;
 	readonly updatedAt: Date;
@@ -18,6 +19,7 @@ export class User implements UserProps {
 	readonly firstName: string;
 	readonly lastName: string;
 	readonly email: string;
+	readonly tokens: Record<string, string>;
 	readonly password: string;
 	// readonly accountList: Account[];
 	readonly createdAt: Date;
@@ -28,13 +30,17 @@ export class User implements UserProps {
 		this.firstName = props.firstName;
 		this.lastName = props.lastName;
 		this.email = props.email;
+		this.tokens = props.tokens;
 		this.password = props.password;
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
 	}
 
 	public static async createNew(
-		props: Omit<UserProps, 'id' | 'createdAt' | 'updatedAt' | 'accountList'>,
+		props: Omit<
+			UserProps,
+			'id' | 'createdAt' | 'updatedAt' | 'accountList' | 'tokens'
+		>,
 		pc: PasswordCipher,
 	) {
 		const userId = crypto.randomUUID();
@@ -44,6 +50,7 @@ export class User implements UserProps {
 			firstName: props.firstName,
 			lastName: props.lastName,
 			email: props.email,
+			tokens: {},
 			password: await pc.encrypt(props.password),
 			createdAt: new Date(),
 			updatedAt: new Date(),

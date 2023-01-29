@@ -32,7 +32,7 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 					lastName: user.lastName,
 					email: user.email,
 					password: user.password,
-					tokens: {},
+					tokens: user.tokens,
 				},
 			});
 		},

@@ -1,18 +1,29 @@
+import { ConfigModule } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AuthController } from '@/Auth/infrastructure/auth.controller';
 import { AuthService } from '@/Auth/infrastructure/auth.service';
-import { BcryptPasswordCipher } from '@/Auth/infrastructure/service';
-import { PrismaService } from '@/Database/prisma.service';
-import { AppService } from '@/src/app.service';
+import {
+	AccessTokenCipher,
+	BcryptPasswordCipher,
+	RefreshTokenCipher,
+} from '@/Auth/infrastructure/service';
+import { DatabaseModule } from '@/Database/database.module';
 
 describe('AuthController', () => {
 	let controller: AuthController;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
+			imports: [ConfigModule, JwtModule, DatabaseModule],
 			controllers: [AuthController],
-			providers: [AuthService, AppService, PrismaService, BcryptPasswordCipher],
+			providers: [
+				AccessTokenCipher,
+				AuthService,
+				BcryptPasswordCipher,
+				RefreshTokenCipher,
+			],
 		}).compile();
 
 		controller = module.get<AuthController>(AuthController);

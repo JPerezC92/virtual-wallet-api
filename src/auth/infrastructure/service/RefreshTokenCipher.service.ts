@@ -2,24 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 
-import { AccessPayload, TokenCipher } from '@/Auth/domain';
+import { RefreshPayload, TokenCipher } from '@/Auth/domain';
 import { EnvVariables } from '@/Shared/infrastructure/utils';
 
 @Injectable()
-export class AccessTokenCipher implements TokenCipher<AccessPayload> {
+export class RefreshTokenCipher implements TokenCipher<RefreshPayload> {
 	constructor(
 		private jwtService: JwtService,
 		private configService: ConfigService<EnvVariables>,
 	) {}
-	encode(payload: AccessPayload): string {
+	encode(payload: RefreshPayload): string {
 		return this.jwtService.sign(payload, {
-			secret: this.configService.get('JWT_ACCESSS_TOKEN_SECRET'),
+			secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
 			expiresIn: '60s',
 		});
 	}
-	decode(token: string): AccessPayload {
-		return this.jwtService.verify<AccessPayload>(token, {
-			secret: this.configService.get('JWT_ACCESSS_TOKEN_SECRET'),
+	decode(token: string): RefreshPayload {
+		return this.jwtService.verify<RefreshPayload>(token, {
+			secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
 		});
 	}
 }

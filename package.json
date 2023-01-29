@@ -6,7 +6,6 @@
 	"private": true,
 	"license": "UNLICENSED",
 	"scripts": {
-		"env:load": "dotenv -e .env.development.local",
 		"build": "nest build",
 		"format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
 		"start": "nest start",
@@ -19,12 +18,14 @@
 		"test:cov": "jest --coverage",
 		"test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
 		"test:e2e": "jest --config ./test/jest-e2e.json",
+		"env:load": "dotenv -e .env.development.local",
 		"migrate": "pnpm env:load -- prisma migrate",
-		"migrate:dev": "pnpm migrate dev"
+		"migrate:dev": "pnpm migrate dev",
+		"migrate:reset": "pnpm migrate reset"
 	},
 	"dependencies": {
-		"@anatine/zod-nestjs": "1.8.0",
-		"@anatine/zod-openapi": "1.11.1",
+		"@anatine/zod-nestjs": "1.9.2",
+		"@anatine/zod-openapi": "1.12.0",
 		"@nestjs/common": "9.0.0",
 		"@nestjs/config": "2.2.0",
 		"@nestjs/core": "9.0.0",
@@ -36,6 +37,7 @@
 		"openapi3-ts": "3.1.2",
 		"passport-jwt": "4.0.1",
 		"reflect-metadata": "0.1.13",
+		"request-ip": "3.3.0",
 		"rxjs": "7.2.0",
 		"zod": "3.20.2"
 	},
@@ -48,6 +50,7 @@
 		"@types/jest": "29.2.4",
 		"@types/node": "18.11.18",
 		"@types/passport-jwt": "3.0.8",
+		"@types/request-ip": "0.0.37",
 		"@types/supertest": "2.0.11",
 		"@typescript-eslint/eslint-plugin": "5.0.0",
 		"@typescript-eslint/parser": "5.0.0",

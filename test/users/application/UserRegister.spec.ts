@@ -5,12 +5,7 @@ import { UserRegister } from '@/Users/application';
 import { User } from '@/Users/domain';
 import { UserModelToEndpoint } from '@/Users/infrastructure/adapters';
 
-const userCreate = {
-	firstName: 'userFirstNameTest',
-	lastName: 'userLastNameTest',
-	email: 'example@gmail.com',
-	password: '123456',
-};
+import { userCreateMock } from '../fixtures/userCreate.mock';
 
 describe('UserRegister use case', () => {
 	test('should create a new user', async () => {
@@ -21,12 +16,12 @@ describe('UserRegister use case', () => {
 			userRepository,
 			new BcryptPasswordCipher(),
 			UserModelToEndpoint,
-		).execute(userCreate);
+		).execute(userCreateMock);
 
 		return expect(user).toEqual({
-			firstName: userCreate.firstName,
-			lastName: userCreate.lastName,
-			email: userCreate.email,
+			firstName: userCreateMock.firstName,
+			lastName: userCreateMock.lastName,
+			email: userCreateMock.email,
 			id: expect.any(String),
 			createdAt: expect.any(Date),
 			updatedAt: expect.any(Date),
@@ -42,7 +37,7 @@ describe('UserRegister use case', () => {
 				userRepository,
 				new BcryptPasswordCipher(),
 				UserModelToEndpoint,
-			).execute(userCreate);
+			).execute(userCreateMock);
 		} catch (error) {
 			expect(error).toBeInstanceOf(UserAlreadyRegistered);
 		}

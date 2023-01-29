@@ -1,28 +1,26 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
 import {
 	AccessTokenCipher,
 	BcryptPasswordCipher,
+	RefreshTokenCipher,
 } from '@/Auth/infrastructure/service';
-import { PrismaService } from '@/Database/prisma.service';
-import { AppService } from '@/src/app.service';
+import { DatabaseModule } from '@/Database/database.module';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
 @Module({
-	imports: [
-		JwtModule.register({ secret: '123', signOptions: { expiresIn: '60s' } }),
-	],
+	imports: [ConfigModule, JwtModule, DatabaseModule],
 	exports: [BcryptPasswordCipher],
 	controllers: [AuthController],
 	providers: [
+		AccessTokenCipher,
 		AuthService,
 		BcryptPasswordCipher,
-		AccessTokenCipher,
-		AppService,
-		PrismaService,
+		RefreshTokenCipher,
 	],
 })
 export class AuthModule {}

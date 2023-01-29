@@ -1,2 +1,2 @@
-export * from './UserModelToEndpoint.schema';
-export * from './UserPersistenceToModel.schema';
+export * from './UserModelToEndpoint.adapter';
+export * from './UserPersistenceToModel.adapter';

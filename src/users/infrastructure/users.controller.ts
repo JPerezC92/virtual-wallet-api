@@ -10,6 +10,7 @@ import {
 	ApiBadRequestResponse,
 	ApiConflictResponse,
 	ApiCreatedResponse,
+	ApiTags,
 } from '@nestjs/swagger';
 
 import { UserAlreadyRegistered } from '@/Auth/domain';
@@ -18,8 +19,9 @@ import * as usersSchemas from '@/Users/infrastructure/schemas';
 
 import { UsersService } from './users.service';
 
-@UsePipes(ZodValidationPipe)
 @Controller('users')
+@ApiTags('users')
+@UsePipes(ZodValidationPipe)
 export class UsersController {
 	constructor(private usersService: UsersService) {}
 

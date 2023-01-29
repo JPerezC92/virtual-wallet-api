@@ -1,27 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
+
+import { UserLogin } from '@/Auth/application';
+import { AuthPrismaRepository } from '@/Auth/infrastructure/repos';
+import * as authSchemas from '@/Auth/infrastructure/schemas';
+import {
+	AccessTokenCipher,
+	BcryptPasswordCipher,
+	RefreshTokenCipher,
+} from '@/Auth/infrastructure/service';
+import { PrismaService } from '@/Database/prisma.service';
+import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
+import { UsersPrismaRepository } from '@/Users/infrastructure/repos';
 
 @Injectable()
 export class AuthService {
-	// constructor(
-	// 	private readonly prismaService: PrismaService,
-	// 	private readonly bcryptPasswordCipher: BcryptPasswordCipher,
-	// ) {}
-	// async registerUser(
-	// 	createuserDto: usersSchemas.UserCreateDto,
-	// 	exceptionMap: ExceptionMap,
-	// ): Promise<usersSchemas.UserEndpoint> {
-	// 	try {
-	// 		return await this.prismaService.$transaction(async (db) => {
-	// 			return await UserRegister(
-	// 				AuthPrismaRepository(db),
-	// 				UsersPrismaRepository(db),
-	// 				this.bcryptPasswordCipher,
-	// 				UserModelToEndpoint,
-	// 			).execute(createuserDto);
-	// 		});
-	// 	} catch (error) {
-	// 		const HttpException = ExceptionHandler(exceptionMap).find(error);
-	// 		throw HttpException();
-	// 	}
-	// }
+	constructor(
+		private readonly prismaService: PrismaService,
+		private readonly bcryptPasswordCipher: BcryptPasswordCipher,
+		private readonly accessTokenCipher: AccessTokenCipher,
+		private readonly refreshTokenCipher: RefreshTokenCipher,
+	) {}
+	async login(
+		credentials: authSchemas.CredentialsDto,
+		ip: Request['ip'],
+		exceptionMap: ExceptionMap,
+	): Promise<authSchemas.AuthTokenDto> {
+		try {
+			return await this.prismaService.$transaction(async (db) => {
+				return await UserLogin(
+					AuthPrismaRepository(db),
+					UsersPrismaRepository(db),
+					this.bcryptPasswordCipher,
+					this.accessTokenCipher,
+					this.refreshTokenCipher,
+					(data) => authSchemas.authToken.parse(data),
+				).execute({ credentials, ip });
+			});
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+			throw HttpException();
+		}
+	}
 }

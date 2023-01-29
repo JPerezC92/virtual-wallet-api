@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@anatine/zod-nestjs': 1.8.0
-  '@anatine/zod-openapi': 1.11.1
+  '@anatine/zod-nestjs': 1.9.2
+  '@anatine/zod-openapi': 1.12.0
   '@nestjs/cli': 9.0.0
   '@nestjs/common': 9.0.0
   '@nestjs/config': 2.2.0
@@ -18,6 +18,7 @@ specifiers:
   '@types/jest': 29.2.4
   '@types/node': 18.11.18
   '@types/passport-jwt': 3.0.8
+  '@types/request-ip': 0.0.37
   '@types/supertest': 2.0.11
   '@typescript-eslint/eslint-plugin': 5.0.0
   '@typescript-eslint/parser': 5.0.0
@@ -34,6 +35,7 @@ specifiers:
   prettier: 2.3.2
   prisma: 4.8.1
   reflect-metadata: 0.1.13
+  request-ip: 3.3.0
   rxjs: 7.2.0
   source-map-support: 0.5.20
   supertest: 6.1.3
@@ -45,8 +47,8 @@ specifiers:
   zod: 3.20.2
 
 dependencies:
-  '@anatine/zod-nestjs': 1.8.0_73fwrpclt2epvvlgqdeereqeya
-  '@anatine/zod-openapi': 1.11.1_26f3syjlpe3aomwtusmxknd77u
+  '@anatine/zod-nestjs': 1.9.2_tthipyobndrbddnefcpdwkpbcq
+  '@anatine/zod-openapi': 1.12.0_26f3syjlpe3aomwtusmxknd77u
   '@nestjs/common': 9.0.0_am7yutbq3niv3526eiuqe4mc3q
   '@nestjs/config': 2.2.0_yiwyuzecw5wwnx4lnkqqfhh7oi
   '@nestjs/core': 9.0.0_qstxb52zgkbbeu6bdedvtfp75m
@@ -58,6 +60,7 @@ dependencies:
   openapi3-ts: 3.1.2
   passport-jwt: 4.0.1
   reflect-metadata: 0.1.13
+  request-ip: 3.3.0
   rxjs: 7.2.0
   zod: 3.20.2
 
@@ -70,6 +73,7 @@ devDependencies:
   '@types/jest': 29.2.4
   '@types/node': 18.11.18
   '@types/passport-jwt': 3.0.8
+  '@types/request-ip': 0.0.37
   '@types/supertest': 2.0.11
   '@typescript-eslint/eslint-plugin': 5.0.0_7nil47z5g6fhz4w5tvdms7hcui
   '@typescript-eslint/parser': 5.0.0_uhaujixt4myxtnzhmcamhb342a
@@ -100,25 +104,25 @@ packages:
       '@jridgewell/trace-mapping': 0.3.17
     dev: true
 
-  /@anatine/zod-nestjs/1.8.0_73fwrpclt2epvvlgqdeereqeya:
-    resolution: {integrity: sha512-+3erKMNJ1w9FoOcl9W1aPCO4hC2A2OBG7ieOEDuvYuCwWw5a/Md7R16Kyp0/cecvne9hRPjhWelLa697ipEUwA==}
+  /@anatine/zod-nestjs/1.9.2_tthipyobndrbddnefcpdwkpbcq:
+    resolution: {integrity: sha512-R8DVdFPJ2TC1oZY5Nrg6+Vsfz9XmlL5mBpnpkiKtT66T7Xj4BU5oCyWEczYdoKJnX1plpzoHRR2mwm/6aNTpmw==}
     peerDependencies:
-      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
       '@nestjs/swagger': ^6.0.0
       openapi3-ts: ^2.0.0 || ^3.0.0
-      ts-deepmerge: ^4.0.0
-      zod: ^3.17.0 || ^3.18.0
+      ts-deepmerge: 4.0.0
+      zod: ^3.20.0
     dependencies:
-      '@anatine/zod-openapi': 1.11.1_26f3syjlpe3aomwtusmxknd77u
-      '@nestjs/core': 9.0.0_qstxb52zgkbbeu6bdedvtfp75m
+      '@anatine/zod-openapi': 1.12.0_26f3syjlpe3aomwtusmxknd77u
+      '@nestjs/common': 9.0.0_am7yutbq3niv3526eiuqe4mc3q
       '@nestjs/swagger': 6.1.4_6ww52e2xb3t2jwr53ne57ys52u
       openapi3-ts: 3.1.2
       ts-deepmerge: 4.0.0
       zod: 3.20.2
     dev: false
 
-  /@anatine/zod-openapi/1.11.1_26f3syjlpe3aomwtusmxknd77u:
-    resolution: {integrity: sha512-RgsUC5lNYBBRzOcUEIwoxrONslE5TVG7BAYkHAzl04EeZHgxU4i/Oxw8i4rKZv09P03nkjtSn2vdykVSske79Q==}
+  /@anatine/zod-openapi/1.12.0_26f3syjlpe3aomwtusmxknd77u:
+    resolution: {integrity: sha512-ZdkmQFXdc2us0nTBPWiJ3joHxsZoc5G79hKB8QzUuo73zp2A4t4TlBmOjS+hJfMnTBATfJutrlN/wK4DUq6ztg==}
     peerDependencies:
       openapi3-ts: ^2.0.0 || ^3.0.0
       zod: ^3.20.0
@@ -1376,6 +1380,12 @@ packages:
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+    dev: true
+
+  /@types/request-ip/0.0.37:
+    resolution: {integrity: sha512-uw6/i3rQnpznxD7LtLaeuZytLhKZK6bRoTS6XVJlwxIOoOpEBU7bgKoVXDNtOg4Xl6riUKHa9bjMVrL6ESqYlQ==}
+    dependencies:
+      '@types/node': 18.11.18
     dev: true
 
   /@types/serve-static/1.15.0:
@@ -4796,6 +4806,10 @@ packages:
     resolution: {integrity: sha512-pq2bWo9mVD43nbts2wGv17XLiNLya+GklZ8kaDLV2Z08gDCsGpnKn9BFMepvWuHCbyVvY7J5o5+BVvoQbmlJLg==}
     engines: {node: '>=8'}
     dev: true
+
+  /request-ip/3.3.0:
+    resolution: {integrity: sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==}
+    dev: false
 
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}

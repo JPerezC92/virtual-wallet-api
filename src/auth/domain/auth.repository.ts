@@ -1,5 +1,10 @@
+import { AuthToken } from '@/Auth/domain/';
 import { User } from '@/Users/domain';
 
 export interface AuthRepository {
-	register(user: User): Promise<void>;
+	updateRefreshToken(
+		user: User,
+		refreshToken: AuthToken['refreshToken'],
+		ip: string,
+	): Promise<void>;
 }
