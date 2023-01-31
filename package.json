@@ -11,7 +11,7 @@
 		"start": "nest start",
 		"start:dev": "pnpm env:load -- nest start --watch",
 		"start:debug": "nest start --debug --watch",
-		"start:prod": "node dist/main",
+		"start:prod": "node dist/src/main",
 		"lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
 		"test": "jest",
 		"test:watch": "pnpm env:load:test -- jest --watch",
@@ -22,7 +22,8 @@
 		"env:load": "dotenv -e .env.development.local",
 		"migrate": "pnpm env:load -- prisma migrate",
 		"migrate:dev": "pnpm migrate dev",
-		"migrate:reset": "pnpm migrate reset"
+		"migrate:reset": "pnpm migrate reset",
+		"build:deploy": "pnpm build && pnpm start:dev && killall node && vercel --prod"
 	},
 	"dependencies": {
 		"@anatine/zod-nestjs": "1.9.2",
@@ -33,6 +34,7 @@
 		"@nestjs/jwt": "10.0.1",
 		"@nestjs/passport": "9.0.0",
 		"@nestjs/platform-express": "9.0.0",
+		"@nestjs/serve-static": "3.0.0",
 		"@nestjs/swagger": "6.1.4",
 		"@prisma/client": "4.8.1",
 		"bcrypt": "5.1.0",

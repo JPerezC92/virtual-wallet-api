@@ -5,7 +5,7 @@ import { z } from 'zod';
 const BadRequestSchema = extendApi(
 	z.object({
 		statusCode: z.number().default(400),
-		message: z.array(z.string()),
+		message: z.array(z.string()).optional(),
 		error: z.string(),
 	}),
 	{ title: 'BadRequest', description: 'Bad request response' },

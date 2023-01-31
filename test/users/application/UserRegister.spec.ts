@@ -1,11 +1,10 @@
 import { UserAlreadyRegistered } from '@/Auth/domain';
 import { BcryptPasswordCipher } from '@/Auth/infrastructure/service';
+import { userCreateMock } from '@/Test/users/fixtures';
 import { UsersMockRepository } from '@/Test/users/infrastructure';
 import { UserRegister } from '@/Users/application';
 import { User } from '@/Users/domain';
 import { UserModelToEndpoint } from '@/Users/infrastructure/adapters';
-
-import { userCreateMock } from '../fixtures/userCreate.mock';
 
 describe('UserRegister use case', () => {
 	test('should create a new user', async () => {

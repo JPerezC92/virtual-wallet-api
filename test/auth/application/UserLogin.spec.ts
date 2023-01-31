@@ -48,7 +48,7 @@ describe('UserLogin use case', () => {
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(true);
 
 		const authToken = await UserLogin(
-			authMockRepository,
+			authMockRepository(),
 			usersMockRepository,
 			bcryptPasswordCipher,
 			accessTokenCipher,
@@ -72,7 +72,7 @@ describe('UserLogin use case', () => {
 
 		try {
 			await UserLogin(
-				authMockRepository,
+				authMockRepository(),
 				usersMockRepository,
 				bcryptPasswordCipher,
 				accessTokenCipher,
@@ -94,7 +94,7 @@ describe('UserLogin use case', () => {
 
 		try {
 			await UserLogin(
-				authMockRepository,
+				authMockRepository(),
 				usersMockRepository,
 				bcryptPasswordCipher,
 				accessTokenCipher,

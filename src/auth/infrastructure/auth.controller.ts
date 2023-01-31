@@ -3,6 +3,7 @@ import {
 	Body,
 	Controller,
 	Get,
+	HttpCode,
 	Post,
 	Req,
 	UnprocessableEntityException,
@@ -12,7 +13,6 @@ import {
 import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
-	ApiCreatedResponse,
 	ApiHeader,
 	ApiOkResponse,
 	ApiTags,
@@ -40,14 +40,15 @@ import * as usersSchemas from '@/Users/infrastructure/schemas';
 export class AuthController {
 	constructor(private readonly authService: AuthService) {}
 
-	@ApiCreatedResponse({ type: authSchemas.AuthTokenDto })
+	@ApiOkResponse({ type: authSchemas.AuthToken })
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
 	@ApiUnprocessableEntityResponse({ type: sharedSchemas.Error })
 	@Post()
-	registerUser(
+	@HttpCode(200)
+	login(
 		@Req() req: Request,
 		@Body() credentialsDto: authSchemas.CredentialsDto,
-	): Promise<authSchemas.AuthTokenDto> {
+	): Promise<authSchemas.AuthToken> {
 		return this.authService.login(
 			credentialsDto,
 			requestIP.getClientIp(req) || req.ip,
@@ -64,11 +65,19 @@ export class AuthController {
 		return usersSchemas.UserEndpoint.parse(user);
 	}
 
+	@ApiOkResponse({ type: authSchemas.AuthToken })
 	@ApiHeader({ name: 'x-refresh-token' })
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
 	@UseGuards(RefreshJwtAuthGuard)
 	@Get('refresh-token')
-	refreshToken(@UserFromReq() user: User) {
-		return { user };
+	@HttpCode(200)
+	refreshToken(
+		@Req() req: Request,
+		@UserFromReq() user: User,
+	): Promise<authDomain.AuthToken> {
+		return this.authService.refreshToken(
+			user,
+			requestIP.getClientIp(req) || req.ip,
+		);
 	}
 }
