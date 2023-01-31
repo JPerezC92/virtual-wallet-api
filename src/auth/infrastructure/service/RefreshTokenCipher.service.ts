@@ -14,7 +14,7 @@ export class RefreshTokenCipher implements TokenCipher<RefreshPayload> {
 	encode(payload: RefreshPayload): string {
 		return this.jwtService.sign(payload, {
 			secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
-			expiresIn: '60s',
+			expiresIn: '3 days',
 		});
 	}
 	decode(token: string): RefreshPayload {

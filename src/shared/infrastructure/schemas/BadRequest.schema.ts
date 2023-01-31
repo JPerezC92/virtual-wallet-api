@@ -8,7 +8,7 @@ const BadRequestSchema = extendApi(
 		message: z.array(z.string()),
 		error: z.string(),
 	}),
-	{ title: 'BadRequestErrorSchema', description: 'Bad request response' },
+	{ title: 'BadRequest', description: 'Bad request response' },
 );
 
 export class BadRequest extends createZodDto(BadRequestSchema) {}

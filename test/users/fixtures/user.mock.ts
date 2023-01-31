@@ -1,6 +1,6 @@
 import { User } from '@/Users/domain';
 
-export const userMock: User = {
+export const userMock: User = new User({
 	firstName: 'userFirstNameTest',
 	lastName: 'userLastNameTest',
 	email: 'example@gmail.com',
@@ -9,4 +9,4 @@ export const userMock: User = {
 	tokens: {},
 	createdAt: new Date(),
 	updatedAt: new Date(),
-};
+});

@@ -3,12 +3,12 @@ import { JwtModule } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { AuthController } from '@/Auth/infrastructure/auth.controller';
-import { AuthService } from '@/Auth/infrastructure/auth.service';
 import {
 	AccessTokenCipher,
 	BcryptPasswordCipher,
 	RefreshTokenCipher,
 } from '@/Auth/infrastructure/service';
+import { AuthService } from '@/Auth/infrastructure/service/auth.service';
 import { DatabaseModule } from '@/Database/database.module';
 
 describe('AuthController', () => {

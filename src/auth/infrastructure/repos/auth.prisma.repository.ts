@@ -3,9 +3,9 @@ import { Repository } from '@/Shared/infrastructure/repos';
 
 export const AuthPrismaRepository: Repository<AuthRepository> = (db) => {
 	return {
-		updateRefreshToken: async (user, refreshToken, ip) => {
+		updateRefreshToken: async (user) => {
 			await db.user.update({
-				data: { tokens: { ...user.tokens, [ip]: refreshToken } },
+				data: { tokens: user.tokens },
 				where: { id: user.id },
 			});
 		},

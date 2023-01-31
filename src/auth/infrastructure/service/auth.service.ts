@@ -4,14 +4,13 @@ import { Request } from 'express';
 import { UserLogin } from '@/Auth/application';
 import { AuthPrismaRepository } from '@/Auth/infrastructure/repos';
 import * as authSchemas from '@/Auth/infrastructure/schemas';
-import {
-	AccessTokenCipher,
-	BcryptPasswordCipher,
-	RefreshTokenCipher,
-} from '@/Auth/infrastructure/service';
 import { PrismaService } from '@/Database/prisma.service';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
 import { UsersPrismaRepository } from '@/Users/infrastructure/repos';
+
+import { AccessTokenCipher } from './AccessTokenCipher.service';
+import { BcryptPasswordCipher } from './BcryptPasswordCipher.service';
+import { RefreshTokenCipher } from './RefreshTokenCipher.service';
 
 @Injectable()
 export class AuthService {

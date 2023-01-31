@@ -45,13 +45,14 @@ export const UserLogin: <AdapterReturn>(
 				throw new InvalidCredentials();
 			}
 
-			const authToken = _credentials.authenticate(
+			const authToken = user.authenticate(
 				user,
+				ip,
 				accessTokenCipher,
 				refreshTokenCipher,
 			);
 
-			await authRepository.updateRefreshToken(user, authToken.refreshToken, ip);
+			await authRepository.updateRefreshToken(user);
 
 			return outputAdapter(authToken);
 		},

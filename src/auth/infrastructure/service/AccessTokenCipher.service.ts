@@ -14,7 +14,7 @@ export class AccessTokenCipher implements TokenCipher<AccessPayload> {
 	encode(payload: AccessPayload): string {
 		return this.jwtService.sign(payload, {
 			secret: this.configService.get('JWT_ACCESSS_TOKEN_SECRET'),
-			expiresIn: '60s',
+			expiresIn: '10h',
 		});
 	}
 	decode(token: string): AccessPayload {

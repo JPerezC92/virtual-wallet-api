@@ -1,6 +1,12 @@
 import * as crypto from 'crypto';
 
-import { PasswordCipher } from '@/Auth/domain';
+import {
+	AccessPayload,
+	AuthToken,
+	PasswordCipher,
+	RefreshPayload,
+	TokenCipher,
+} from '@/Auth/domain';
 
 interface UserProps {
 	readonly id: string;
@@ -19,7 +25,7 @@ export class User implements UserProps {
 	readonly firstName: string;
 	readonly lastName: string;
 	readonly email: string;
-	readonly tokens: Record<string, string>;
+	tokens: Record<string, string>;
 	readonly password: string;
 	// readonly accountList: Account[];
 	readonly createdAt: Date;
@@ -55,5 +61,32 @@ export class User implements UserProps {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		});
+	}
+
+	public authenticate(
+		user: User,
+		ip: string,
+		AccessTokenCipher: TokenCipher<AccessPayload>,
+		RefreshTokenCipher: TokenCipher<RefreshPayload>,
+	): AuthToken {
+		const tokenId = crypto.randomUUID();
+		const refreshToken = RefreshTokenCipher.encode({
+			email: user.email,
+			tokenId,
+		});
+
+		this.tokens = { ...this.tokens, [ip]: tokenId };
+
+		return {
+			accessToken: AccessTokenCipher.encode({
+				email: user.email,
+				userId: user.id,
+			}),
+			refreshToken,
+		};
+	}
+
+	public static isUser(other: unknown): other is User {
+		return other instanceof User;
 	}
 }
