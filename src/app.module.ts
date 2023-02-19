@@ -4,6 +4,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 import { AuthModule } from '@/Auth/infrastructure/auth.module';
+import { CurrencyModule } from '@/Currency/infrastructure/currency.module';
 import { DatabaseModule } from '@/Database/database.module';
 import { UsersModule } from '@/Users/infrastructure/users.module';
 
@@ -22,6 +23,7 @@ import { AppService } from './app.service';
 		AuthModule,
 		UsersModule,
 		DatabaseModule,
+		CurrencyModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

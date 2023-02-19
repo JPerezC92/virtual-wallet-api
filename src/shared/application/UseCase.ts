@@ -1,3 +1,3 @@
-export interface UseCase<Output, Input = never> {
+export interface UseCase<Output, Input = void> {
 	execute(input: Input): Output;
 }

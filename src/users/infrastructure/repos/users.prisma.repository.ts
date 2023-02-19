@@ -5,7 +5,7 @@ import { UserPersistenceToModel } from '@/Users/infrastructure/adapters';
 export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 	return {
 		findByEmail: async (email) => {
-			const user = await db.user.findUnique({
+			const user = await db.userDB.findUnique({
 				where: { email },
 			});
 
@@ -15,7 +15,7 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 		},
 
 		findByUserId: async (userId) => {
-			const user = await db.user.findUnique({
+			const user = await db.userDB.findUnique({
 				where: { id: userId },
 			});
 
@@ -25,7 +25,7 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 		},
 
 		register: async (user) => {
-			await db.user.create({
+			await db.userDB.create({
 				data: {
 					id: user.id,
 					firstName: user.firstName,

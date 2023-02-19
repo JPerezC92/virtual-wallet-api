@@ -1,4 +1,4 @@
-import { User as UserPrisma } from '@prisma/client';
+import { UserDB } from '@prisma/client';
 import { z } from 'zod';
 
 import { User } from '@/Users/domain';
@@ -16,6 +16,6 @@ const userStoreValidator = z
 	})
 	.transform((userStored) => new User(userStored));
 
-export function UserPersistenceToModel(userStored: UserPrisma): User {
+export function UserPersistenceToModel(userStored: UserDB): User {
 	return userStoreValidator.parse(userStored);
 }

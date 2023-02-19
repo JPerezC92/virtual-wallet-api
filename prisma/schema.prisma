@@ -11,13 +11,62 @@ datasource db {
   relationMode = "prisma"
 }
 
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
+model UserDB {
+  id        String      @id @default(uuid())
+  email     String      @unique
   firstName String
   lastName  String
   password  String
-  tokens    Json     @db.Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  tokens    Json        @db.Json
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now())
+  AccountDB AccountDB[]
+
+  @@map("User")
+}
+
+enum TransactionType {
+  PAYMENT
+  TOPUP
+  TRANSFERENCE
+}
+
+model Currency {
+  value     String      @id @unique
+  AccountDB AccountDB[]
+}
+
+model AccountDB {
+  id              String       @id @default(uuid())
+  money           Int          @default(0)
+  user            UserDB       @relation(fields: userId, references: [id])
+  userId          String
+  currency        Currency     @relation(fields: currencyValue, references: [value])
+  currencyValue   String
+  movementList    MovementDB[] @relation("MovementList")
+  tranferenceList MovementDB[] @relation("TranferList")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @default(now())
+
+  @@index([userId])
+  @@index([currencyValue])
+  @@map("Account")
+}
+
+model MovementDB {
+  id          String          @id @default(uuid())
+  type        TransactionType
+  amount      Int
+  date        DateTime
+  description String
+  account     AccountDB       @relation("MovementList", fields: accountId, references: [id])
+  accountId   String
+  toAccount   AccountDB?      @relation("TranferList", fields: toAccountId, references: [id])
+  toAccountId String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @default(now())
+
+  @@index([accountId])
+  @@index([toAccountId])
+  @@map("Movement")
 }
