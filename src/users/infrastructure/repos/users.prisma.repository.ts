@@ -7,6 +7,7 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 		findByEmail: async (email) => {
 			const user = await db.userDB.findUnique({
 				where: { email },
+				include: { accountList: true },
 			});
 
 			if (!user) return;

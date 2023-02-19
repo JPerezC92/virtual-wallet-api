@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
+import { AccountsModule } from '@/Accounts/infrastructure/accounts.module';
 import { AuthModule } from '@/Auth/infrastructure/auth.module';
 import { CurrencyModule } from '@/Currency/infrastructure/currency.module';
 import { DatabaseModule } from '@/Database/database.module';
@@ -24,6 +25,7 @@ import { AppService } from './app.service';
 		UsersModule,
 		DatabaseModule,
 		CurrencyModule,
+		AccountsModule,
 	],
 	controllers: [AppController],
 	providers: [AppService],

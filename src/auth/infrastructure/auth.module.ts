@@ -4,6 +4,7 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { AuthController } from '@/Auth/infrastructure/auth.controller';
 import {
+	AccessJwtAuthGuard,
 	AccessJwtStrategy,
 	AccessTokenCipher,
 	AuthService,
@@ -15,9 +16,10 @@ import { DatabaseModule } from '@/Database/database.module';
 
 @Module({
 	imports: [ConfigModule, JwtModule, DatabaseModule],
-	exports: [BcryptPasswordCipher],
+	exports: [BcryptPasswordCipher, AccessJwtAuthGuard],
 	controllers: [AuthController],
 	providers: [
+		AccessJwtAuthGuard,
 		AccessJwtStrategy,
 		RefreshJwtStrategy,
 		AccessTokenCipher,

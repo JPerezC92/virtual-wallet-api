@@ -10,5 +10,9 @@ export const CurrencyPrismaRepository: Repository<CurrencyRepository> = (
 
 			return currencyList.map((currency) => currency.value);
 		},
+		findDefault: async () => {
+			const currency = await db.currency.findFirstOrThrow();
+			return currency.value;
+		},
 	};
 };

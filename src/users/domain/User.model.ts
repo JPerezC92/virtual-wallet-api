@@ -1,5 +1,6 @@
 import * as crypto from 'crypto';
 
+import { Account, AccountsRepository } from '@/Accounts/domain';
 import {
 	AccessPayload,
 	AuthToken,
@@ -7,6 +8,7 @@ import {
 	RefreshPayload,
 	TokenCipher,
 } from '@/Auth/domain';
+import { CurrencyRepository } from '@/Currency/domain';
 
 interface UserProps {
 	readonly id: string;
@@ -15,7 +17,7 @@ interface UserProps {
 	readonly email: string;
 	readonly password: string;
 	readonly tokens: Record<string, string>;
-
+	readonly accountList: Account[];
 	readonly createdAt: Date;
 	readonly updatedAt: Date;
 }
@@ -27,7 +29,7 @@ export class User implements UserProps {
 	readonly email: string;
 	tokens: Record<string, string>;
 	readonly password: string;
-	// readonly accountList: Account[];
+	readonly accountList: Account[];
 	readonly createdAt: Date;
 	readonly updatedAt: Date;
 
@@ -38,6 +40,7 @@ export class User implements UserProps {
 		this.email = props.email;
 		this.tokens = props.tokens;
 		this.password = props.password;
+		this.accountList = props.accountList;
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
 	}
@@ -45,11 +48,20 @@ export class User implements UserProps {
 	public static async createNew(
 		props: Omit<
 			UserProps,
-			'id' | 'createdAt' | 'updatedAt' | 'accountList' | 'tokens'
+			| 'id'
+			| 'createdAt'
+			| 'updatedAt'
+			| 'accountList'
+			| 'tokens'
+			| 'accountIdList'
 		>,
+		accountsRepository: AccountsRepository,
+		currencyRepository: CurrencyRepository,
 		pc: PasswordCipher,
 	) {
 		const userId = crypto.randomUUID();
+		const account = await Account.createDefault(userId, currencyRepository);
+		await accountsRepository.create(account);
 
 		return new User({
 			id: userId,
@@ -60,6 +72,7 @@ export class User implements UserProps {
 			password: await pc.encrypt(props.password),
 			createdAt: new Date(),
 			updatedAt: new Date(),
+			accountList: [account],
 		});
 	}
 

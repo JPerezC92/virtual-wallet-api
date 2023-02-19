@@ -12,15 +12,15 @@ datasource db {
 }
 
 model UserDB {
-  id        String      @id @default(uuid())
-  email     String      @unique
-  firstName String
-  lastName  String
-  password  String
-  tokens    Json        @db.Json
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @default(now())
-  AccountDB AccountDB[]
+  id          String      @id @default(uuid())
+  email       String      @unique
+  firstName   String
+  lastName    String
+  password    String
+  tokens      Json        @db.Json
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  accountList AccountDB[]
 
   @@map("User")
 }

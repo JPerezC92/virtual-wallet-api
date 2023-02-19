@@ -1,10 +1,7 @@
 import { CurrencyFindAll } from '@/Currency/application';
+import { CurrencyMockRepository } from '@/Test/currency/infrastructure/CurrencyMockRepository';
 
 const currencyList = () => ['USD', 'EUR', 'GBP'];
-
-const CurrencyMockRepository = () => ({
-	findAll: jest.fn(),
-});
 
 describe('CurrencyFindAll use case', () => {
 	test('should return a list of currencies', async () => {

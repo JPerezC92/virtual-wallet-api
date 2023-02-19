@@ -19,6 +19,7 @@ export function ExceptionHandler(exceptionList: ExceptionMap) {
 		const _exceptionList = new Map(exceptionList);
 
 		if (!DomainError.isDomainError(error)) {
+			console.log(error);
 			return () => new InternalServerErrorException();
 		}
 
