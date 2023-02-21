@@ -1,12 +1,18 @@
 import { CurrenciesRepository } from '@/Currencies/domain';
-import { UseCase } from '@/Shared/application';
+import { Adapter, UseCase } from '@/Shared/application';
 
-export const CurrencyFindAll: (
+export const CurrencyFindAll: <AdapterReturn>(
 	currenciesRepository: CurrenciesRepository,
-) => UseCase<Promise<string[]>> = (currenciesRepository) => {
+	outputAdapter: Adapter<string[], AdapterReturn>,
+) => UseCase<Promise<AdapterReturn>> = (
+	currenciesRepository,
+	outputAdapter,
+) => {
 	return {
-		execute: () => {
-			return currenciesRepository.findAll();
+		execute: async () => {
+			const currencyList = await currenciesRepository.findAll();
+
+			return outputAdapter(currencyList);
 		},
 	};
 };

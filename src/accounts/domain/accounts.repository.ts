@@ -1,5 +1,7 @@
-import { Account } from '@/Accounts/domain/Account.model';
+import { Account } from '@/Accounts/domain';
+import { User } from '@/Users/domain';
 
 export interface AccountsRepository {
-	create: (account: Account) => Promise<Account>;
+	create: (account: Account, user: User) => Promise<Account>;
+	createDefault: (account: Account) => Promise<Account>;
 }

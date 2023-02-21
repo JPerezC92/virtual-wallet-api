@@ -5,7 +5,7 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 	db,
 ) => {
 	return {
-		create: async (account) => {
+		createDefault: async (account) => {
 			await db.accountDB.create({
 				data: {
 					id: account.id,
@@ -14,6 +14,24 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 					userId: account.userId,
 					updatedAt: account.updatedAt,
 					createdAt: account.createdAt,
+				},
+			});
+
+			return account;
+		},
+		create: async (account, user) => {
+			await db.userDB.update({
+				where: { id: user.id, updatedAt: user.updatedAt },
+				data: {
+					accountList: {
+						create: {
+							id: account.id,
+							money: account.money,
+							currencyValue: account.currency,
+							updatedAt: account.updatedAt,
+							createdAt: account.createdAt,
+						},
+					},
 				},
 			});
 

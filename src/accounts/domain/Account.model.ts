@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-import { CurrencyRepository } from '@/Currency/domain';
+import { CurrenciesRepository } from '@/Currencies/domain';
 import { User } from '@/Users/domain';
 
 interface AccountProps {
@@ -29,11 +29,7 @@ export class Account {
 		this.updatedAt = props.updatedAt;
 	}
 
-	public static async createDefault(
-		userId: User['id'],
-		currencyRepository: CurrencyRepository,
-	): Promise<Account> {
-		const currency = await currencyRepository.findDefault();
+	static createNew(userId: User['id'], currency: string): Account {
 		return new Account({
 			id: crypto.randomUUID(),
 			money: 0,
@@ -42,5 +38,13 @@ export class Account {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		});
+	}
+
+	public static async createDefault(
+		userId: User['id'],
+		currencyRepository: CurrenciesRepository,
+	): Promise<Account> {
+		const currency = await currencyRepository.findDefault();
+		return Account.createNew(userId, currency);
 	}
 }

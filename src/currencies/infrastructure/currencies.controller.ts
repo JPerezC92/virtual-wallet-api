@@ -1,8 +1,13 @@
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
 import { Controller, Get, UsePipes } from '@nestjs/common';
-import { ApiInternalServerErrorResponse, ApiTags } from '@nestjs/swagger';
+import {
+	ApiInternalServerErrorResponse,
+	ApiOkResponse,
+	ApiTags,
+} from '@nestjs/swagger';
 
-import { CurrenciesService } from '@/Currencies/infrastructure/service/currencies.service';
+import { CurrencyList } from '@/Currencies/infrastructure/schemas';
+import { CurrenciesService } from '@/Currencies/infrastructure/service';
 import * as sharedSchemas from '@/Shared/infrastructure/schemas';
 
 @Controller('currencies')
@@ -12,8 +17,9 @@ export class CurrenciesController {
 	constructor(readonly currenciesService: CurrenciesService) {}
 
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiOkResponse({ type: CurrencyList })
 	@Get()
-	findAll() {
+	findAll(): Promise<CurrencyList> {
 		return this.currenciesService.findAll();
 	}
 }
