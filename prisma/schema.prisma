@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["extendedWhereUnique"]
 }
 
 datasource db {
@@ -19,7 +20,7 @@ model UserDB {
   password    String
   tokens      Json        @db.Json
   createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   accountList AccountDB[]
 
   @@map("User")
@@ -46,7 +47,7 @@ model AccountDB {
   movementList    MovementDB[] @relation("MovementList")
   tranferenceList MovementDB[] @relation("TranferList")
   createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   @@index([userId])
   @@index([currencyValue])
@@ -64,7 +65,7 @@ model MovementDB {
   toAccount   AccountDB?      @relation("TranferList", fields: toAccountId, references: [id])
   toAccountId String?
   createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@index([accountId])
   @@index([toAccountId])

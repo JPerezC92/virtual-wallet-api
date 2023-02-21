@@ -1,5 +1,5 @@
-import { CurrencyFindAll } from '@/Currency/application';
-import { CurrencyMockRepository } from '@/Test/currency/infrastructure/CurrencyMockRepository';
+import { CurrencyFindAll } from '@/Currencies/application';
+import { CurrencyMockRepository } from '@/Test/currencies/infrastructure';
 
 const currencyList = () => ['USD', 'EUR', 'GBP'];
 

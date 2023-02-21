@@ -1,7 +1,7 @@
-import { CurrencyRepository } from '@/Currency/domain';
+import { CurrenciesRepository } from '@/Currencies/domain';
 import { Repository } from '@/Shared/infrastructure/repos';
 
-export const CurrencyPrismaRepository: Repository<CurrencyRepository> = (
+export const CurrenciesPrismaRepository: Repository<CurrenciesRepository> = (
 	db,
 ) => {
 	return {
@@ -13,6 +13,15 @@ export const CurrencyPrismaRepository: Repository<CurrencyRepository> = (
 		findDefault: async () => {
 			const currency = await db.currency.findFirstOrThrow();
 			return currency.value;
+		},
+		findByValue: async (currency) => {
+			const _currency = await db.currency.findUnique({
+				where: { value: currency },
+			});
+
+			if (!_currency) return;
+
+			return _currency.value;
 		},
 	};
 };

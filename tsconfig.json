@@ -25,7 +25,7 @@
 		"strict": true,
 		"paths": {
 			"@/Accounts/*": ["src/accounts/*"],
-			"@/Currency/*": ["src/currency/*"],
+			"@/Currencies/*": ["src/currencies/*"],
 			"@/Users/*": ["src/users/*"],
 			"@/Shared/*": ["src/shared/*"],
 			"@/Database/*": ["src/database/*"],

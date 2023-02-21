@@ -5,7 +5,7 @@ import { join } from 'path';
 
 import { AccountsModule } from '@/Accounts/infrastructure/accounts.module';
 import { AuthModule } from '@/Auth/infrastructure/auth.module';
-import { CurrencyModule } from '@/Currency/infrastructure/currency.module';
+import { CurrenciesModule } from '@/Currencies/infrastructure/currencies.module';
 import { DatabaseModule } from '@/Database/database.module';
 import { UsersModule } from '@/Users/infrastructure/users.module';
 
@@ -24,7 +24,7 @@ import { AppService } from './app.service';
 		AuthModule,
 		UsersModule,
 		DatabaseModule,
-		CurrencyModule,
+		CurrenciesModule,
 		AccountsModule,
 	],
 	controllers: [AppController],

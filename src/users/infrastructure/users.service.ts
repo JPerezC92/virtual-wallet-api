@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
-import { AccountsPrismaRepository } from '@/Accounts/infrastructure/repos/accounts.prisma.repository';
+import { AccountsPrismaRepository } from '@/Accounts/infrastructure/repos';
 import { BcryptPasswordCipher } from '@/Auth/infrastructure/service';
-import { CurrencyPrismaRepository } from '@/Currency/infrastructure/repos/currency.prisma.repository';
+import { CurrenciesPrismaRepository } from '@/Currencies/infrastructure/repos';
 import { PrismaService } from '@/Database/prisma.service';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
 import { UserRegister } from '@/Users/application';
@@ -25,7 +25,7 @@ export class UsersService {
 			return await this.prismaService.$transaction(async (db) => {
 				return await UserRegister(
 					AccountsPrismaRepository(db),
-					CurrencyPrismaRepository(db),
+					CurrenciesPrismaRepository(db),
 					UsersPrismaRepository(db),
 					this.bcryptPasswordCipher,
 					UserModelToEndpoint,

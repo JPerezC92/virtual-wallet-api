@@ -1,6 +1,6 @@
 import { AccountsRepository } from '@/Accounts/domain';
 import { PasswordCipher, UserAlreadyRegistered } from '@/Auth/domain';
-import { CurrencyRepository } from '@/Currency/domain';
+import { CurrenciesRepository } from '@/Currencies/domain';
 import { Adapter, UseCase } from '@/Shared/application';
 import { User, UsersRepository } from '@/Users/domain';
 
@@ -14,7 +14,7 @@ type UserRegisterInput = Pick<
  */
 export const UserRegister: <AdapterReturn>(
 	accountsRepository: AccountsRepository,
-	currencyRepository: CurrencyRepository,
+	currencyRepository: CurrenciesRepository,
 	usersRepository: UsersRepository,
 	passwordEncryptor: PasswordCipher,
 	outputAdapter: Adapter<User, AdapterReturn>,

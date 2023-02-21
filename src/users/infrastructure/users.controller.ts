@@ -10,6 +10,7 @@ import {
 	ApiBadRequestResponse,
 	ApiConflictResponse,
 	ApiCreatedResponse,
+	ApiInternalServerErrorResponse,
 	ApiTags,
 } from '@nestjs/swagger';
 
@@ -28,11 +29,12 @@ export class UsersController {
 	@Post()
 	@ApiCreatedResponse({ type: usersSchemas.User })
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
-	@ApiConflictResponse({ type: sharedSchemas.Error })
+	@ApiConflictResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	registerUser(
-		@Body() createuserDto: usersSchemas.UserCreateDto,
+		@Body() userCreateDto: usersSchemas.UserCreateDto,
 	): Promise<usersSchemas.UserEndpoint> {
-		return this.usersService.registerUser(createuserDto, [
+		return this.usersService.registerUser(userCreateDto, [
 			[UserAlreadyRegistered.name, ConflictException],
 		]);
 	}

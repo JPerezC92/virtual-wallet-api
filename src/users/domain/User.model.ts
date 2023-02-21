@@ -8,7 +8,7 @@ import {
 	RefreshPayload,
 	TokenCipher,
 } from '@/Auth/domain';
-import { CurrencyRepository } from '@/Currency/domain';
+import { CurrenciesRepository } from '@/Currencies/domain';
 
 interface UserProps {
 	readonly id: string;
@@ -56,12 +56,12 @@ export class User implements UserProps {
 			| 'accountIdList'
 		>,
 		accountsRepository: AccountsRepository,
-		currencyRepository: CurrencyRepository,
+		currencyRepository: CurrenciesRepository,
 		pc: PasswordCipher,
 	) {
 		const userId = crypto.randomUUID();
 		const account = await Account.createDefault(userId, currencyRepository);
-		await accountsRepository.create(account);
+		await accountsRepository.createDefault(account);
 
 		return new User({
 			id: userId,

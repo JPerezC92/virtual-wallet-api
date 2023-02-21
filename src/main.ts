@@ -1,6 +1,7 @@
 import { patchNestjsSwagger } from '@anatine/zod-nestjs';
 import { NestFactory } from '@nestjs/core';
 import * as swagger from '@nestjs/swagger';
+import * as morgan from 'morgan';
 
 import { writeStaticSwagger } from '@/src/writeStaticSwagger';
 
@@ -8,7 +9,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule, { cors: true });
-
+	app.use(morgan('dev'));
 	const config = new swagger.DocumentBuilder()
 		.setTitle('Alkybank wallet')
 		.setDescription('The cats API description')

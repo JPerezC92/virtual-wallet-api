@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { Request } from 'express';
 
 import { RevalidateAccess, UserLogin } from '@/Auth/application';
-import { AuthToken } from '@/Auth/domain';
+import { AuthToken, InvalidCredentials } from '@/Auth/domain';
 import { AuthPrismaRepository } from '@/Auth/infrastructure/repos';
 import * as authSchemas from '@/Auth/infrastructure/schemas';
 import { PrismaService } from '@/Database/prisma.service';
@@ -25,7 +25,9 @@ export class AuthService {
 	async login(
 		credentials: authSchemas.CredentialsDto,
 		ip: Request['ip'],
-		exceptionMap: ExceptionMap = [],
+		exceptionMap: ExceptionMap = [
+			[InvalidCredentials.name, UnprocessableEntityException],
+		],
 	): Promise<authSchemas.AuthToken> {
 		try {
 			return await this.prismaService.$transaction(async (db) => {

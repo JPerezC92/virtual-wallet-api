@@ -6,7 +6,6 @@ import {
 	HttpCode,
 	Post,
 	Req,
-	UnprocessableEntityException,
 	UseGuards,
 	UsePipes,
 } from '@nestjs/common';
@@ -14,6 +13,7 @@ import {
 	ApiBadRequestResponse,
 	ApiBearerAuth,
 	ApiHeader,
+	ApiInternalServerErrorResponse,
 	ApiOkResponse,
 	ApiTags,
 	ApiUnauthorizedResponse,
@@ -42,7 +42,8 @@ export class AuthController {
 
 	@ApiOkResponse({ type: authSchemas.AuthToken })
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
-	@ApiUnprocessableEntityResponse({ type: sharedSchemas.Error })
+	@ApiUnprocessableEntityResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@Post()
 	@HttpCode(200)
 	login(
@@ -52,13 +53,13 @@ export class AuthController {
 		return this.authService.login(
 			credentialsDto,
 			requestIP.getClientIp(req) || req.ip,
-			[[authDomain.InvalidCredentials.name, UnprocessableEntityException]],
 		);
 	}
 
 	@ApiBearerAuth()
 	@ApiOkResponse({ type: usersSchemas.User })
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@UseGuards(AccessJwtAuthGuard)
 	@Get('me')
 	me(@UserFromReq() user: User): usersSchemas.User {
@@ -68,6 +69,7 @@ export class AuthController {
 	@ApiOkResponse({ type: authSchemas.AuthToken })
 	@ApiHeader({ name: 'x-refresh-token' })
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@UseGuards(RefreshJwtAuthGuard)
 	@Get('refresh-token')
 	@HttpCode(200)

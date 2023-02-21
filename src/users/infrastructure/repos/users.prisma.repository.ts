@@ -18,6 +18,7 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 		findByUserId: async (userId) => {
 			const user = await db.userDB.findUnique({
 				where: { id: userId },
+				include: { accountList: true },
 			});
 
 			if (!user) return;

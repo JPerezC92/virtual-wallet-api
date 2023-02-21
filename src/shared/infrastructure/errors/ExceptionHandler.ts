@@ -20,7 +20,12 @@ export function ExceptionHandler(exceptionList: ExceptionMap) {
 
 		if (!DomainError.isDomainError(error)) {
 			console.log(error);
-			return () => new InternalServerErrorException();
+			return () =>
+				new InternalServerErrorException({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'Something went wrong check the server logs',
+					statusCode: 500,
+				});
 		}
 
 		const Exception = _exceptionList.get(error.name);

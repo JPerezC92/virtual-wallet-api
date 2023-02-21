@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 
-import { CurrencyFindAll } from '@/Currency/application';
-import { CurrencyPrismaRepository } from '@/Currency/infrastructure/repos/currency.prisma.repository';
+import { CurrencyFindAll } from '@/Currencies/application';
+import { CurrenciesPrismaRepository } from '@/Currencies/infrastructure/repos';
 import { PrismaService } from '@/Database/prisma.service';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
 
 @Injectable()
-export class CurrencyService {
+export class CurrenciesService {
 	constructor(readonly prismaService: PrismaService) {}
 
 	async findAll(exceptionMap: ExceptionMap = []): Promise<string[]> {
 		try {
 			return this.prismaService.$transaction((db) =>
-				CurrencyFindAll(CurrencyPrismaRepository(db)).execute(),
+				CurrencyFindAll(CurrenciesPrismaRepository(db)).execute(),
 			);
 		} catch (error) {
 			const HttpException = ExceptionHandler(exceptionMap).find(error);

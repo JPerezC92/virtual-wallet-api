@@ -1,7 +1,7 @@
 import { UserAlreadyRegistered } from '@/Auth/domain';
 import { BcryptPasswordCipher } from '@/Auth/infrastructure/service';
 import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { CurrencyMockRepository } from '@/Test/currency/infrastructure/CurrencyMockRepository';
+import { CurrencyMockRepository } from '@/Test/currencies/infrastructure';
 import { userCreateMock } from '@/Test/users/fixtures';
 import { UsersMockRepository } from '@/Test/users/infrastructure';
 import { UserRegister } from '@/Users/application';
