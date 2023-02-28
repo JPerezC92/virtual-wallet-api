@@ -1,6 +1,12 @@
 import * as crypto from 'crypto';
 
+import { NotEnoughMoney } from '@/Accounts/domain/NotEnoughMoney.error';
 import { CurrenciesRepository } from '@/Currencies/domain';
+import {
+	MovementPayment,
+	MovementTopUp,
+	MovementTransference,
+} from '@/Movements/domain';
 import { User } from '@/Users/domain';
 
 interface AccountProps {
@@ -46,5 +52,31 @@ export class Account {
 	): Promise<Account> {
 		const currency = await currencyRepository.findDefault();
 		return Account.createNew(userId, currency);
+	}
+
+	doTopup(topup: MovementTopUp) {
+		return new Account({ ...this, money: topup.amount + this.money });
+	}
+
+	/**
+	 * @throws { NotEnoughMoney }
+	 */
+	doPayment(payment: MovementPayment): Account {
+		if (this.money < payment.amount) throw new NotEnoughMoney();
+
+		return new Account({ ...this, money: this.money - payment.amount });
+	}
+
+	/**
+	 * @throws { NotEnoughMoney }
+	 */
+	sendTransference(transference: MovementTransference): Account {
+		if (this.money < transference.amount) throw new NotEnoughMoney();
+
+		return new Account({ ...this, money: this.money - transference.amount });
+	}
+
+	recieveTransference(transference: MovementTransference): Account {
+		return new Account({ ...this, money: this.money + transference.amount });
 	}
 }

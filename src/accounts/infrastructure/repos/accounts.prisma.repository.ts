@@ -1,4 +1,5 @@
 import { AccountsRepository } from '@/Accounts/domain';
+import { AccountDBToModel } from '@/Accounts/infrastructure/adapters';
 import { Repository } from '@/Shared/infrastructure/repos';
 
 export const AccountsPrismaRepository: Repository<AccountsRepository> = (
@@ -28,7 +29,6 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 							id: account.id,
 							money: account.money,
 							currencyValue: account.currency,
-							updatedAt: account.updatedAt,
 							createdAt: account.createdAt,
 						},
 					},
@@ -36,6 +36,25 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 			});
 
 			return account;
+		},
+		update: async (account) => {
+			await db.accountDB.update({
+				where: {
+					id: account.id,
+					updatedAt: account.updatedAt,
+				},
+				data: { money: account.money },
+			});
+		},
+
+		findById: async (accountId) => {
+			const account = await db.accountDB.findUnique({
+				where: { id: accountId },
+			});
+
+			if (!account) return;
+
+			return AccountDBToModel(account);
 		},
 	};
 };

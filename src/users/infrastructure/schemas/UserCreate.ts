@@ -10,7 +10,7 @@ export const UserCreate = extendApi(
 		password: z.string().min(1),
 	}),
 	{
-		title: 'Create User',
+		title: 'UserCreate',
 		description: 'A new user',
 	},
 );

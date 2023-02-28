@@ -24,6 +24,7 @@
 		"noUncheckedIndexedAccess": true,
 		"strict": true,
 		"paths": {
+			"@/Movements/*": ["src/movements/*"],
 			"@/Accounts/*": ["src/accounts/*"],
 			"@/Currencies/*": ["src/currencies/*"],
 			"@/Users/*": ["src/users/*"],

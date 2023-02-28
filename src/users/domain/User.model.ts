@@ -99,6 +99,10 @@ export class User implements UserProps {
 		};
 	}
 
+	findAccount(accountId: Account['id']) {
+		return this.accountList.find((v) => v.id === accountId);
+	}
+
 	public static isUser(other: unknown): other is User {
 		return other instanceof User;
 	}

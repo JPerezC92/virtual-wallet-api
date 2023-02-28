@@ -12,7 +12,7 @@ import {
 } from '@/Auth/infrastructure/service';
 import { DatabaseModule } from '@/Database/database.module';
 import { AppModule } from '@/src/app.module';
-import { authMockRepository } from '@/Test/auth/infrastructure/authMockRepository';
+import { authMockRepository } from '@/Test/auth/infrastructure';
 import { userMock } from '@/Test/users/fixtures';
 
 describe('RevalidateAccess use case', () => {
@@ -41,7 +41,7 @@ describe('RevalidateAccess use case', () => {
 			authMockRepository(),
 			accessTokenCipher,
 			refreshTokenCipher,
-		).execute({ user: userMock, ip: '127.0.0.1' });
+		).execute({ user: userMock(), ip: '127.0.0.1' });
 
 		expect(authToken).toEqual({
 			accessToken: expect.any(String),

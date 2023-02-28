@@ -44,7 +44,7 @@ describe('UserLogin use case', () => {
 
 	test('should login successfully', async () => {
 		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByEmail.mockResolvedValue(userMock);
+		usersMockRepository.findByEmail.mockResolvedValue(userMock());
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(true);
 
 		const authToken = await UserLogin(
@@ -89,7 +89,7 @@ describe('UserLogin use case', () => {
 
 	test('should throw a InvalidCredentials error when the passwords doesnt match', async () => {
 		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByEmail.mockResolvedValue(userMock);
+		usersMockRepository.findByEmail.mockResolvedValue(userMock());
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(false);
 
 		try {

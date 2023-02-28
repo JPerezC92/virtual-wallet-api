@@ -2,15 +2,6 @@ import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 
-// export const AccountEndpoint = z.object({
-// 	id: z.string(),
-// 	money: z.number(),
-// 	userId: z.string(),
-// 	currency: z.string(),
-// 	createdAt: z.date(),
-// 	updatedAt: z.date(),
-// });
-
 export const AccountEndpoint = extendApi(
 	z.object({
 		id: z.string(),

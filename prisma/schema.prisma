@@ -59,7 +59,7 @@ model MovementDB {
   type        TransactionType
   amount      Int
   date        DateTime
-  description String
+  concept     String
   account     AccountDB       @relation("MovementList", fields: accountId, references: [id])
   accountId   String
   toAccount   AccountDB?      @relation("TranferList", fields: toAccountId, references: [id])
