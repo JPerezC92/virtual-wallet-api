@@ -1,4 +1,5 @@
 import { AccountCreate } from '@/Accounts/application';
+import { AccountAlreadyCreated } from '@/Accounts/domain';
 import { AccountModelToEndpoint } from '@/Accounts/infrastructure/adapters';
 import { CurrencyNotFound } from '@/Currencies/domain';
 import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
@@ -14,7 +15,7 @@ describe('AccountCreate use case', () => {
 		const currencyMockRepository = CurrencyMockRepository();
 
 		usersMockRepository.findByUserId.mockResolvedValue(user);
-		currencyMockRepository.findByValue.mockResolvedValue('ARS');
+		currencyMockRepository.findByValue.mockResolvedValue('USD');
 
 		const account = await AccountCreate(
 			AccountsMockRepository(),
@@ -23,17 +24,39 @@ describe('AccountCreate use case', () => {
 			AccountModelToEndpoint,
 		).execute({
 			user: user,
-			currency: 'ARS',
+			currency: 'USD',
 		});
 
 		expect(account).toEqual({
-			currency: 'ARS',
+			currency: 'USD',
 			id: expect.any(String),
 			money: 0,
 			userId: user.id,
 			updatedAt: expect.any(Date),
 			createdAt: expect.any(Date),
 		});
+	});
+
+	test('should throw an AccountAlreadyCreated error', async () => {
+		const user = userMock();
+		const usersMockRepository = UsersMockRepository();
+		const currencyMockRepository = CurrencyMockRepository();
+
+		try {
+			const res = await AccountCreate(
+				AccountsMockRepository(),
+				currencyMockRepository,
+				usersMockRepository,
+				AccountModelToEndpoint,
+			).execute({
+				user: user,
+				currency: 'ARS',
+			});
+
+			expect(res).toBeUndefined();
+		} catch (error) {
+			expect(error).toBeInstanceOf(AccountAlreadyCreated);
+		}
 	});
 
 	test('should throw an UserNotFound error', async () => {
@@ -49,7 +72,7 @@ describe('AccountCreate use case', () => {
 				AccountModelToEndpoint,
 			).execute({
 				user: user,
-				currency: 'ARS',
+				currency: 'USD',
 			});
 
 			expect(res).toBeUndefined();
@@ -73,7 +96,7 @@ describe('AccountCreate use case', () => {
 				AccountModelToEndpoint,
 			).execute({
 				user: user,
-				currency: 'ARS',
+				currency: 'USD',
 			});
 
 			expect(res).toBeUndefined();

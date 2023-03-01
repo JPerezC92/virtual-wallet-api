@@ -21,6 +21,7 @@ type CreatePaymentProps = {
 };
 
 /**
+ * @throws { AccountSenderAndRecieverAreEqual }
  * @throws { UserNotFound }
  * @throws { NotEnoughMoney }
  * @throws { UserIsntOwnerOfAccount }

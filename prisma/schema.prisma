@@ -18,7 +18,7 @@ model UserDB {
   firstName   String
   lastName    String
   password    String
-  tokens      Json        @db.Json
+  tokens      Json        @default(dbgenerated()) @db.Json
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   accountList AccountDB[]

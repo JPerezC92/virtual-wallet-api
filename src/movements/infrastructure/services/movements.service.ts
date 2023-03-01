@@ -16,7 +16,12 @@ import {
 	CreateTopup,
 	CreateTransference,
 } from '@/Movements/application';
-import { MovementType } from '@/Movements/domain';
+import { MovementFindAll } from '@/Movements/application/MovementFindAll';
+import {
+	AccountNotFound,
+	AccountSenderAndRecieverAreEqual,
+	MovementType,
+} from '@/Movements/domain';
 import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
 import { MovementsPrismaRepository } from '@/Movements/infrastructure/repos';
 import * as movementsSchemas from '@/Movements/infrastructure/schemas';
@@ -35,6 +40,7 @@ export class MovementsService {
 		exceptionMap: ExceptionMap = [
 			[UserNotFound.name, NotFoundException],
 			[NotEnoughMoney.name, ConflictException],
+			[AccountSenderAndRecieverAreEqual.name, ConflictException],
 			[UserIsntOwnerOfAccount.name, ConflictException],
 			[AccountRecieverNotFound.name, NotFoundException],
 		],
@@ -67,6 +73,31 @@ export class MovementsService {
 					MovementModelToEndpoint,
 				).execute({ user, newTransference: _newMovement });
 			});
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+
+			throw HttpException();
+		}
+	}
+
+	async findAll(
+		user: User,
+		accountId: string,
+		exceptionMap: ExceptionMap = [
+			[AccountNotFound.name, NotFoundException],
+			[UserNotFound.name, NotFoundException],
+		],
+	): Promise<movementsSchemas.MovementGetResponseDto> {
+		try {
+			return await this.prismaService.$transaction(
+				async (db) =>
+					await MovementFindAll(
+						AccountsPrismaRepository(db),
+						MovementsPrismaRepository(db),
+						UsersPrismaRepository(db),
+						(v) => v.map(MovementModelToEndpoint),
+					).execute({ user, accountId }),
+			);
 		} catch (error) {
 			const HttpException = ExceptionHandler(exceptionMap).find(error);
 

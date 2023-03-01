@@ -7,12 +7,33 @@ import { writeStaticSwagger } from '@/src/writeStaticSwagger';
 
 import { AppModule } from './app.module';
 
+const whitelist = ['https://alkybank-rho.vercel.app'];
+// const whitelist = ['http://localhost:3000'];
+
 async function bootstrap() {
-	const app = await NestFactory.create(AppModule, { cors: true });
+	const app = await NestFactory.create(AppModule);
+
+	app.enableCors({
+		origin: whitelist,
+		preflightContinue: false,
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS'],
+		optionsSuccessStatus: 204,
+		allowedHeaders: [
+			'Access-Control-Allow-Origin',
+			'Content-Type',
+			'Accept',
+			'Origin',
+		],
+		credentials: true,
+	});
+
 	app.use(morgan('dev'));
+
 	const config = new swagger.DocumentBuilder()
-		.setTitle('Alkybank wallet')
-		.setDescription('The cats API description')
+		.setTitle('Virtual wallet')
+		.setDescription(
+			'An API of a virtual wallet that provides the functionality of the wallet and can be integrated into applications or websites.',
+		)
 		.setVersion('1.0')
 		.addBearerAuth()
 		.build();

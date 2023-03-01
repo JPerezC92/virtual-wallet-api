@@ -3,6 +3,7 @@ import { Controller, Get, UsePipes } from '@nestjs/common';
 import {
 	ApiInternalServerErrorResponse,
 	ApiOkResponse,
+	ApiOperation,
 	ApiTags,
 } from '@nestjs/swagger';
 
@@ -18,6 +19,10 @@ export class CurrenciesController {
 
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiOkResponse({ type: CurrencyList })
+	@ApiOperation({
+		summary: 'List all supported currencies',
+		description: 'List all supported currencies.',
+	})
 	@Get()
 	findAll(): Promise<CurrencyList> {
 		return this.currenciesService.findAll();

@@ -1,6 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+	ConflictException,
+	Injectable,
+	NotFoundException,
+} from '@nestjs/common';
 
 import { AccountCreate } from '@/Accounts/application/AccountCreate';
+import { AccountAlreadyCreated } from '@/Accounts/domain';
 import { AccountModelToEndpoint } from '@/Accounts/infrastructure/adapters';
 import { AccountsPrismaRepository } from '@/Accounts/infrastructure/repos';
 import * as accountSchemas from '@/Accounts/infrastructure/schemas';
@@ -20,6 +25,7 @@ export class AccountsService {
 		user: User,
 		accountCreateDto: accountSchemas.AccountCreateDto,
 		exceptionMap: ExceptionMap = [
+			[AccountAlreadyCreated.name, ConflictException],
 			[UserNotFound.name, NotFoundException],
 			[CurrencyNotFound.name, NotFoundException],
 		],

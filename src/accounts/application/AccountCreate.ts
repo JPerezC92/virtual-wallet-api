@@ -1,4 +1,8 @@
-import { Account, AccountsRepository } from '@/Accounts/domain';
+import {
+	Account,
+	AccountAlreadyCreated,
+	AccountsRepository,
+} from '@/Accounts/domain';
 import { CurrenciesRepository, CurrencyNotFound } from '@/Currencies/domain';
 import { Adapter, UseCase } from '@/Shared/application';
 import { User, UsersRepository } from '@/Users/domain';
@@ -10,6 +14,7 @@ interface AccountCreateProps {
 }
 
 /**
+ * @throws { AccountAlreadyCreated }
  * @throws { UserNotFound }
  * @throws { CurrencyNotFound }
  */
@@ -30,6 +35,10 @@ export const AccountCreate: <AdapterResult>(
 				usersRepository.findByUserId(user.id),
 				currencyRepository.findByValue(currency),
 			]);
+
+			if (user.findAccountByCurrency(currency)) {
+				throw new AccountAlreadyCreated(currency);
+			}
 
 			if (!_user) throw new UserNotFound(user.id);
 			if (!_currency) throw new CurrencyNotFound(currency);

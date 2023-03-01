@@ -15,6 +15,7 @@ import {
 	ApiHeader,
 	ApiInternalServerErrorResponse,
 	ApiOkResponse,
+	ApiOperation,
 	ApiTags,
 	ApiUnauthorizedResponse,
 	ApiUnprocessableEntityResponse,
@@ -44,6 +45,11 @@ export class AuthController {
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
 	@ApiUnprocessableEntityResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiOperation({
+		summary: 'Start a session',
+		description:
+			'Get a JWT access token to authenticate to the system and a refresh token to refresh the session.',
+	})
 	@Post()
 	@HttpCode(200)
 	login(
@@ -61,6 +67,10 @@ export class AuthController {
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@UseGuards(AccessJwtAuthGuard)
+	@ApiOperation({
+		summary: 'Obtain information of the logged in user',
+		description: 'Get the information of the user who started the session.',
+	})
 	@Get('me')
 	me(@UserFromReq() user: User): usersSchemas.User {
 		return usersSchemas.UserEndpoint.parse(user);
@@ -70,8 +80,13 @@ export class AuthController {
 	@ApiHeader({ name: 'x-refresh-token' })
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
-	@UseGuards(RefreshJwtAuthGuard)
+	@ApiOperation({
+		summary: 'Renew the authentication JWT tokens',
+		description:
+			'Get a new JWT access token and refresh token and invalidate the olders.',
+	})
 	@Get('refresh-token')
+	@UseGuards(RefreshJwtAuthGuard)
 	@HttpCode(200)
 	refreshToken(
 		@Req() req: Request,

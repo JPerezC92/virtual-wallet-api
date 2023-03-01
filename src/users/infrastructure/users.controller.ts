@@ -11,6 +11,7 @@ import {
 	ApiConflictResponse,
 	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
+	ApiOperation,
 	ApiTags,
 } from '@nestjs/swagger';
 
@@ -31,6 +32,10 @@ export class UsersController {
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
 	@ApiConflictResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiOperation({
+		summary: 'Create a new user',
+		description: 'Create a new user.',
+	})
 	registerUser(
 		@Body() userCreateDto: usersSchemas.UserCreateDto,
 	): Promise<usersSchemas.UserEndpoint> {

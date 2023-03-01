@@ -5,6 +5,7 @@ import {
 	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
 	ApiNotFoundResponse,
+	ApiOperation,
 	ApiTags,
 } from '@nestjs/swagger';
 
@@ -25,6 +26,10 @@ export class AccountsController {
 	@ApiCreatedResponse({ type: accountSchemas.Account })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Create a new account',
+		description: 'Create a new account.',
+	})
 	@UseGuards(AccessJwtAuthGuard)
 	@Post()
 	create(

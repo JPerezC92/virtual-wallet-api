@@ -1,1 +1,2 @@
-export * from './MovementModelToEndpoint.schema';
+export * from './MovementDbToModel.adapter';
+export * from './MovementModelToEndpoint.adapter';

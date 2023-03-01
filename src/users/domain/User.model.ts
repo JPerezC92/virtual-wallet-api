@@ -103,6 +103,10 @@ export class User implements UserProps {
 		return this.accountList.find((v) => v.id === accountId);
 	}
 
+	findAccountByCurrency(currency: Account['currency']) {
+		return this.accountList.find((v) => v.currency === currency);
+	}
+
 	public static isUser(other: unknown): other is User {
 		return other instanceof User;
 	}
