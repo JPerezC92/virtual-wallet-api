@@ -1,5 +1,8 @@
 import { MovementsRepository } from '@/Movements/domain';
-import { MovementDbToModel } from '@/Movements/infrastructure/adapter';
+import {
+	MovementDbToModel,
+	MovementModelToDB,
+} from '@/Movements/infrastructure/adapter';
 import { Repository } from '@/Shared/infrastructure/repos';
 
 export const MovementsPrismaRepository: Repository<MovementsRepository> = (
@@ -12,20 +15,28 @@ export const MovementsPrismaRepository: Repository<MovementsRepository> = (
 			// 	data: { ...movement },
 			// });
 			await db.movementDB.create({
-				data: { ...movement },
+				data: { ...MovementModelToDB(movement) },
 			});
 		},
 
 		findAll: async (accountId) => {
-			const movementList = await db.movementDB.findMany({
-				where: {
-					OR: [{ accountId }, { toAccountId: accountId }],
+			const accountDb = await db.accountDB.findUnique({
+				where: { id: accountId },
+				include: {
+					movementList: {
+						where: {
+							OR: [{ accountId }, { toAccountId: accountId }],
+						},
+						orderBy: { createdAt: 'desc' },
+					},
 				},
-
-				orderBy: { updatedAt: 'desc' },
 			});
 
-			return movementList.map(MovementDbToModel);
+			return (
+				accountDb?.movementList.map((m) =>
+					MovementDbToModel({ ...m, currency: accountDb.currencyValue }),
+				) || []
+			);
 		},
 	};
 };

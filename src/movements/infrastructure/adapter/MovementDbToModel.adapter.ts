@@ -1,5 +1,5 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { MovementDB } from '@prisma/client';
+import { Currency, MovementDB } from '@prisma/client';
 
 import {
 	MovementPayment,
@@ -7,7 +7,9 @@ import {
 	MovementTransference,
 } from '@/Movements/domain';
 
-export function MovementDbToModel(movementDb: MovementDB) {
+export function MovementDbToModel(
+	movementDb: MovementDB & { currency: Currency['value'] },
+) {
 	if (movementDb.type === 'TOPUP') {
 		return new MovementTopUp({
 			accountId: movementDb.accountId,
@@ -17,6 +19,7 @@ export function MovementDbToModel(movementDb: MovementDB) {
 			date: movementDb.date,
 			id: movementDb.id,
 			type: movementDb.type,
+			currency: movementDb.currency,
 			updatedAt: movementDb.updatedAt,
 		});
 	}

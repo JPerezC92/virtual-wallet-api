@@ -23,6 +23,8 @@ async function bootstrap() {
 			'Content-Type',
 			'Accept',
 			'Origin',
+			'x-refresh-token',
+			'Authorization ',
 		],
 		credentials: true,
 	});

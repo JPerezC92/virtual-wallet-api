@@ -5,9 +5,11 @@ import { z } from 'zod';
 import { MovementType } from '@/Movements/domain';
 
 const MovementEndpointBase = z.object({
+	id: z.string().uuid(),
 	amount: z.number(),
 	date: z.date(),
 	concept: z.string(),
+	currency: z.string(),
 	accountId: z.string().uuid(),
 	createdAt: z.date(),
 	updatedAt: z.date(),

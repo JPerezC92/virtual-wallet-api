@@ -1,17 +1,15 @@
 import { AccountsRepository } from '@/Accounts/domain';
 import { UserIsntOwnerOfAccount } from '@/Accounts/domain/UserIsntOwnerOfAccount.error';
 import { MovementsRepository } from '@/Movements/domain';
-import {
-	MovementTopUp,
-	TopupNewProps,
-} from '@/Movements/domain/Movement.model';
+import { MovementTopUp } from '@/Movements/domain/MovementTopUp.model';
+import { ITopupCreate } from '@/Movements/domain/TopupCreate.interface';
 import { Adapter, UseCase } from '@/Shared/application';
 import { User, UsersRepository } from '@/Users/domain';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
 
 type CreateTopupProps = {
 	user: User;
-	newTopup: TopupNewProps;
+	newTopup: Omit<ITopupCreate, 'currency'>;
 };
 
 /**
@@ -41,7 +39,10 @@ export const CreateTopup: <AdapterReturn>(
 				throw new UserIsntOwnerOfAccount(newTopup.accountId);
 			}
 
-			const topup = MovementTopUp.createNew(newTopup);
+			const topup = MovementTopUp.createNew({
+				...newTopup,
+				currency: account.currency,
+			});
 			account = account.doTopup(topup);
 
 			await Promise.all([

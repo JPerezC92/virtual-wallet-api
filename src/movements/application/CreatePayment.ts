@@ -1,16 +1,14 @@
 import { AccountsRepository, UserIsntOwnerOfAccount } from '@/Accounts/domain';
 import { MovementsRepository } from '@/Movements/domain';
-import {
-	MovementPayment,
-	PaymentNewProps,
-} from '@/Movements/domain/Movement.model';
+import { MovementPayment } from '@/Movements/domain/MovementPayment.model';
+import { IPaymentCreate } from '@/Movements/domain/PaymentCreate.interface';
 import { Adapter, UseCase } from '@/Shared/application';
 import { User, UsersRepository } from '@/Users/domain';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
 
 type CreatePaymentProps = {
 	user: User;
-	newPayment: PaymentNewProps;
+	newPayment: Omit<IPaymentCreate, 'currency'>;
 };
 
 /**
@@ -41,7 +39,10 @@ export const CreatePayment: <AdapterReturn>(
 				throw new UserIsntOwnerOfAccount(newPayment.accountId);
 			}
 
-			const payment = MovementPayment.createNew(newPayment);
+			const payment = MovementPayment.createNew({
+				...newPayment,
+				currency: account.currency,
+			});
 			account = account.doPayment(payment);
 
 			await Promise.all([
