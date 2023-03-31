@@ -4,16 +4,19 @@ import { z } from 'zod';
 
 import { MovementEndpoint } from '@/Movements/infrastructure/schemas/MovementEndpoint.schema';
 
-const MovementListGetEndpoint = extendApi(
+export const MovementGetResponse = extendApi(
 	z.object({
-		accountId: z.string().uuid(),
+		movementList: z.array(MovementEndpoint),
+		pagination: z.object({
+			page: z.number(),
+			totalPages: z.number(),
+			prevPage: z.number().nullable(),
+			nextPage: z.number().nullable(),
+		}),
 	}),
-	{ title: 'MovementListGetDto' },
+	{
+		title: 'MovementGetResponse',
+	},
 );
 
-const MovementListGetRes = extendApi(z.array(MovementEndpoint), {
-	title: 'MovementEndpointList',
-});
-
-export class MovementGetResponseDto extends createZodDto(MovementListGetRes) {}
-export class MovementListGetDto extends createZodDto(MovementListGetEndpoint) {}
+export class MovementGetResponseDto extends createZodDto(MovementGetResponse) {}

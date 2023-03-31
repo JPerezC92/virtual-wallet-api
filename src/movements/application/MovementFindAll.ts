@@ -5,9 +5,15 @@ import {
 	MovementsRepository,
 } from '@/Movements/domain';
 import { Adapter, UseCase } from '@/Shared/application';
+import { IPaginationCriteria, Pagination } from '@/Shared/domain';
 import { User, UserNotFound, UsersRepository } from '@/Users/domain';
 
-type FindAllProps = { user: User; accountId: Account['id'] };
+type FindAllProps = {
+	user: User;
+	accountId: Account['id'];
+	page: IPaginationCriteria['page'];
+	limit: IPaginationCriteria['limit'];
+};
 
 /**
  * @throws { UserNotFound }
@@ -17,7 +23,13 @@ export const MovementFindAll: <AdapterReturn>(
 	accountsRepository: AccountsRepository,
 	movementsRepository: MovementsRepository,
 	usersRepository: UsersRepository,
-	outputAdapter: Adapter<Movement[], AdapterReturn>,
+	outputAdapter: Adapter<
+		{
+			movementList: Movement[];
+			pagination: Pagination;
+		},
+		AdapterReturn
+	>,
 ) => UseCase<Promise<AdapterReturn>, FindAllProps> = (
 	accountsRepository,
 	movementsRepository,
@@ -25,7 +37,7 @@ export const MovementFindAll: <AdapterReturn>(
 	outputAdapter,
 ) => {
 	return {
-		execute: async ({ user, accountId }) => {
+		execute: async ({ user, accountId, page, limit }) => {
 			const [_user, account] = await Promise.all([
 				usersRepository.findByUserId(user.id),
 				accountsRepository.findById(accountId),
@@ -35,7 +47,11 @@ export const MovementFindAll: <AdapterReturn>(
 
 			if (!account) throw new AccountNotFound();
 
-			const movementList = await movementsRepository.findAll(account.id);
+			const movementList = await movementsRepository.findAll(
+				account.id,
+				page,
+				limit,
+			);
 
 			return outputAdapter(movementList);
 		},

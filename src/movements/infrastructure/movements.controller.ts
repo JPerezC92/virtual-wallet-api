@@ -64,8 +64,8 @@ export class MovementsController {
 	@Get()
 	findAll(
 		@UserFromReq() user: User,
-		@Query() movementListGetDto: movementsSchemas.MovementListGetDto,
+		@Query() movementGetQueryDto: movementsSchemas.MovementGetQueryDto,
 	): Promise<movementsSchemas.MovementGetResponseDto> {
-		return this.movementsService.findAll(user, movementListGetDto.accountId);
+		return this.movementsService.findAll(user, movementGetQueryDto);
 	}
 }

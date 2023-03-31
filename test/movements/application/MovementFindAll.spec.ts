@@ -1,5 +1,6 @@
 import { MovementFindAll } from '@/Movements/application/MovementFindAll';
 import { AccountNotFound, Movement } from '@/Movements/domain';
+import { Pagination } from '@/Shared/domain';
 import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
 import { MovementsMockRespository } from '@/Test/movements/infrastructure';
 import { userMock } from '@/Test/users/fixtures';
@@ -24,18 +25,20 @@ describe('MovementFindAll use case', () => {
 		accountsMockRepository.findById.mockResolvedValue(account);
 
 		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue(
-			movementListMock as unknown as Movement[],
-		);
+		movementsMockRespository.findAll.mockResolvedValue({
+			movementList: movementListMock as unknown as Movement[],
+			pagination: Pagination.empty(),
+		});
 
 		const movementList = await MovementFindAll(
 			accountsMockRepository,
 			movementsMockRespository,
 			usersMockRepository,
 			(v) => v,
-		).execute({ user, accountId: account?.id || '' });
+		).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
 
-		expect(movementList).toEqual(movementListMock);
+		expect(movementList.movementList).toEqual(movementListMock);
+		expect(movementList.pagination).toBeInstanceOf(Pagination);
 	});
 
 	test('should thrown an UserNotFound error', async () => {
@@ -46,9 +49,10 @@ describe('MovementFindAll use case', () => {
 		const accountsMockRepository = AccountsMockRepository();
 
 		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue(
-			movementListMock as unknown as Movement[],
-		);
+		movementsMockRespository.findAll.mockResolvedValue({
+			movementList: movementListMock as unknown as Movement[],
+			pagination: Pagination.empty(),
+		});
 
 		try {
 			const res = await MovementFindAll(
@@ -56,7 +60,7 @@ describe('MovementFindAll use case', () => {
 				movementsMockRespository,
 				usersMockRepository,
 				(v) => v,
-			).execute({ user, accountId: account?.id || '' });
+			).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
 
 			expect(res).toBeUndefined();
 		} catch (error) {
@@ -73,9 +77,10 @@ describe('MovementFindAll use case', () => {
 		const accountsMockRepository = AccountsMockRepository();
 
 		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue(
-			movementListMock as unknown as Movement[],
-		);
+		movementsMockRespository.findAll.mockResolvedValue({
+			movementList: movementListMock as unknown as Movement[],
+			pagination: Pagination.empty(),
+		});
 
 		try {
 			const res = await MovementFindAll(
@@ -83,7 +88,7 @@ describe('MovementFindAll use case', () => {
 				movementsMockRespository,
 				usersMockRepository,
 				(v) => v,
-			).execute({ user, accountId: account?.id || '' });
+			).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
 
 			expect(res).toBeUndefined();
 		} catch (error) {

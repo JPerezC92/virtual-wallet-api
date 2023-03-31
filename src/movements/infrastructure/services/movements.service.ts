@@ -25,6 +25,7 @@ import {
 import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
 import { MovementsPrismaRepository } from '@/Movements/infrastructure/repos';
 import * as movementsSchemas from '@/Movements/infrastructure/schemas';
+import { MovementGetResponse } from '@/Movements/infrastructure/schemas';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
 import { User } from '@/Users/domain';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
@@ -82,7 +83,7 @@ export class MovementsService {
 
 	async findAll(
 		user: User,
-		accountId: string,
+		movementGetQueryDto: movementsSchemas.MovementGetQueryDto,
 		exceptionMap: ExceptionMap = [
 			[AccountNotFound.name, NotFoundException],
 			[UserNotFound.name, NotFoundException],
@@ -95,8 +96,13 @@ export class MovementsService {
 						AccountsPrismaRepository(db),
 						MovementsPrismaRepository(db),
 						UsersPrismaRepository(db),
-						(v) => v.map(MovementModelToEndpoint),
-					).execute({ user, accountId }),
+						(out) => MovementGetResponse.parse(out),
+					).execute({
+						user,
+						accountId: movementGetQueryDto.accountId,
+						page: movementGetQueryDto.page,
+						limit: movementGetQueryDto.limit,
+					}),
 			);
 		} catch (error) {
 			const HttpException = ExceptionHandler(exceptionMap).find(error);

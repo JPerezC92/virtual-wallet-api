@@ -47,6 +47,8 @@ describe('CreateTopup use case', () => {
 		expect(movement).toEqual({
 			...transferenceCreate,
 			createdAt: expect.any(Date),
+			currency: expect.any(String),
+			id: expect.any(String),
 			updatedAt: expect.any(Date),
 		});
 	});
