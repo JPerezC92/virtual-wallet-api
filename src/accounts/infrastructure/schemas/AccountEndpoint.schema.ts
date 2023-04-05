@@ -5,7 +5,9 @@ import { z } from 'zod';
 export const AccountEndpoint = extendApi(
 	z.object({
 		id: z.string(),
-		money: z.number(),
+		balance: z.number(),
+		income: z.number(),
+		expense: z.number(),
 		userId: z.string(),
 		currency: z.string(),
 		createdAt: z.date(),

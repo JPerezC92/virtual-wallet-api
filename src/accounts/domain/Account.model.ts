@@ -11,7 +11,8 @@ import { User } from '@/Users/domain';
 
 interface AccountProps {
 	id: string;
-	money: number;
+	income: number;
+	expense: number;
 	userId: string;
 	currency: string;
 	createdAt: Date;
@@ -20,7 +21,9 @@ interface AccountProps {
 
 export class Account {
 	id: string;
-	money: number;
+	balance: number;
+	income: number;
+	expense: number;
 	userId: string;
 	currency: string;
 	createdAt: Date;
@@ -28,7 +31,9 @@ export class Account {
 
 	constructor(props: AccountProps) {
 		this.id = props.id;
-		this.money = props.money;
+		this.balance = props.income - props.expense;
+		this.income = props.income;
+		this.expense = props.expense;
 		this.userId = props.userId;
 		this.currency = props.currency;
 		this.createdAt = props.createdAt;
@@ -38,7 +43,8 @@ export class Account {
 	static createNew(userId: User['id'], currency: string): Account {
 		return new Account({
 			id: crypto.randomUUID(),
-			money: 0,
+			income: 0,
+			expense: 0,
 			currency,
 			userId,
 			createdAt: new Date(),
@@ -55,28 +61,41 @@ export class Account {
 	}
 
 	doTopup(topup: MovementTopUp) {
-		return new Account({ ...this, money: topup.amount + this.money });
+		return new Account({
+			...this,
+
+			income: topup.amount + this.income,
+		});
 	}
 
 	/**
 	 * @throws { NotEnoughMoney }
 	 */
 	doPayment(payment: MovementPayment): Account {
-		if (this.money < payment.amount) throw new NotEnoughMoney();
+		if (this.balance < payment.amount) throw new NotEnoughMoney();
 
-		return new Account({ ...this, money: this.money - payment.amount });
+		return new Account({
+			...this,
+			expense: payment.amount + this.expense,
+		});
 	}
 
 	/**
 	 * @throws { NotEnoughMoney }
 	 */
 	sendTransference(transference: MovementTransference): Account {
-		if (this.money < transference.amount) throw new NotEnoughMoney();
+		if (this.balance < transference.amount) throw new NotEnoughMoney();
 
-		return new Account({ ...this, money: this.money - transference.amount });
+		return new Account({
+			...this,
+			expense: transference.amount + this.expense,
+		});
 	}
 
 	recieveTransference(transference: MovementTransference): Account {
-		return new Account({ ...this, money: this.money + transference.amount });
+		return new Account({
+			...this,
+			income: transference.amount + this.income,
+		});
 	}
 }

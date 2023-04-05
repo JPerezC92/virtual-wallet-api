@@ -10,7 +10,6 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 			await db.accountDB.create({
 				data: {
 					id: account.id,
-					money: account.money,
 					currencyValue: account.currency,
 					userId: account.userId,
 					updatedAt: account.updatedAt,
@@ -27,7 +26,6 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 					accountList: {
 						create: {
 							id: account.id,
-							money: account.money,
 							currencyValue: account.currency,
 							createdAt: account.createdAt,
 						},
@@ -43,7 +41,10 @@ export const AccountsPrismaRepository: Repository<AccountsRepository> = (
 					id: account.id,
 					updatedAt: account.updatedAt,
 				},
-				data: { money: account.money },
+				data: {
+					income: account.income,
+					expense: account.expense,
+				},
 			});
 		},
 

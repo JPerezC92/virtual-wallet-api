@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE `Account` MODIFY `expense` INTEGER NOT NULL DEFAULT 0,
+    MODIFY `income` INTEGER NOT NULL DEFAULT 0;

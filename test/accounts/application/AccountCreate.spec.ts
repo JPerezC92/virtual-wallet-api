@@ -30,7 +30,9 @@ describe('AccountCreate use case', () => {
 		expect(account).toEqual({
 			currency: 'USD',
 			id: expect.any(String),
-			money: 0,
+			balance: 0,
+			income: 0,
+			expense: 0,
 			userId: user.id,
 			updatedAt: expect.any(Date),
 			createdAt: expect.any(Date),

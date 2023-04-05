@@ -45,6 +45,7 @@ export const AccountCreate: <AdapterResult>(
 
 			const account = Account.createNew(_user.id, _currency);
 			await accountsRepository.create(account, _user);
+
 			return outputAdapter(account);
 		},
 	};
