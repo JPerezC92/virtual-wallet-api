@@ -1,5 +1,14 @@
 import { ZodValidationPipe } from '@anatine/zod-nestjs';
-import { Body, Controller, Post, UseGuards, UsePipes } from '@nestjs/common';
+import {
+	Body,
+	Controller,
+	Get,
+	Param,
+	ParseUUIDPipe,
+	Post,
+	UseGuards,
+	UsePipes,
+} from '@nestjs/common';
 import {
 	ApiBearerAuth,
 	ApiCreatedResponse,
@@ -37,5 +46,21 @@ export class AccountsController {
 		@Body() accountCreateDto: accountSchemas.AccountCreateDto,
 	): Promise<accountSchemas.Account> {
 		return this.accountsService.createAccount(user, accountCreateDto);
+	}
+
+	@ApiNotFoundResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Find an account by id',
+		description: 'Find an account by id.',
+	})
+	@UseGuards(AccessJwtAuthGuard)
+	@Get(':id')
+	getById(
+		@Param('id', ParseUUIDPipe) accountId: string,
+		@UserFromReq() user: User,
+	): Promise<accountSchemas.Account> {
+		return this.accountsService.getById(accountId, user);
 	}
 }

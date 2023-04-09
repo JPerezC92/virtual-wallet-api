@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 
 import { AccountCreate } from '@/Accounts/application/AccountCreate';
+import { AccountFind } from '@/Accounts/application/AccountFind';
 import { AccountAlreadyCreated } from '@/Accounts/domain';
 import { AccountModelToEndpoint } from '@/Accounts/infrastructure/adapters';
 import { AccountsPrismaRepository } from '@/Accounts/infrastructure/repos';
@@ -44,5 +45,18 @@ export class AccountsService {
 			const HttpException = ExceptionHandler(exceptionMap).find(error);
 			throw HttpException();
 		}
+	}
+
+	getById(accountId: string, user: User): Promise<accountSchemas.Account> {
+		return this.prismaService.$transaction(
+			async (db) =>
+				await AccountFind(
+					UsersPrismaRepository(db),
+					AccountModelToEndpoint,
+				).execute({
+					accountId,
+					userId: user.id,
+				}),
+		);
 	}
 }

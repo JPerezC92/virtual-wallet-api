@@ -6,7 +6,6 @@ import { Account } from '@/Accounts/domain';
 export const AccountDBValidator = z
 	.object({
 		id: z.string(),
-		balance: z.number(),
 		income: z.number(),
 		expense: z.number(),
 		userId: z.string(),
