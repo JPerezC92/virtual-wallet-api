@@ -9,12 +9,11 @@ import {
 	TokenCipher,
 } from '@/Auth/domain';
 import { CurrenciesRepository } from '@/Currencies/domain';
+import { UserDetails, UserDetailsProps } from '@/Users/domain/UserDetails';
 
 interface UserProps {
 	readonly id: string;
-	readonly firstName: string;
-	readonly lastName: string;
-	readonly email: string;
+	userDetails: UserDetails;
 	readonly password: string;
 	readonly tokens: Record<string, string>;
 	readonly accountList: Account[];
@@ -24,9 +23,7 @@ interface UserProps {
 
 export class User implements UserProps {
 	readonly id: string;
-	readonly firstName: string;
-	readonly lastName: string;
-	readonly email: string;
+	userDetails: UserDetails;
 	tokens: Record<string, string>;
 	readonly password: string;
 	readonly accountList: Account[];
@@ -35,9 +32,7 @@ export class User implements UserProps {
 
 	constructor(props: UserProps) {
 		this.id = props.id;
-		this.firstName = props.firstName;
-		this.lastName = props.lastName;
-		this.email = props.email;
+		this.userDetails = props.userDetails;
 		this.tokens = props.tokens;
 		this.password = props.password;
 		this.accountList = props.accountList;
@@ -46,15 +41,7 @@ export class User implements UserProps {
 	}
 
 	public static async createNew(
-		props: Omit<
-			UserProps,
-			| 'id'
-			| 'createdAt'
-			| 'updatedAt'
-			| 'accountList'
-			| 'tokens'
-			| 'accountIdList'
-		>,
+		props: Pick<UserProps, 'password'> & UserDetailsProps,
 		accountsRepository: AccountsRepository,
 		currencyRepository: CurrenciesRepository,
 		pc: PasswordCipher,
@@ -65,9 +52,7 @@ export class User implements UserProps {
 
 		return new User({
 			id: userId,
-			firstName: props.firstName,
-			lastName: props.lastName,
-			email: props.email,
+			userDetails: new UserDetails(props),
 			tokens: {},
 			password: await pc.encrypt(props.password),
 			createdAt: new Date(),
@@ -84,7 +69,7 @@ export class User implements UserProps {
 	): AuthToken {
 		const tokenId = crypto.randomUUID();
 		const refreshToken = RefreshTokenCipher.encode({
-			email: user.email,
+			email: user.userDetails.email,
 			tokenId,
 		});
 
@@ -92,7 +77,7 @@ export class User implements UserProps {
 
 		return {
 			accessToken: AccessTokenCipher.encode({
-				email: user.email,
+				email: user.userDetails.email,
 				userId: user.id,
 			}),
 			refreshToken,

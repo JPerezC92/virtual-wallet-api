@@ -1,98 +1,65 @@
+import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
 import { MovementFindAll } from '@/Movements/application/MovementFindAll';
-import { AccountNotFound, Movement } from '@/Movements/domain';
+import { AccountNotFound } from '@/Movements/domain';
+import {
+	movementListStub,
+	MovementsStubRepository,
+} from '@/Movements/infrastructure/repos';
 import { Pagination } from '@/Shared/domain';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { MovementsMockRespository } from '@/Test/movements/infrastructure';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
 import { UserNotFound } from '@/Users/domain';
-
-const movementListMock = [
-	'Movement 1',
-	'Movement 2',
-	'Movement 3',
-	'Movement 4',
-];
+import {
+	userNotRegisteredStub,
+	UsersStubRepository,
+	userStub1,
+} from '@/Users/infrastructure/repos';
 
 describe('MovementFindAll use case', () => {
 	test('should List al the movements successfully', async () => {
-		const user = userMock();
+		const user = userStub1;
 		const account = user.accountList[0];
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
-		const accountsMockRepository = AccountsMockRepository();
-		accountsMockRepository.findById.mockResolvedValue(account);
-
-		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue({
-			movementList: movementListMock as unknown as Movement[],
-			pagination: Pagination.empty(),
-		});
-
 		const movementList = await MovementFindAll(
-			accountsMockRepository,
-			movementsMockRespository,
-			usersMockRepository,
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
 			(v) => v,
 		).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
 
-		expect(movementList.movementList).toEqual(movementListMock);
+		expect(movementList.movementList).toEqual(movementListStub);
 		expect(movementList.pagination).toBeInstanceOf(Pagination);
 	});
 
 	test('should thrown an UserNotFound error', async () => {
-		const user = userMock();
+		// GIVEN
+		const user = userNotRegisteredStub;
 		const account = user.accountList[0];
 
-		const usersMockRepository = UsersMockRepository();
-		const accountsMockRepository = AccountsMockRepository();
+		// WHEN
+		const res = MovementFindAll(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
 
-		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue({
-			movementList: movementListMock as unknown as Movement[],
-			pagination: Pagination.empty(),
-		});
+			(v) => v,
+		).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
 
-		try {
-			const res = await MovementFindAll(
-				accountsMockRepository,
-				movementsMockRespository,
-				usersMockRepository,
-				(v) => v,
-			).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserNotFound);
 	});
 
 	test('should thrown an AccountNotFound error', async () => {
-		const user = userMock();
-		const account = user.accountList[0];
+		// GIVEN
+		const user = userStub1;
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
-		const accountsMockRepository = AccountsMockRepository();
+		// WHEN
+		const res = MovementFindAll(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({ user, accountId: 'wrong-account-id', limit: 10, page: 1 });
 
-		const movementsMockRespository = MovementsMockRespository();
-		movementsMockRespository.findAll.mockResolvedValue({
-			movementList: movementListMock as unknown as Movement[],
-			pagination: Pagination.empty(),
-		});
-
-		try {
-			const res = await MovementFindAll(
-				accountsMockRepository,
-				movementsMockRespository,
-				usersMockRepository,
-				(v) => v,
-			).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(AccountNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(AccountNotFound);
 	});
 });

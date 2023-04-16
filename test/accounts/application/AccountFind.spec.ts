@@ -1,51 +1,62 @@
 import { AccountFind } from '@/Accounts/application';
 import { Account } from '@/Accounts/domain';
+import {
+	AccounstStubRepository,
+	accountStub1,
+} from '@/Accounts/infrastructure/repos';
 import { AccountNotFound } from '@/Movements/domain';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
 import { UserNotFound } from '@/Users/domain';
+import { UsersStubRepository, userStub1 } from '@/Users/infrastructure/repos';
 
 describe('AccountFind use case', () => {
 	test('should successfully return an Account', async () => {
-		const user = userMock();
-		const usersRepo = UsersMockRepository();
-		const account = user.accountList?.[0];
+		// GIVEN
+		const account = accountStub1;
+		const user = userStub1;
 
-		usersRepo.findByUserId.mockResolvedValue(user);
-
-		const result = await AccountFind(usersRepo, (v) => v).execute({
-			accountId: account?.id || '',
-			userId: user.id || '',
+		// WHEN
+		const result = await AccountFind(
+			AccounstStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			accountId: account.id,
+			userId: user.id,
 		});
 
+		// THEN
 		expect(result).toBeInstanceOf(Account);
 		expect(result).toEqual(account);
 	});
 
 	test('should throw an error if the user does not exist', async () => {
-		const user = userMock();
-		const usersRepo = UsersMockRepository();
-
-		usersRepo.findByUserId.mockResolvedValue(undefined);
+		// GIVEN
+		const account = accountStub1;
 
 		await expect(
-			AccountFind(usersRepo, (v) => v).execute({
-				accountId: user.accountList?.[0]?.id || '',
-				userId: user.id || '',
+			AccountFind(
+				AccounstStubRepository(),
+				UsersStubRepository(),
+				(v) => v,
+			).execute({
+				accountId: account.id,
+				userId: 'non-existing-user-id',
 			}),
 		).rejects.toThrowError(UserNotFound);
 	});
 
 	test('should throw an error if the account does not exist', async () => {
-		const user = userMock();
-		const usersRepo = UsersMockRepository();
-
-		usersRepo.findByUserId.mockResolvedValue(user);
+		// GIVEN
+		const user = userStub1;
 
 		await expect(
-			AccountFind(usersRepo, (v) => v).execute({
+			AccountFind(
+				AccounstStubRepository(),
+				UsersStubRepository(),
+				(v) => v,
+			).execute({
 				accountId: 'non-existing-account-id',
-				userId: user.id || '',
+				userId: user.id,
 			}),
 		).rejects.toThrowError(AccountNotFound);
 	});

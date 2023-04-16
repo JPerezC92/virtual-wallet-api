@@ -44,7 +44,6 @@ export const CreateTopup: <AdapterReturn>(
 				currency: account.currency,
 			});
 			account = account.doTopup(topup);
-
 			await Promise.all([
 				movementsRepo.create(topup),
 				accountsRepo.update(account),

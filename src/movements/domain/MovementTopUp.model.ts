@@ -36,7 +36,6 @@ export class MovementTopUp
 			id: crypto.randomUUID(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			currency: '',
 		});
 	}
 

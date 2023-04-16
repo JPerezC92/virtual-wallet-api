@@ -9,7 +9,7 @@ const MovementEndpointBase = z.object({
 	amount: z.number(),
 	date: z.date(),
 	concept: z.string(),
-	currency: z.string(),
+	currency: z.string().min(3).max(3),
 	accountId: z.string().uuid(),
 	createdAt: z.date(),
 	updatedAt: z.date(),

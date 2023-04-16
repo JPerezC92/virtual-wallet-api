@@ -33,6 +33,7 @@ import {
 } from '@/Auth/infrastructure/service';
 import * as sharedSchemas from '@/Shared/infrastructure/schemas';
 import { User } from '@/Users/domain';
+import { UserModelToEndpoint } from '@/Users/infrastructure/adapters';
 import * as usersSchemas from '@/Users/infrastructure/schemas';
 
 @Controller('auth')
@@ -73,7 +74,7 @@ export class AuthController {
 	})
 	@Get('me')
 	me(@UserFromReq() user: User): usersSchemas.User {
-		return usersSchemas.UserEndpoint.parse(user);
+		return UserModelToEndpoint(user);
 	}
 
 	@ApiOkResponse({ type: authSchemas.AuthToken })

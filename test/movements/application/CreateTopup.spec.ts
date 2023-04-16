@@ -1,15 +1,18 @@
 import { UserIsntOwnerOfAccount } from '@/Accounts/domain';
+import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
 import { CreateTopup } from '@/Movements/application';
-import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { MovementsMockRespository } from '@/Test/movements/infrastructure';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
+import { MovementsStubRepository } from '@/Movements/infrastructure/repos';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
+import {
+	userNotRegisteredStub,
+	UsersStubRepository,
+	userStub1,
+} from '@/Users/infrastructure/repos';
 
 describe('CreateTopup use case', () => {
 	test('should create a new topup movement successfully', async () => {
-		const user = userMock();
+		// GIVEN
+		const user = userStub1;
 		const topupCreate = {
 			accountId: user.accountList[0]?.id || '',
 			amount: 100,
@@ -18,14 +21,11 @@ describe('CreateTopup use case', () => {
 			type: 'TOPUP' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
-
 		const movement = await CreateTopup(
-			AccountsMockRepository(),
-			MovementsMockRespository(),
-			usersMockRepository,
-			MovementModelToEndpoint,
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
 		).execute({
 			user,
 			newTopup: topupCreate,
@@ -41,7 +41,8 @@ describe('CreateTopup use case', () => {
 	});
 
 	test('should throw a UserNotFound exception', async () => {
-		const user = userMock();
+		// GIVEN
+		const user = userNotRegisteredStub;
 		const topupCreate = {
 			accountId: user.accountList[0]?.id || '',
 			amount: 100,
@@ -50,49 +51,45 @@ describe('CreateTopup use case', () => {
 			type: 'TOPUP' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
+		// WHEN
+		const res = CreateTopup(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user,
+			newTopup: topupCreate,
+		});
 
-		try {
-			await CreateTopup(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user,
-				newTopup: topupCreate,
-			});
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserNotFound);
 	});
 
 	test('should throw a UserIsntOwnerOfAccount exception', async () => {
-		const user = userMock();
-		user.findAccount = jest.fn().mockReturnValue(null);
+		// GIVEN
+		const user = userStub1;
+
 		const topupCreate = {
-			accountId: user.accountList[0]?.id || '',
+			accountId: 'wrong-account-id',
 			amount: 100,
 			concept: 'Test topup',
 			date: new Date(),
 			type: 'TOPUP' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
+		// WHEN
+		const res = CreateTopup(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user,
+			newTopup: topupCreate,
+		});
 
-		try {
-			await CreateTopup(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user,
-				newTopup: topupCreate,
-			});
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserIsntOwnerOfAccount);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserIsntOwnerOfAccount);
 	});
 });

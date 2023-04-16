@@ -1,15 +1,18 @@
 import { NotEnoughMoney, UserIsntOwnerOfAccount } from '@/Accounts/domain';
+import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
 import { CreatePayment } from '@/Movements/application';
-import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { MovementsMockRespository } from '@/Test/movements/infrastructure';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
-import { UserNotFound } from '@/Users/domain/UserNotFound.error';
+import { MovementsStubRepository } from '@/Movements/infrastructure/repos';
+import { UserNotFound } from '@/Users/domain';
+import {
+	userNotRegisteredStub,
+	UsersStubRepository,
+	userStub1,
+} from '@/Users/infrastructure/repos';
 
-describe('CreateTopup use case', () => {
+describe('CreatePayment use case', () => {
 	test('should create a new payment movement successfully', async () => {
-		const user = userMock(100);
+		// GIVEN
+		const user = userStub1;
 		const account = user.accountList[0];
 
 		const paymentCreate = {
@@ -20,19 +23,18 @@ describe('CreateTopup use case', () => {
 			type: 'PAYMENT' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
-
+		// WHEN
 		const movement = await CreatePayment(
-			AccountsMockRepository(),
-			MovementsMockRespository(),
-			usersMockRepository,
-			MovementModelToEndpoint,
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
 		).execute({
 			user,
 			newPayment: paymentCreate,
 		});
 
+		// THEN
 		expect(movement).toEqual({
 			...paymentCreate,
 			currency: expect.any(String),
@@ -43,7 +45,8 @@ describe('CreateTopup use case', () => {
 	});
 
 	test('should throw a UserNotFound exception', async () => {
-		const user = userMock(0);
+		// GIVEN
+		const user = userNotRegisteredStub;
 		const account = user.accountList[0];
 		const paymentCreate = {
 			accountId: account?.id || '',
@@ -53,83 +56,70 @@ describe('CreateTopup use case', () => {
 			type: 'PAYMENT' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
+		// WHEN
+		const res = CreatePayment(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user,
+			newPayment: paymentCreate,
+		});
 
-		try {
-			const res = await CreatePayment(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user,
-				newPayment: paymentCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserNotFound);
 	});
 
 	test('should throw a UserIsntOwnerOfAccount exception', async () => {
-		const user = userMock(0);
-		const account = user.accountList[0];
+		// GIVEN
+		const user = userStub1;
 		const paymentCreate = {
-			accountId: account?.id || '',
+			accountId: 'Wrong-account-id',
 			amount: 100,
 			concept: 'Test payment',
 			date: new Date(),
 			type: 'PAYMENT' as const,
 		};
 
-		user.findAccount = jest.fn().mockReturnValue(null);
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
+		// WHEN
+		const res = CreatePayment(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user,
+			newPayment: paymentCreate,
+		});
 
-		try {
-			const res = await CreatePayment(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user,
-				newPayment: paymentCreate,
-			});
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserIsntOwnerOfAccount);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserIsntOwnerOfAccount);
 	});
 
 	test('should throw a NotEnoughMoney exception', async () => {
-		const user = userMock(99);
+		// GIVEN
+		const user = userStub1;
 		const paymentCreate = {
 			accountId: user.accountList[0]?.id || '',
-			amount: 100,
+			amount: 999999999999,
 			concept: 'Test payment',
 			date: new Date(),
 			type: 'PAYMENT' as const,
 		};
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(user);
+		// WHEN
+		const res = CreatePayment(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user,
+			newPayment: paymentCreate,
+		});
 
-		try {
-			const res = await CreatePayment(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user,
-				newPayment: paymentCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(NotEnoughMoney);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(NotEnoughMoney);
 	});
 });

@@ -4,6 +4,13 @@ import { z } from 'zod';
 
 import { MovementType } from '@/Movements/domain';
 
+const baseExample = {
+	amount: 'number',
+	date: new Date().toISOString(),
+	concept: 'A short description of the movement',
+	accountId: 'string',
+};
+
 const MovementBase = z.object({
 	amount: z.number(),
 
@@ -38,18 +45,16 @@ export const MovementCreate = extendApi(
 		title: 'MovementCreate',
 		example: [
 			{
-				type: `${MovementType.TOPUP}|${MovementType.PAYMENT}`,
-				amount: 'number',
-				date: 'string',
-				concept: 'string',
-				accountId: 'string',
+				...baseExample,
+				type: MovementType.TOPUP,
 			},
 			{
-				type: `${MovementType.TRANSFERENCE}`,
-				amount: 'number',
-				date: 'string',
-				concept: 'string',
-				accountId: 'string',
+				...baseExample,
+				type: MovementType.PAYMENT,
+			},
+			{
+				...baseExample,
+				type: MovementType.TRANSFERENCE,
 				toAccountId: 'string',
 			},
 		],

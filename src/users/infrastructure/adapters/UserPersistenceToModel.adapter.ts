@@ -2,7 +2,7 @@ import { UserDB } from '@prisma/client';
 import { z } from 'zod';
 
 import { AccountDBValidator } from '@/Accounts/infrastructure/adapters';
-import { User } from '@/Users/domain';
+import { User, UserDetails } from '@/Users/domain';
 
 const userDBValidator = z
 	.object({
@@ -16,7 +16,9 @@ const userDBValidator = z
 		createdAt: z.date(),
 		updatedAt: z.date(),
 	})
-	.transform((userDB) => new User(userDB));
+	.transform(
+		(userDB) => new User({ ...userDB, userDetails: new UserDetails(userDB) }),
+	);
 
 export function UserPersistenceToModel(userDB: UserDB): User {
 	return userDBValidator.parse(userDB);

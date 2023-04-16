@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { RevalidateAccess } from '@/Auth/application';
 import { AuthController } from '@/Auth/infrastructure/auth.controller';
+import { AuthStubRepository } from '@/Auth/infrastructure/repos';
 import {
 	AccessTokenCipher,
 	AuthService,
@@ -12,8 +13,7 @@ import {
 } from '@/Auth/infrastructure/service';
 import { DatabaseModule } from '@/Database/database.module';
 import { AppModule } from '@/src/app.module';
-import { authMockRepository } from '@/Test/auth/infrastructure';
-import { userMock } from '@/Test/users/fixtures';
+import { userStub1 } from '@/Users/infrastructure/repos';
 
 describe('RevalidateAccess use case', () => {
 	let accessTokenCipher: AccessTokenCipher;
@@ -38,10 +38,10 @@ describe('RevalidateAccess use case', () => {
 
 	test('should return new AuthToken credentials', async () => {
 		const authToken = await RevalidateAccess(
-			authMockRepository(),
+			AuthStubRepository(),
 			accessTokenCipher,
 			refreshTokenCipher,
-		).execute({ user: userMock(), ip: '127.0.0.1' });
+		).execute({ user: userStub1, ip: '127.0.0.1' });
 
 		expect(authToken).toEqual({
 			accessToken: expect.any(String),

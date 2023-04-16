@@ -5,6 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserLogin } from '@/Auth/application';
 import { InvalidCredentials } from '@/Auth/domain';
 import { AuthController } from '@/Auth/infrastructure/auth.controller';
+import { AuthStubRepository } from '@/Auth/infrastructure/repos';
 import {
 	AccessTokenCipher,
 	BcryptPasswordCipher,
@@ -13,9 +14,7 @@ import {
 import { AuthService } from '@/Auth/infrastructure/service/auth.service';
 import { DatabaseModule } from '@/Database/database.module';
 import { AppModule } from '@/src/app.module';
-import { authMockRepository } from '@/Test/auth/infrastructure/authMockRepository';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
+import { UsersStubRepository, userStub1 } from '@/Users/infrastructure/repos';
 
 describe('UserLogin use case', () => {
 	let accessTokenCipher: AccessTokenCipher;
@@ -43,69 +42,77 @@ describe('UserLogin use case', () => {
 	});
 
 	test('should login successfully', async () => {
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByEmail.mockResolvedValue(userMock());
+		// GIVEN
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(true);
+		const user = userStub1;
 
-		const authToken = await UserLogin(
-			authMockRepository(),
-			usersMockRepository,
+		// WHEN
+		const authDetails = await UserLogin(
+			AuthStubRepository(),
+			UsersStubRepository(),
 			bcryptPasswordCipher,
 			accessTokenCipher,
 			refreshTokenCipher,
 			(v) => v,
 		).execute({
-			credentials: { email: 'test@example.com', password: 'test' },
+			credentials: {
+				email: user.userDetails.email,
+				password: user.password,
+			},
 			ip,
 		});
 
-		expect(authToken).toEqual({
+		// THEN
+		expect(authDetails).toEqual({
 			accessToken: expect.any(String),
 			refreshToken: expect.any(String),
 		});
 	});
 
 	test('should throw a InvalidCredentials error when the user is not found', async () => {
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByEmail.mockResolvedValue(undefined);
+		// GIVEN
+		const user = userStub1;
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(true);
 
-		try {
-			await UserLogin(
-				authMockRepository(),
-				usersMockRepository,
-				bcryptPasswordCipher,
-				accessTokenCipher,
-				refreshTokenCipher,
-				(v) => v,
-			).execute({
-				credentials: { email: 'test@example.com', password: 'test' },
-				ip,
-			});
-		} catch (error) {
-			expect(error).toBeInstanceOf(InvalidCredentials);
-		}
+		// WHEN
+		const result = UserLogin(
+			AuthStubRepository(),
+			UsersStubRepository(),
+			bcryptPasswordCipher,
+			accessTokenCipher,
+			refreshTokenCipher,
+			(v) => v,
+		).execute({
+			credentials: { email: 'email-not-register', password: user.password },
+			ip,
+		});
+
+		// THEN
+		expect(result).rejects.toThrow(InvalidCredentials);
 	});
 
 	test('should throw a InvalidCredentials error when the passwords doesnt match', async () => {
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByEmail.mockResolvedValue(userMock());
+		// GIVEN
+		const user = userStub1;
 		jest.spyOn(bcryptPasswordCipher, 'compare').mockResolvedValue(false);
 
-		try {
-			await UserLogin(
-				authMockRepository(),
-				usersMockRepository,
-				bcryptPasswordCipher,
-				accessTokenCipher,
-				refreshTokenCipher,
-				(v) => v,
-			).execute({
-				credentials: { email: 'test@example.com', password: 'test' },
-				ip,
-			});
-		} catch (error) {
-			expect(error).toBeInstanceOf(InvalidCredentials);
-		}
+		// WHEN
+		const result = UserLogin(
+			AuthStubRepository(),
+			UsersStubRepository(),
+			bcryptPasswordCipher,
+			accessTokenCipher,
+			refreshTokenCipher,
+			(v) => v,
+		).execute({
+			credentials: {
+				email: user.userDetails.email,
+				password: 'fake-password',
+			},
+			ip,
+		});
+
+		// THEN
+		expect(result).rejects.toThrow(InvalidCredentials);
 	});
 });

@@ -1,31 +1,34 @@
+import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
 import { UserAlreadyRegistered } from '@/Auth/domain';
 import { BcryptPasswordCipher } from '@/Auth/infrastructure/service';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { CurrencyMockRepository } from '@/Test/currencies/infrastructure';
-import { userCreateMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
+import {
+	CurrenciesStubRepository,
+	currencyStub1,
+} from '@/Currencies/infrastructure/repos';
 import { UserRegister } from '@/Users/application';
-import { User } from '@/Users/domain';
 import { UserModelToEndpoint } from '@/Users/infrastructure/adapters';
+import { UsersStubRepository } from '@/Users/infrastructure/repos';
 
 describe('UserRegister use case', () => {
 	test('should create a new user', async () => {
-		const accountsRepository = AccountsMockRepository();
+		// GIVEN
+		const userCreateMock = {
+			email: 'jhon.test@gmail.com',
+			firstName: 'Jhon',
+			lastName: 'Test',
+			password: '123456',
+		};
 
-		const currencyRepository = CurrencyMockRepository();
-		currencyRepository.findDefault.mockResolvedValue('ARS');
-
-		const userRepository = UsersMockRepository();
-		userRepository.findByEmail.mockResolvedValueOnce(undefined);
-
+		// WHEN
 		const user = await UserRegister(
-			accountsRepository,
-			currencyRepository,
-			userRepository,
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
 			new BcryptPasswordCipher(),
 			UserModelToEndpoint,
 		).execute(userCreateMock);
 
+		// THEN
 		expect(user).toEqual({
 			firstName: userCreateMock.firstName,
 			lastName: userCreateMock.lastName,
@@ -39,7 +42,7 @@ describe('UserRegister use case', () => {
 		user.accountList.map((account) =>
 			expect(account).toEqual({
 				id: expect.any(String),
-				currency: 'ARS',
+				currency: currencyStub1,
 				userId: user.id,
 				balance: 0,
 				income: 0,
@@ -51,24 +54,24 @@ describe('UserRegister use case', () => {
 	});
 
 	test('should throw an UserAlreadyRegistered', async () => {
-		const accountsRepository = AccountsMockRepository();
+		// GIVEN
+		const userCreateMock = {
+			email: 'jhon.test@gmail.com',
+			firstName: 'Jhon',
+			lastName: 'Test',
+			password: '123456',
+		};
 
-		const currencyRepository = CurrencyMockRepository();
-		currencyRepository.findDefault.mockResolvedValue('ARS');
+		// WHEN
+		const res = UserRegister(
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
+			new BcryptPasswordCipher(),
+			UserModelToEndpoint,
+		).execute(userCreateMock);
 
-		const userRepository = UsersMockRepository();
-		userRepository.findByEmail.mockResolvedValueOnce({} as User);
-
-		try {
-			await UserRegister(
-				accountsRepository,
-				currencyRepository,
-				userRepository,
-				new BcryptPasswordCipher(),
-				UserModelToEndpoint,
-			).execute(userCreateMock);
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserAlreadyRegistered);
-		}
+		// THEN
+		expect(res).rejects.toThrow(UserAlreadyRegistered);
 	});
 });

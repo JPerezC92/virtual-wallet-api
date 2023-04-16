@@ -52,6 +52,7 @@ export class MovementsController {
 		return this.movementsService.createMovement(user, movement);
 	}
 
+	@ApiBearerAuth()
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiNotFoundResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })

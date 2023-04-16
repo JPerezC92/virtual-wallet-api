@@ -3,19 +3,23 @@ import {
 	NotEnoughMoney,
 	UserIsntOwnerOfAccount,
 } from '@/Accounts/domain';
+import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
 import { CreateTransference } from '@/Movements/application';
 import { AccountSenderAndRecieverAreEqual } from '@/Movements/domain';
-import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { MovementsMockRespository } from '@/Test/movements/infrastructure';
-import { userMock, userMock2 } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
-import { UserNotFound } from '@/Users/domain/UserNotFound.error';
+import { MovementsStubRepository } from '@/Movements/infrastructure/repos';
+import { UserNotFound } from '@/Users/domain';
+import {
+	userNotRegisteredStub,
+	UsersStubRepository,
+	userStub1,
+	userStub2,
+} from '@/Users/infrastructure/repos';
 
-describe('CreateTopup use case', () => {
+describe('CreateTransference use case', () => {
 	test('should create a new transference movement successfully', async () => {
-		const userSender = userMock(100);
-		const userReciever = userMock2(0);
+		// GIVEN
+		const userSender = userStub1;
+		const userReciever = userStub2;
 		const accountSender = userSender.accountList[0];
 		const accountReciever = userReciever.accountList[0];
 
@@ -28,34 +32,36 @@ describe('CreateTopup use case', () => {
 			type: 'TRANSFERENCE',
 		} as const;
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(userSender);
+		// const usersMockRepository = UsersMockRepository();
+		// usersMockRepository.findByUserId.mockResolvedValue(userSender);
 
-		const accountsMockRepository = AccountsMockRepository();
-		accountsMockRepository.findById.mockResolvedValue(accountReciever);
+		// const accountsMockRepository = AccountsMockRepository();
+		// accountsMockRepository.findById.mockResolvedValue(accountReciever);
 
+		// WHEN
 		const movement = await CreateTransference(
-			accountsMockRepository,
-			MovementsMockRespository(),
-			usersMockRepository,
-			MovementModelToEndpoint,
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
 		).execute({
 			user: userSender,
 			newTransference: transferenceCreate,
 		});
 
+		// THEN
 		expect(movement).toEqual({
 			...transferenceCreate,
-			createdAt: expect.any(Date),
-			currency: expect.any(String),
 			id: expect.any(String),
+			currency: expect.any(String),
+			createdAt: expect.any(Date),
 			updatedAt: expect.any(Date),
 		});
 	});
 
-	test('should throw a UserNotFound exception', async () => {
-		const userSender = userMock(100);
-
+	test('should throw a AccountSenderAndRecieverAreEqual exception', async () => {
+		// GIVEN
+		const userSender = userStub1;
 		const accountSender = userSender.accountList[0];
 
 		const transferenceCreate = {
@@ -67,28 +73,25 @@ describe('CreateTopup use case', () => {
 			type: 'TRANSFERENCE',
 		} as const;
 
-		const usersMockRepository = UsersMockRepository();
+		// WHEN
+		const result = CreateTransference(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user: userSender,
+			newTransference: transferenceCreate,
+		});
 
-		try {
-			const res = await CreateTransference(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user: userSender,
-				newTransference: transferenceCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(AccountSenderAndRecieverAreEqual);
-		}
+		// THEN
+		expect(result).rejects.toThrowError(AccountSenderAndRecieverAreEqual);
 	});
 
 	test('should throw a UserNotFound exception', async () => {
-		const userSender = userMock(100);
-		const userReciever = userMock2(0);
+		// GIVEN
+		const userSender = userNotRegisteredStub;
+		const userReciever = userStub2;
 		const accountSender = userSender.accountList[0];
 		const accountReciever = userReciever.accountList[0];
 
@@ -101,33 +104,29 @@ describe('CreateTopup use case', () => {
 			type: 'TRANSFERENCE',
 		} as const;
 
-		const usersMockRepository = UsersMockRepository();
+		// WHEN
+		const res = CreateTransference(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user: userSender,
+			newTransference: transferenceCreate,
+		});
 
-		try {
-			const res = await CreateTransference(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user: userSender,
-				newTransference: transferenceCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserNotFound);
 	});
 
-	test('should throw a UserIsntOwnerOfAccount exception', async () => {
-		const userSender = userMock(100);
-		const userReciever = userMock2(0);
-		const accountSender = userSender.accountList[0];
+	test('should throw a UserIsntOwnerOfAccount exception when the account sender id is not found', async () => {
+		// GIVEN
+		const userSender = userStub1;
+		const userReciever = userStub2;
 		const accountReciever = userReciever.accountList[0];
 
 		const transferenceCreate = {
-			accountId: accountSender?.id || '',
+			accountId: 'Wrong Account Id',
 			amount: 100,
 			concept: 'Test Transference',
 			date: new Date(),
@@ -135,96 +134,78 @@ describe('CreateTopup use case', () => {
 			type: 'TRANSFERENCE',
 		} as const;
 
-		userSender.findAccount = jest.fn().mockReturnValue(null);
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValue(userSender);
+		// WHEN
+		const res = CreateTransference(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user: userSender,
+			newTransference: transferenceCreate,
+		});
 
-		try {
-			const res = await CreateTransference(
-				AccountsMockRepository(),
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user: userSender,
-				newTransference: transferenceCreate,
-			});
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserIsntOwnerOfAccount);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(UserIsntOwnerOfAccount);
 	});
 
-	test('should throw a NotEnoughMoney exception', async () => {
-		const userSender = userMock(99);
-		const userReciever = userMock2(0);
+	test('should throw a AccountRecieverNotFound exception', async () => {
+		// GIVEN
+		const userSender = userStub1;
 		const accountSender = userSender.accountList[0];
-		const accountReciever = userReciever.accountList[0];
 
 		const transferenceCreate = {
 			accountId: accountSender?.id || '',
 			amount: 100,
 			concept: 'Test Transference',
 			date: new Date(),
-			toAccountId: accountReciever?.id || '',
+			toAccountId: 'Wrong Account Id',
 			type: 'TRANSFERENCE',
 		} as const;
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValueOnce(userSender);
-		const accountsMockRepository = AccountsMockRepository();
+		// WHEN
+		const res = CreateTransference(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user: userSender,
+			newTransference: transferenceCreate,
+		});
 
-		try {
-			const res = await CreateTransference(
-				accountsMockRepository,
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user: userSender,
-				newTransference: transferenceCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(AccountRecieverNotFound);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(AccountRecieverNotFound);
 	});
 
 	test('should throw a NotEnoughMoney exception', async () => {
-		const userSender = userMock(99);
-		const userReciever = userMock2(0);
+		// GIVEN
+		const userSender = userStub1;
+		const userReciever = userStub2;
 		const accountSender = userSender.accountList[0];
 		const accountReciever = userReciever.accountList[0];
 
 		const transferenceCreate = {
 			accountId: accountSender?.id || '',
-			amount: 100,
+			amount: 99999999999999,
 			concept: 'Test Transference',
 			date: new Date(),
 			toAccountId: accountReciever?.id || '',
 			type: 'TRANSFERENCE',
 		} as const;
 
-		const usersMockRepository = UsersMockRepository();
-		usersMockRepository.findByUserId.mockResolvedValueOnce(userSender);
-		const accountsMockRepository = AccountsMockRepository();
-		accountsMockRepository.findById.mockResolvedValue(accountReciever);
+		// WHEN
+		const res = CreateTransference(
+			AccounstStubRepository(),
+			MovementsStubRepository(),
+			UsersStubRepository(),
+			(v) => v,
+		).execute({
+			user: userSender,
+			newTransference: transferenceCreate,
+		});
 
-		try {
-			const res = await CreateTransference(
-				accountsMockRepository,
-				MovementsMockRespository(),
-				usersMockRepository,
-				MovementModelToEndpoint,
-			).execute({
-				user: userSender,
-				newTransference: transferenceCreate,
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(NotEnoughMoney);
-		}
+		// THEN
+		expect(res).rejects.toThrowError(NotEnoughMoney);
 	});
 });

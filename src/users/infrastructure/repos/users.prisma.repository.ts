@@ -1,5 +1,5 @@
 import { Repository } from '@/Shared/infrastructure/repos/Repository';
-import { UsersRepository } from '@/Users/domain/users.repository';
+import { UsersRepository } from '@/Users/domain';
 import { UserPersistenceToModel } from '@/Users/infrastructure/adapters';
 
 export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
@@ -30,9 +30,9 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 			await db.userDB.create({
 				data: {
 					id: user.id,
-					firstName: user.firstName,
-					lastName: user.lastName,
-					email: user.email,
+					firstName: user.userDetails.firstName,
+					lastName: user.userDetails.lastName,
+					email: user.userDetails.email,
 					password: user.password,
 					tokens: user.tokens,
 				},

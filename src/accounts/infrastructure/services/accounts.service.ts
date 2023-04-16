@@ -4,15 +4,23 @@ import {
 	NotFoundException,
 } from '@nestjs/common';
 
-import { AccountCreate } from '@/Accounts/application/AccountCreate';
-import { AccountFind } from '@/Accounts/application/AccountFind';
+import {
+	AccountCreate,
+	AccountFind,
+	AccountFindTransferenceDetails,
+} from '@/Accounts/application';
 import { AccountAlreadyCreated } from '@/Accounts/domain';
-import { AccountModelToEndpoint } from '@/Accounts/infrastructure/adapters';
+import {
+	AccountModelToEndpoint,
+	TransferenceDetailsModelToEndpoint,
+} from '@/Accounts/infrastructure/adapters';
 import { AccountsPrismaRepository } from '@/Accounts/infrastructure/repos';
 import * as accountSchemas from '@/Accounts/infrastructure/schemas';
 import { CurrencyNotFound } from '@/Currencies/domain';
 import { CurrenciesPrismaRepository } from '@/Currencies/infrastructure/repos';
 import { PrismaService } from '@/Database/prisma.service';
+import { AccountNotFound } from '@/Movements/domain';
+import * as movementsSchemas from '@/Movements/infrastructure/schemas';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
 import { User } from '@/Users/domain';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
@@ -51,6 +59,7 @@ export class AccountsService {
 		return this.prismaService.$transaction(
 			async (db) =>
 				await AccountFind(
+					AccountsPrismaRepository(db),
 					UsersPrismaRepository(db),
 					AccountModelToEndpoint,
 				).execute({
@@ -58,5 +67,28 @@ export class AccountsService {
 					userId: user.id,
 				}),
 		);
+	}
+
+	async TransferenceDetails(
+		accountId: string,
+		exceptionMap: ExceptionMap = [
+			[UserNotFound.name, NotFoundException],
+			[AccountNotFound.name, NotFoundException],
+		],
+	): Promise<movementsSchemas.TransferenceDetailsDto> {
+		try {
+			return await this.prismaService.$transaction(
+				async (db) =>
+					await AccountFindTransferenceDetails(
+						AccountsPrismaRepository(db),
+						UsersPrismaRepository(db),
+						TransferenceDetailsModelToEndpoint,
+					).execute({ accountId }),
+			);
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+
+			throw HttpException();
+		}
 	}
 }

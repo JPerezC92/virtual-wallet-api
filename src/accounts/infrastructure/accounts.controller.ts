@@ -14,6 +14,7 @@ import {
 	ApiCreatedResponse,
 	ApiInternalServerErrorResponse,
 	ApiNotFoundResponse,
+	ApiOkResponse,
 	ApiOperation,
 	ApiTags,
 } from '@nestjs/swagger';
@@ -22,8 +23,10 @@ import * as accountSchemas from '@/Accounts/infrastructure/schemas';
 import { AccountsService } from '@/Accounts/infrastructure/services';
 import { UserFromReq } from '@/Auth/infrastructure/decorators';
 import { AccessJwtAuthGuard } from '@/Auth/infrastructure/service';
+import * as movementsSchemas from '@/Movements/infrastructure/schemas';
 import * as sharedSchemas from '@/Shared/infrastructure/schemas';
 import { User } from '@/Users/domain';
+import * as userSchemas from '@/Users/infrastructure/schemas';
 
 @ApiTags('accounts')
 @Controller('accounts')
@@ -48,6 +51,7 @@ export class AccountsController {
 		return this.accountsService.createAccount(user, accountCreateDto);
 	}
 
+	@ApiOkResponse({ type: accountSchemas.Account })
 	@ApiNotFoundResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@ApiBearerAuth()
@@ -62,5 +66,21 @@ export class AccountsController {
 		@UserFromReq() user: User,
 	): Promise<accountSchemas.Account> {
 		return this.accountsService.getById(accountId, user);
+	}
+
+	@ApiOkResponse({ type: userSchemas.UserDetailsDto })
+	@ApiNotFoundResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Find user details by account id',
+		description: 'Find the user information associated with an account.',
+	})
+	@UseGuards(AccessJwtAuthGuard)
+	@Get(':id/transference-details')
+	getTransferenceDetails(
+		@Param('id', ParseUUIDPipe) accountId: string,
+	): Promise<movementsSchemas.TransferenceDetailsDto> {
+		return this.accountsService.TransferenceDetails(accountId);
 	}
 }

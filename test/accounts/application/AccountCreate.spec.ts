@@ -1,34 +1,42 @@
 import { AccountCreate } from '@/Accounts/application';
 import { AccountAlreadyCreated } from '@/Accounts/domain';
 import { AccountModelToEndpoint } from '@/Accounts/infrastructure/adapters';
+import {
+	AccounstStubRepository,
+	accountStub1,
+} from '@/Accounts/infrastructure/repos';
 import { CurrencyNotFound } from '@/Currencies/domain';
-import { AccountsMockRepository } from '@/Test/accounts/infrastructure';
-import { CurrencyMockRepository } from '@/Test/currencies/infrastructure';
-import { userMock } from '@/Test/users/fixtures';
-import { UsersMockRepository } from '@/Test/users/infrastructure';
-import { UserNotFound } from '@/Users/domain/UserNotFound.error';
+import {
+	CurrenciesStubRepository,
+	currencyStub2,
+} from '@/Currencies/infrastructure/repos';
+import { UserNotFound } from '@/Users/domain';
+import {
+	userNotRegisteredStub,
+	UsersStubRepository,
+	userStub1,
+} from '@/Users/infrastructure/repos';
 
 describe('AccountCreate use case', () => {
 	test('should create an account successfully', async () => {
-		const user = userMock();
-		const usersMockRepository = UsersMockRepository();
-		const currencyMockRepository = CurrencyMockRepository();
+		// GIVEN
+		const user = userStub1;
+		const currency = currencyStub2;
 
-		usersMockRepository.findByUserId.mockResolvedValue(user);
-		currencyMockRepository.findByValue.mockResolvedValue('USD');
-
-		const account = await AccountCreate(
-			AccountsMockRepository(),
-			currencyMockRepository,
-			usersMockRepository,
+		// WHEN
+		const result = await AccountCreate(
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
 			AccountModelToEndpoint,
 		).execute({
 			user: user,
-			currency: 'USD',
+			currency: currency,
 		});
 
-		expect(account).toEqual({
-			currency: 'USD',
+		// THEN
+		expect(result).toEqual({
+			currency: currency,
 			id: expect.any(String),
 			balance: 0,
 			income: 0,
@@ -40,70 +48,61 @@ describe('AccountCreate use case', () => {
 	});
 
 	test('should throw an AccountAlreadyCreated error', async () => {
-		const user = userMock();
-		const usersMockRepository = UsersMockRepository();
-		const currencyMockRepository = CurrencyMockRepository();
+		// GIVEN
+		const user = userStub1;
+		const account = accountStub1;
 
-		try {
-			const res = await AccountCreate(
-				AccountsMockRepository(),
-				currencyMockRepository,
-				usersMockRepository,
-				AccountModelToEndpoint,
-			).execute({
-				user: user,
-				currency: 'ARS',
-			});
+		// WHEN
+		const result = AccountCreate(
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
+			AccountModelToEndpoint,
+		).execute({
+			user: user,
+			currency: account.currency,
+		});
 
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(AccountAlreadyCreated);
-		}
+		// THEN
+		await expect(result).rejects.toThrowError(AccountAlreadyCreated);
 	});
 
 	test('should throw an UserNotFound error', async () => {
-		const user = userMock();
-		const usersMockRepository = UsersMockRepository();
-		const currencyMockRepository = CurrencyMockRepository();
+		// GIVEN
+		const user = userNotRegisteredStub;
+		const currency = currencyStub2;
 
-		try {
-			const res = await AccountCreate(
-				AccountsMockRepository(),
-				currencyMockRepository,
-				usersMockRepository,
-				AccountModelToEndpoint,
-			).execute({
-				user: user,
-				currency: 'USD',
-			});
+		// WHEN
+		const result = AccountCreate(
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
+			AccountModelToEndpoint,
+		).execute({
+			user,
+			currency,
+		});
 
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(UserNotFound);
-		}
+		// THEN
+		await expect(result).rejects.toThrowError(UserNotFound);
 	});
 
 	test('should throw an CurrencyNotFound error', async () => {
-		const user = userMock();
-		const usersMockRepository = UsersMockRepository();
-		const currencyMockRepository = CurrencyMockRepository();
+		// GIVEN
+		const user = userStub1;
 
-		usersMockRepository.findByUserId.mockResolvedValue(user);
+		// WHEN
+		const result = AccountCreate(
+			AccounstStubRepository(),
+			CurrenciesStubRepository(),
+			UsersStubRepository(),
+			AccountModelToEndpoint,
+		).execute({
+			user: user,
+			currency: '---',
+		});
 
-		try {
-			const res = await AccountCreate(
-				AccountsMockRepository(),
-				currencyMockRepository,
-				usersMockRepository,
-				AccountModelToEndpoint,
-			).execute({
-				user: user,
-				currency: 'USD',
-			});
-
-			expect(res).toBeUndefined();
-		} catch (error) {
-			expect(error).toBeInstanceOf(CurrencyNotFound);
-		}
+		// THEN
+		await expect(result).rejects.toThrowError(CurrencyNotFound);
 	});
 });
