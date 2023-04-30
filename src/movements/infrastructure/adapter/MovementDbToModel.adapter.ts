@@ -1,30 +1,26 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { Currency, MovementDB } from '@prisma/client';
 
 import {
 	MovementPayment,
 	MovementTopUp,
 	MovementTransference,
 } from '@/Movements/domain';
+import { MovementExtendedDB } from '@/Movements/infrastructure/types/MovementExtendedDB';
 
-export function MovementDbToModel(
-	movementDb: MovementDB & { currency: Currency['value'] },
-) {
+export function MovementDbToModel(movementDb: MovementExtendedDB) {
 	if (movementDb.type === 'TOPUP') {
 		return new MovementTopUp({
-			accountId: movementDb.accountId,
-			amount: movementDb.amount,
-			concept: movementDb.concept,
-			createdAt: movementDb.createdAt,
-			date: movementDb.date,
-			id: movementDb.id,
+			...movementDb,
+			currency: movementDb.account.currencyValue,
 			type: movementDb.type,
-			currency: movementDb.currency,
-			updatedAt: movementDb.updatedAt,
 		});
 	}
 	if (movementDb.type === 'PAYMENT') {
-		return new MovementPayment({ ...movementDb, type: movementDb.type });
+		return new MovementPayment({
+			...movementDb,
+			currency: movementDb.account.currencyValue,
+			type: movementDb.type,
+		});
 	}
 
 	if (!movementDb.toAccountId) throw new InternalServerErrorException();
@@ -32,6 +28,8 @@ export function MovementDbToModel(
 	return new MovementTransference({
 		...movementDb,
 		type: movementDb.type,
+		currency: movementDb.account.currencyValue,
+		isTransferenceReceived: Boolean(movementDb?.isTransferenceReceived),
 		toAccountId: movementDb.toAccountId,
 	});
 }

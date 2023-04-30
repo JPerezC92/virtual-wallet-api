@@ -8,7 +8,7 @@ import { UserNotFound } from '@/Users/domain/UserNotFound.error';
 
 type CreatePaymentProps = {
 	user: User;
-	newPayment: Omit<IPaymentCreate, 'currency'>;
+	newPayment: Omit<IPaymentCreate, 'currency' | 'userId'>;
 };
 
 /**
@@ -43,6 +43,7 @@ export const CreatePayment: <AdapterReturn>(
 				...newPayment,
 				currency: account.currency,
 			});
+
 			account = account.doPayment(payment);
 
 			await Promise.all([

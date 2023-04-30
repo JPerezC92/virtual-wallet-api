@@ -1,6 +1,6 @@
 import { AccounstStubRepository } from '@/Accounts/infrastructure/repos';
-import { MovementFindAll } from '@/Movements/application/MovementFindAll';
-import { AccountNotFound } from '@/Movements/domain';
+import { MovementFindByCriteria } from '@/Movements/application/MovementFindAll';
+import { AccountNotFound, MovementType } from '@/Movements/domain';
 import {
 	movementListStub,
 	MovementsStubRepository,
@@ -18,12 +18,19 @@ describe('MovementFindAll use case', () => {
 		const user = userStub1;
 		const account = user.accountList[0];
 
-		const movementList = await MovementFindAll(
+		const movementList = await MovementFindByCriteria(
 			AccounstStubRepository(),
 			MovementsStubRepository(),
 			UsersStubRepository(),
 			(v) => v,
-		).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
+		).execute({
+			user,
+			accountId: account?.id || '',
+			limit: 10,
+			page: 1,
+			operation: MovementType.ALL,
+			concept: '',
+		});
 
 		expect(movementList.movementList).toEqual(movementListStub);
 		expect(movementList.pagination).toBeInstanceOf(Pagination);
@@ -35,13 +42,20 @@ describe('MovementFindAll use case', () => {
 		const account = user.accountList[0];
 
 		// WHEN
-		const res = MovementFindAll(
+		const res = MovementFindByCriteria(
 			AccounstStubRepository(),
 			MovementsStubRepository(),
 			UsersStubRepository(),
 
 			(v) => v,
-		).execute({ user, accountId: account?.id || '', limit: 10, page: 1 });
+		).execute({
+			user,
+			accountId: account?.id || '',
+			limit: 10,
+			page: 1,
+			operation: MovementType.ALL,
+			concept: '',
+		});
 
 		// THEN
 		expect(res).rejects.toThrowError(UserNotFound);
@@ -52,12 +66,19 @@ describe('MovementFindAll use case', () => {
 		const user = userStub1;
 
 		// WHEN
-		const res = MovementFindAll(
+		const res = MovementFindByCriteria(
 			AccounstStubRepository(),
 			MovementsStubRepository(),
 			UsersStubRepository(),
 			(v) => v,
-		).execute({ user, accountId: 'wrong-account-id', limit: 10, page: 1 });
+		).execute({
+			user,
+			accountId: 'wrong-account-id',
+			limit: 10,
+			page: 1,
+			operation: MovementType.ALL,
+			concept: '',
+		});
 
 		// THEN
 		expect(res).rejects.toThrowError(AccountNotFound);

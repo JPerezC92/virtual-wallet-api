@@ -5,17 +5,20 @@ import {
 } from '@/Accounts/domain';
 import {
 	AccountSenderAndRecieverAreEqual,
+	ITransferenceCreate,
 	MovementsRepository,
+	MovementTransference,
 } from '@/Movements/domain';
-import { MovementTransference } from '@/Movements/domain/MovementTransference.model';
-import { ITransferenceCreate } from '@/Movements/domain/TransferenceCreate.interface';
 import { Adapter, UseCase } from '@/Shared/application';
 import { User, UsersRepository } from '@/Users/domain';
 import { UserNotFound } from '@/Users/domain/UserNotFound.error';
 
 type CreatePaymentProps = {
 	user: User;
-	newTransference: Omit<ITransferenceCreate, 'currency'>;
+	newTransference: Omit<
+		ITransferenceCreate,
+		'currency' | 'isTransferenceReceived'
+	>;
 };
 
 /**

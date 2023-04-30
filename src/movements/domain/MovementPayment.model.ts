@@ -1,5 +1,7 @@
 import * as crypto from 'crypto';
 
+import { Account } from '@/Accounts/domain';
+
 import { IMovementBase } from './MovementBase.interface';
 import { IMovementEdition } from './MovementEdition.interface';
 import { IMovementValidation } from './MovementValidation.interface';
@@ -14,7 +16,7 @@ export class MovementPayment
 	date: Date;
 	createdAt: Date;
 	updatedAt: Date;
-	accountId: string;
+	accountId: Account['id'];
 	id: string;
 	currency: string;
 

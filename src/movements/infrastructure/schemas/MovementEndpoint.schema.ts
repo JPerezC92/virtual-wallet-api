@@ -30,6 +30,7 @@ export const MovementEndpoint = extendApi(
 		z
 			.object({
 				type: z.literal(MovementType.TRANSFERENCE),
+				isTransferenceReceived: z.boolean(),
 				toAccountId: z.string().uuid(),
 			})
 			.merge(MovementEndpointBase),
@@ -38,19 +39,27 @@ export const MovementEndpoint = extendApi(
 		title: 'Movement',
 		example: [
 			{
+				id: 'string',
 				type: `${MovementType.TOPUP}|${MovementType.PAYMENT}`,
 				amount: 'number',
-				date: 'string',
+				date: new Date(),
 				concept: 'string',
+				currency: 'ARS',
 				accountId: 'string',
+				createdAt: new Date(),
+				updatedAt: new Date(),
 			},
 			{
+				id: 'string',
 				type: `${MovementType.TRANSFERENCE}`,
 				amount: 'number',
-				date: 'string',
+				date: new Date(),
 				concept: 'string',
+				currency: 'ARS',
 				accountId: 'string',
 				toAccountId: 'string',
+				createdAt: new Date(),
+				updatedAt: new Date(),
 			},
 		],
 	},

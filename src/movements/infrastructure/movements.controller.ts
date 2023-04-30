@@ -63,10 +63,10 @@ export class MovementsController {
 	})
 	@UseGuards(AccessJwtAuthGuard)
 	@Get()
-	findAll(
+	findByCriteria(
 		@UserFromReq() user: User,
 		@Query() movementGetQueryDto: movementsSchemas.MovementGetQueryDto,
 	): Promise<movementsSchemas.MovementGetResponseDto> {
-		return this.movementsService.findAll(user, movementGetQueryDto);
+		return this.movementsService.findByCriteria(user, movementGetQueryDto);
 	}
 }

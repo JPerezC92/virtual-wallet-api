@@ -9,7 +9,7 @@ import { UserNotFound } from '@/Users/domain/UserNotFound.error';
 
 type CreateTopupProps = {
 	user: User;
-	newTopup: Omit<ITopupCreate, 'currency'>;
+	newTopup: Omit<ITopupCreate, 'currency' | 'userId'>;
 };
 
 /**
@@ -43,7 +43,9 @@ export const CreateTopup: <AdapterReturn>(
 				...newTopup,
 				currency: account.currency,
 			});
+
 			account = account.doTopup(topup);
+
 			await Promise.all([
 				movementsRepo.create(topup),
 				accountsRepo.update(account),

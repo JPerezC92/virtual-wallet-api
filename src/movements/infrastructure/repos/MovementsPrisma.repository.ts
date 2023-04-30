@@ -1,4 +1,6 @@
-import { MovementsRepository } from '@/Movements/domain';
+import { Prisma } from '@prisma/client';
+
+import { MovementsRepository, MovementType } from '@/Movements/domain';
 import {
 	MovementDbToModel,
 	MovementModelToDB,
@@ -16,22 +18,27 @@ export const MovementsPrismaRepository: Repository<MovementsRepository> = (
 			});
 		},
 
-		findAll: async (accountId, page, limit) => {
+		findByCriteria: async (accountId, page, limit, operation, concept) => {
 			const pagination = Pagination.empty();
+			const where: Prisma.MovementDBWhereInput = {
+				OR: [{ accountId }, { toAccountId: accountId }],
+			};
 
-			const result = await db.accountDB.findUnique({
-				where: { id: accountId },
-				include: {
-					movementList: {
-						where: {
-							OR: [{ accountId }, { toAccountId: accountId }],
-						},
-						orderBy: { createdAt: 'desc' },
-						skip: (page - 1) * limit,
-						take: limit,
-					},
-					_count: { select: { movementList: true } },
-				},
+			if (operation !== MovementType.ALL) {
+				where.type = operation;
+			}
+			if (!!concept) {
+				where.concept = { contains: concept };
+			}
+
+			const resultCount = await db.movementDB.count({ where });
+
+			const result = await db.movementDB.findMany({
+				where,
+				include: { account: true, toAccount: true },
+				orderBy: { createdAt: 'desc' },
+				skip: (page - 1) * limit,
+				take: limit,
 			});
 
 			if (!result)
@@ -40,13 +47,16 @@ export const MovementsPrismaRepository: Repository<MovementsRepository> = (
 					pagination,
 				};
 
-			const { movementList, _count, ...accountDB } = result;
-			const movementCount = _count.movementList;
+			const movementCount = resultCount;
 
 			return {
-				movementList: movementList.map((m) =>
-					MovementDbToModel({ ...m, currency: accountDB.currencyValue }),
-				),
+				movementList: result
+					.map((v) =>
+						v.type === MovementType.TRANSFERENCE
+							? { ...v, isTransferenceReceived: v.accountId !== accountId }
+							: v,
+					)
+					.map(MovementDbToModel),
 				pagination: pagination.calculate({ page, limit }, movementCount),
 			};
 		},

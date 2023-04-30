@@ -3,6 +3,7 @@ import {
 	AccountNotFound,
 	Movement,
 	MovementsRepository,
+	MovementType,
 } from '@/Movements/domain';
 import { Adapter, UseCase } from '@/Shared/application';
 import { IPaginationCriteria, Pagination } from '@/Shared/domain';
@@ -13,13 +14,15 @@ type FindAllProps = {
 	accountId: Account['id'];
 	page: IPaginationCriteria['page'];
 	limit: IPaginationCriteria['limit'];
+	operation: MovementType;
+	concept: Movement['concept'];
 };
 
 /**
  * @throws { UserNotFound }
  * @throws { AccountNotFound }
  **/
-export const MovementFindAll: <AdapterReturn>(
+export const MovementFindByCriteria: <AdapterReturn>(
 	accountsRepository: AccountsRepository,
 	movementsRepository: MovementsRepository,
 	usersRepository: UsersRepository,
@@ -37,7 +40,7 @@ export const MovementFindAll: <AdapterReturn>(
 	outputAdapter,
 ) => {
 	return {
-		execute: async ({ user, accountId, page, limit }) => {
+		execute: async ({ user, accountId, page, limit, concept, operation }) => {
 			const [_user, account] = await Promise.all([
 				usersRepository.findByUserId(user.id),
 				accountsRepository.findById(accountId),
@@ -47,10 +50,12 @@ export const MovementFindAll: <AdapterReturn>(
 
 			if (!account) throw new AccountNotFound();
 
-			const movementList = await movementsRepository.findAll(
+			const movementList = await movementsRepository.findByCriteria(
 				account.id,
 				page,
 				limit,
+				operation,
+				concept,
 			);
 
 			return outputAdapter(movementList);

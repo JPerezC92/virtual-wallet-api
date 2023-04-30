@@ -16,7 +16,7 @@ import {
 	CreateTopup,
 	CreateTransference,
 } from '@/Movements/application';
-import { MovementFindAll } from '@/Movements/application/MovementFindAll';
+import { MovementFindByCriteria } from '@/Movements/application/MovementFindAll';
 import {
 	AccountNotFound,
 	AccountSenderAndRecieverAreEqual,
@@ -81,7 +81,7 @@ export class MovementsService {
 		}
 	}
 
-	async findAll(
+	async findByCriteria(
 		user: User,
 		movementGetQueryDto: movementsSchemas.MovementGetQueryDto,
 		exceptionMap: ExceptionMap = [
@@ -92,7 +92,7 @@ export class MovementsService {
 		try {
 			return await this.prismaService.$transaction(
 				async (db) =>
-					await MovementFindAll(
+					await MovementFindByCriteria(
 						AccountsPrismaRepository(db),
 						MovementsPrismaRepository(db),
 						UsersPrismaRepository(db),
@@ -102,6 +102,8 @@ export class MovementsService {
 						accountId: movementGetQueryDto.accountId,
 						page: movementGetQueryDto.page,
 						limit: movementGetQueryDto.limit,
+						operation: movementGetQueryDto.operation,
+						concept: movementGetQueryDto.concept,
 					}),
 			);
 		} catch (error) {

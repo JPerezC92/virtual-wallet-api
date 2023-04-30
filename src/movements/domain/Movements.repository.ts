@@ -1,12 +1,18 @@
 import { Account } from '@/Accounts/domain';
 import { Movement } from '@/Movements/domain/Movement.interface';
-import { IPaginationCriteria, Pagination } from '@/Shared/domain';
+import {
+	IMovementCriteria,
+	IPaginationCriteria,
+	Pagination,
+} from '@/Shared/domain';
 
 export interface MovementsRepository {
-	findAll: (
+	findByCriteria: (
 		userId: Account['id'],
 		page: IPaginationCriteria['page'],
 		limit: IPaginationCriteria['limit'],
+		operation: IMovementCriteria['operation'],
+		concept: IMovementCriteria['concept'],
 	) => Promise<{ movementList: Movement[]; pagination: Pagination }>;
 	create: (movement: Movement) => Promise<void>;
 }

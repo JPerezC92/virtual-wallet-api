@@ -40,7 +40,7 @@ export function MovementsStubRepository(): MovementsRepository {
 			movementListStub.push(movement);
 			return;
 		},
-		findAll: async (accountId, _page, _limit) => {
+		findByCriteria: async (accountId, _page, _limit) => {
 			const movements = movementListStub.filter(
 				(movement) => movement.accountId === accountId,
 			);

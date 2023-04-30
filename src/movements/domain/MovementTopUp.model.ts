@@ -1,5 +1,7 @@
 import * as crypto from 'crypto';
 
+import { Account } from '@/Accounts/domain';
+
 import { IMovementBase } from './MovementBase.interface';
 import { IMovementEdition } from './MovementEdition.interface';
 import { IMovementValidation } from './MovementValidation.interface';
@@ -14,7 +16,7 @@ export class MovementTopUp
 	date: Date;
 	createdAt: Date;
 	updatedAt: Date;
-	accountId: string;
+	accountId: Account['id'];
 	id: string;
 	currency: string;
 
@@ -26,6 +28,7 @@ export class MovementTopUp
 		this.type = props.type;
 		this.date = props.date;
 		this.currency = props.currency;
+
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
 	}

@@ -1,5 +1,7 @@
 import * as crypto from 'crypto';
 
+import { Account } from '@/Accounts/domain';
+
 import { IMovementValidation } from './MovementValidation.interface';
 import { ITransference } from './Transference.interface';
 import { ITransferenceCreate } from './TransferenceCreate.interface';
@@ -13,10 +15,11 @@ export class MovementTransference
 	date: Date;
 	createdAt: Date;
 	updatedAt: Date;
-	toAccountId: string;
-	accountId: string;
+	toAccountId: Account['id'];
+	accountId: Account['id'];
 	id: string;
 	currency: string;
+	isTransferenceReceived: boolean;
 
 	constructor(props: ITransference) {
 		this.id = props.id;
@@ -29,6 +32,7 @@ export class MovementTransference
 		this.currency = props.currency;
 		this.createdAt = props.createdAt;
 		this.updatedAt = props.updatedAt;
+		this.isTransferenceReceived = props.isTransferenceReceived;
 	}
 
 	static createNew(newTransference: ITransferenceCreate) {
@@ -37,6 +41,7 @@ export class MovementTransference
 			id: crypto.randomUUID(),
 			createdAt: new Date(),
 			updatedAt: new Date(),
+			isTransferenceReceived: false,
 		});
 	}
 

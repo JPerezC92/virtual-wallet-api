@@ -32,12 +32,6 @@ describe('CreateTransference use case', () => {
 			type: 'TRANSFERENCE',
 		} as const;
 
-		// const usersMockRepository = UsersMockRepository();
-		// usersMockRepository.findByUserId.mockResolvedValue(userSender);
-
-		// const accountsMockRepository = AccountsMockRepository();
-		// accountsMockRepository.findById.mockResolvedValue(accountReciever);
-
 		// WHEN
 		const movement = await CreateTransference(
 			AccounstStubRepository(),
@@ -53,6 +47,7 @@ describe('CreateTransference use case', () => {
 		expect(movement).toEqual({
 			...transferenceCreate,
 			id: expect.any(String),
+			isTransferenceReceived: false,
 			currency: expect.any(String),
 			createdAt: expect.any(Date),
 			updatedAt: expect.any(Date),

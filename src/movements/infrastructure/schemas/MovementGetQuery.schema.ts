@@ -2,6 +2,8 @@ import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 
+import { MovementTypeEnum } from '@/Movements/domain';
+
 const MovementGetQuery = extendApi(
 	z.object({
 		accountId: z.string().uuid(),
@@ -21,6 +23,8 @@ const MovementGetQuery = extendApi(
 				const limit = parseInt(value, 10);
 				return isNaN(limit) ? 10 : limit;
 			}),
+		operation: z.enum(MovementTypeEnum).default('ALL'),
+		concept: z.string().default(''),
 	}),
 	{ title: 'MovementGetQuery' },
 );
