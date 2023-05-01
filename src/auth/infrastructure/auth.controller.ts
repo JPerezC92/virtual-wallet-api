@@ -98,4 +98,14 @@ export class AuthController {
 			requestIP.getClientIp(req) || req.ip,
 		);
 	}
+
+	@ApiOkResponse()
+	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@UseGuards(RefreshJwtAuthGuard)
+	@Post('logout')
+	@HttpCode(200)
+	logout(@Req() req: Request, @UserFromReq() user: User): Promise<void> {
+		return this.authService.logout(user, requestIP.getClientIp(req) || req.ip);
+	}
 }

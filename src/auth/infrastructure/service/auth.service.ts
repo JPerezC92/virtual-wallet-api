@@ -1,13 +1,18 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import {
+	Injectable,
+	NotFoundException,
+	UnprocessableEntityException,
+} from '@nestjs/common';
 import { Request } from 'express';
 
 import { RevalidateAccess, UserLogin } from '@/Auth/application';
+import { Logout } from '@/Auth/application/Logout';
 import { AuthToken, InvalidCredentials } from '@/Auth/domain';
 import { AuthPrismaRepository } from '@/Auth/infrastructure/repos';
 import * as authSchemas from '@/Auth/infrastructure/schemas';
 import { PrismaService } from '@/Database/prisma.service';
 import { ExceptionHandler, ExceptionMap } from '@/Shared/infrastructure/errors';
-import { User } from '@/Users/domain';
+import { User, UserNotFound } from '@/Users/domain';
 import { UsersPrismaRepository } from '@/Users/infrastructure/repos';
 
 import { AccessTokenCipher } from './AccessTokenCipher.service';
@@ -59,6 +64,28 @@ export class AuthService {
 						this.accessTokenCipher,
 						this.refreshTokenCipher,
 					).execute({ ip, user }),
+			);
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+			throw HttpException();
+		}
+	}
+
+	async logout(
+		user: User,
+		ip: string,
+		exceptionMap: ExceptionMap = [[UserNotFound.name, NotFoundException]],
+	): Promise<void> {
+		try {
+			await this.prismaService.$transaction(
+				async (db) =>
+					await Logout(
+						AuthPrismaRepository(db),
+						UsersPrismaRepository(db),
+					).execute({
+						ip,
+						userId: user.id,
+					}),
 			);
 		} catch (error) {
 			const HttpException = ExceptionHandler(exceptionMap).find(error);

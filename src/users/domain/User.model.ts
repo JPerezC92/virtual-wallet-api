@@ -92,6 +92,13 @@ export class User implements UserProps {
 		return this.accountList.find((v) => v.currency === currency);
 	}
 
+	logout(ip: string) {
+		this.tokens = Object.fromEntries(
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			Object.entries(this.tokens).filter(([k, _]) => k !== ip),
+		);
+	}
+
 	public static isUser(other: unknown): other is User {
 		return other instanceof User;
 	}

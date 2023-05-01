@@ -6,5 +6,9 @@ export function AuthStubRepository(): AuthRepository {
 		updateRefreshToken: async (_user) => {
 			return;
 		},
+
+		logout: async (_user) => {
+			return;
+		},
 	};
 }

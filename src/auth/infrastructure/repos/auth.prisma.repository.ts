@@ -9,5 +9,12 @@ export const AuthPrismaRepository: Repository<AuthRepository> = (db) => {
 				where: { id: user.id },
 			});
 		},
+
+		logout: async (user) => {
+			await db.userDB.update({
+				data: { tokens: user.tokens },
+				where: { id: user.id, updatedAt: user.updatedAt },
+			});
+		},
 	};
 };
