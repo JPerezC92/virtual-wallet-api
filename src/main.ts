@@ -7,8 +7,8 @@ import { writeStaticSwagger } from '@/src/writeStaticSwagger';
 
 import { AppModule } from './app.module';
 
-const whitelist = ['https://alkybank-rho.vercel.app'];
-// const whitelist = ['http://localhost:3000'];
+// const whitelist = ['https://alkybank-rho.vercel.app'];
+const whitelist = ['http://localhost:3000'];
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -16,7 +16,7 @@ async function bootstrap() {
 	app.enableCors({
 		origin: whitelist,
 		preflightContinue: false,
-		methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS'],
+		methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS', 'PATCH'],
 		optionsSuccessStatus: 204,
 		allowedHeaders: [
 			'Access-Control-Allow-Origin',

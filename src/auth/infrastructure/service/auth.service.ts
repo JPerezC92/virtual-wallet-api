@@ -5,9 +5,17 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { RevalidateAccess, UserLogin } from '@/Auth/application';
+import {
+	RevalidateAccess,
+	UpdatePassword,
+	UserLogin,
+} from '@/Auth/application';
 import { Logout } from '@/Auth/application/Logout';
-import { AuthToken, InvalidCredentials } from '@/Auth/domain';
+import {
+	AuthToken,
+	IncorrectOldPassword,
+	InvalidCredentials,
+} from '@/Auth/domain';
 import { AuthPrismaRepository } from '@/Auth/infrastructure/repos';
 import * as authSchemas from '@/Auth/infrastructure/schemas';
 import { PrismaService } from '@/Database/prisma.service';
@@ -85,6 +93,32 @@ export class AuthService {
 					).execute({
 						ip,
 						userId: user.id,
+					}),
+			);
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+			throw HttpException();
+		}
+	}
+
+	async updatePassword(
+		user: User,
+		updatePasswordDto: authSchemas.ChangeCredentialsDto,
+		exceptionMap: ExceptionMap = [
+			[IncorrectOldPassword.name, UnprocessableEntityException],
+			[UserNotFound.name, NotFoundException],
+		],
+	): Promise<void> {
+		try {
+			return await this.prismaService.$transaction(
+				async (db) =>
+					await UpdatePassword(
+						UsersPrismaRepository(db),
+						this.bcryptPasswordCipher,
+					).execute({
+						id: user.id,
+						password: updatePasswordDto.password,
+						newPassword: updatePasswordDto.newPassword,
 					}),
 			);
 		} catch (error) {

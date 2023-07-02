@@ -14,4 +14,11 @@ export class UserDetails implements UserDetailsProps {
 		this.lastName = props.lastName;
 		this.email = props.email;
 	}
+
+	change(userDetails: Partial<UserDetails>) {
+		return new UserDetails({
+			...this,
+			...userDetails,
+		});
+	}
 }

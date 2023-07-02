@@ -4,6 +4,7 @@ import {
 	Controller,
 	Get,
 	HttpCode,
+	Patch,
 	Post,
 	Req,
 	UseGuards,
@@ -25,6 +26,7 @@ import * as requestIP from 'request-ip';
 
 import * as authDomain from '@/Auth/domain';
 import { UserFromReq } from '@/Auth/infrastructure/decorators';
+import { AccountOwnerGuard } from '@/Auth/infrastructure/guards';
 import * as authSchemas from '@/Auth/infrastructure/schemas';
 import {
 	AccessJwtAuthGuard,
@@ -99,7 +101,13 @@ export class AuthController {
 		);
 	}
 
-	@ApiOkResponse()
+	@ApiOperation({
+		summary: 'Invalidates the refresh token',
+		description:
+			'Invalidates the refresh token of the user who started the session.',
+	})
+	@ApiBearerAuth()
+	@ApiOkResponse({ description: 'Refresh token invalidated successfully' })
 	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
 	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
 	@UseGuards(RefreshJwtAuthGuard)
@@ -107,5 +115,23 @@ export class AuthController {
 	@HttpCode(200)
 	logout(@Req() req: Request, @UserFromReq() user: User): Promise<void> {
 		return this.authService.logout(user, requestIP.getClientIp(req) || req.ip);
+	}
+
+	@ApiOperation({
+		summary: 'Update the password of the logged in user',
+		description: 'Update the password of the user who started the session.',
+	})
+	@ApiBearerAuth()
+	@ApiOkResponse({ description: 'Password updated successfully' })
+	@ApiUnauthorizedResponse({ type: sharedSchemas.Unauthorized })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@UseGuards(AccessJwtAuthGuard, AccountOwnerGuard)
+	@Patch(':id')
+	@HttpCode(200)
+	updatePassword(
+		@UserFromReq() user: User,
+		@Body() updatePasswordDto: authSchemas.ChangeCredentialsDto,
+	): Promise<void> {
+		return this.authService.updatePassword(user, updatePasswordDto);
 	}
 }

@@ -2,7 +2,7 @@ import { AuthRepository } from '@/Auth/domain';
 import { UseCase } from '@/Shared/application';
 import { User, UserNotFound, UsersRepository } from '@/Users/domain';
 
-interface Ds {
+interface LogoutProps {
 	userId: User['id'];
 	ip: string;
 }
@@ -13,7 +13,10 @@ interface Ds {
 export const Logout: (
 	authRepository: AuthRepository,
 	usersRepository: UsersRepository,
-) => UseCase<Promise<void>, Ds> = (authRepository, usersRepository) => {
+) => UseCase<Promise<void>, LogoutProps> = (
+	authRepository,
+	usersRepository,
+) => {
 	return {
 		execute: async ({ userId, ip }) => {
 			const user = await usersRepository.findByUserId(userId);

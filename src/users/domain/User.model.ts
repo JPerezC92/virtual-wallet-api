@@ -99,6 +99,25 @@ export class User implements UserProps {
 		);
 	}
 
+	public updateUserInfo(userDetails: Partial<UserDetails>): User {
+		return new User({
+			...this,
+			userDetails: this.userDetails.change(userDetails),
+			updatedAt: new Date(),
+		});
+	}
+
+	public async changePassword(
+		newPassword: User['password'],
+		pc: PasswordCipher,
+	) {
+		return new User({
+			...this,
+			password: await pc.encrypt(newPassword),
+			updatedAt: new Date(),
+		});
+	}
+
 	public static isUser(other: unknown): other is User {
 		return other instanceof User;
 	}

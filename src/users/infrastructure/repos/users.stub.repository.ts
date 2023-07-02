@@ -1,14 +1,14 @@
 import { accountStub1, accountStub2 } from '@/Accounts/infrastructure/repos';
-import { User, UsersRepository } from '@/Users/domain';
+import { User, UserDetails, UsersRepository } from '@/Users/domain';
 
 export const userNotRegisteredStub: User = new User({
 	id: '999999999999999',
 	accountList: [],
-	userDetails: {
+	userDetails: new UserDetails({
 		firstName: 'Not',
 		lastName: 'Exist',
 		email: 'not@exist.com',
-	},
+	}),
 	updatedAt: new Date(),
 	createdAt: new Date(),
 	password: '123456',
@@ -18,25 +18,27 @@ export const userNotRegisteredStub: User = new User({
 export const userStub1: User = new User({
 	id: '1',
 	accountList: [accountStub1],
-	userDetails: {
+	userDetails: new UserDetails({
 		firstName: 'John',
 		lastName: 'Doe',
 		email: 'jhon.doe@gmail.com',
-	},
+	}),
 	updatedAt: new Date(),
 	createdAt: new Date(),
 	password: '123456',
-	tokens: {},
+	tokens: {
+		'1': '1',
+	},
 });
 
 export const userStub2: User = new User({
 	id: '2',
 	accountList: [accountStub2],
-	userDetails: {
+	userDetails: new UserDetails({
 		firstName: 'Jane',
 		lastName: 'Doe',
 		email: 'jane.doe@gmail.com',
-	},
+	}),
 	updatedAt: new Date(),
 	createdAt: new Date(),
 	password: '123456',
@@ -55,6 +57,12 @@ export function UsersStubRepository(): UsersRepository {
 		},
 		register: async (user: User) => {
 			usersStub.push(user);
+		},
+
+		update: async (user: User) => {
+			const userIndex = usersStub.findIndex((u) => u.id === user.id);
+			usersStub[userIndex] = user;
+			return user;
 		},
 	};
 }

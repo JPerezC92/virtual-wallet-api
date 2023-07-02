@@ -1,3 +1,4 @@
 export * from './UserCreate';
-export * from './userDetailsEndpoint';
 export * from './UserEndpoint';
+export * from './UserUpdateDto';
+export * from './userDetailsEndpoint';

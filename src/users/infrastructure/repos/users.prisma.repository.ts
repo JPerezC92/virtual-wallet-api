@@ -38,5 +38,21 @@ export const UsersPrismaRepository: Repository<UsersRepository> = (db) => {
 				},
 			});
 		},
+
+		update: async (user) => {
+			const updatedUser = await db.userDB.update({
+				where: { id: user.id },
+				data: {
+					firstName: user.userDetails.firstName,
+					lastName: user.userDetails.lastName,
+					email: user.userDetails.email,
+					password: user.password,
+					tokens: user.tokens,
+				},
+				include: { accountList: true },
+			});
+
+			return UserPersistenceToModel(updatedUser);
+		},
 	};
 };

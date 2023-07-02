@@ -11,6 +11,7 @@ export class Credentials {
 	}
 
 	async passwordMatches(user: User, pc: PasswordCipher): Promise<boolean> {
+		console.log('Credentials.passwordMatches', user.password, this.password);
 		return await pc.compare(this.password, user.password);
 	}
 }
