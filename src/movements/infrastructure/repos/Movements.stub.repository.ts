@@ -5,6 +5,7 @@ import {
 	MovementPayment,
 	MovementsRepository,
 	MovementTopUp,
+	MovementTransference,
 } from '@/Movements/domain';
 import { Pagination } from '@/Shared/domain';
 
@@ -32,7 +33,25 @@ export const movementStub2: MovementPayment = new MovementPayment({
 	updatedAt: new Date(),
 });
 
-export const movementListStub: Movement[] = [movementStub1, movementStub2];
+export const movementStub3: MovementTransference = new MovementTransference({
+	accountId: accountStub1.id,
+	amount: 100,
+	concept: 'Test Transference',
+	date: new Date(),
+	type: 'TRANSFERENCE',
+	createdAt: new Date(),
+	currency: accountStub1.currency,
+	id: '3',
+	updatedAt: new Date(),
+	isTransferenceReceived: true,
+	toAccountId: '2',
+});
+
+export const movementListStub: Movement[] = [
+	movementStub1,
+	movementStub2,
+	movementStub3,
+];
 
 export function MovementsStubRepository(): MovementsRepository {
 	return {
@@ -51,6 +70,18 @@ export function MovementsStubRepository(): MovementsRepository {
 				movementList: movements,
 				pagination,
 			};
+		},
+
+		findById: async (movementId) => {
+			return movementListStub.find((movement) => movement.id === movementId);
+		},
+
+		update: async (movement) => {
+			const index = movementListStub.findIndex(
+				(movement) => movement.id === movement.id,
+			);
+			movementListStub[index] = movement;
+			return;
 		},
 	};
 }

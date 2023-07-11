@@ -15,4 +15,6 @@ export interface MovementsRepository {
 		concept: IMovementCriteria['concept'],
 	) => Promise<{ movementList: Movement[]; pagination: Pagination }>;
 	create: (movement: Movement) => Promise<void>;
+	findById: (movementId: Movement['id']) => Promise<Movement | undefined>;
+	update: (movement: Movement) => Promise<void>;
 }

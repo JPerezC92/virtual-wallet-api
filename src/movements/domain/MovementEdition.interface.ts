@@ -1,5 +1,5 @@
 import { IMovementBase } from './MovementBase.interface';
 
-export interface IMovementEdition {
-	changeConcept(concept: IMovementBase['concept']): void;
+export interface IMovementEdition<T> {
+	changeConcept(concept: Pick<IMovementBase, 'concept' | 'date'>): T;
 }

@@ -8,7 +8,10 @@ import { IMovementValidation } from './MovementValidation.interface';
 import { ITopupCreate } from './TopupCreate.interface';
 
 export class MovementTopUp
-	implements IMovementBase, IMovementEdition, IMovementValidation
+	implements
+		IMovementBase,
+		IMovementEdition<MovementTopUp>,
+		IMovementValidation
 {
 	concept: string;
 	amount: number;
@@ -42,8 +45,11 @@ export class MovementTopUp
 		});
 	}
 
-	changeConcept(concept: MovementTopUp['concept']): void {
-		this.concept = concept;
+	changeConcept(details: Pick<MovementTopUp, 'date' | 'concept'>) {
+		return new MovementTopUp({
+			...this,
+			...details,
+		});
 	}
 
 	isInstance(other: unknown): other is this {

@@ -3,6 +3,8 @@ export * from './AccountSenderAndRecieverAreEqual.error';
 export * from './Movement.interface';
 export * from './MovementBase.interface';
 export * from './MovementEdition.interface';
+export * from './MovementNotAllowedToEdit.error';
+export * from './MovementNotFound.error';
 export * from './MovementPayment.model';
 export * from './Movements.repository';
 export * from './MovementTopUp.model';

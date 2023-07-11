@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { MovementType } from '@/Movements/domain';
 
-const MovementEndpointBase = z.object({
+export const MovementEndpointBase = z.object({
 	id: z.string().uuid(),
 	amount: z.number(),
 	date: z.date(),

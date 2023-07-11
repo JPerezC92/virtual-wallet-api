@@ -8,7 +8,10 @@ import { IMovementValidation } from './MovementValidation.interface';
 import { IPaymentCreate } from './PaymentCreate.interface';
 
 export class MovementPayment
-	implements IMovementBase<'PAYMENT'>, IMovementEdition, IMovementValidation
+	implements
+		IMovementBase<'PAYMENT'>,
+		IMovementEdition<MovementPayment>,
+		IMovementValidation
 {
 	concept: string;
 	amount: number;
@@ -41,8 +44,11 @@ export class MovementPayment
 		});
 	}
 
-	changeConcept(concept: MovementPayment['concept']): void {
-		this.concept = concept;
+	changeConcept(details: Pick<MovementPayment, 'date' | 'concept'>) {
+		return new MovementPayment({
+			...this,
+			...details,
+		});
 	}
 
 	isInstance(other: unknown): other is this {

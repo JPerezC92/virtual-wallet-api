@@ -48,4 +48,8 @@ export class MovementTransference
 	isInstance(other: unknown): other is this {
 		return other instanceof MovementTransference;
 	}
+
+	static isTransference(other: any): other is MovementTransference {
+		return other?.['type'] === 'TRANSFERENCE';
+	}
 }

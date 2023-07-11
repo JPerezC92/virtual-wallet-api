@@ -4,6 +4,7 @@ import {
 	Controller,
 	Get,
 	Post,
+	Put,
 	Query,
 	UseGuards,
 	UsePipes,
@@ -68,5 +69,23 @@ export class MovementsController {
 		@Query() movementGetQueryDto: movementsSchemas.MovementGetQueryDto,
 	): Promise<movementsSchemas.MovementGetResponseDto> {
 		return this.movementsService.findByCriteria(user, movementGetQueryDto);
+	}
+
+	@ApiBearerAuth()
+	@ApiBadRequestResponse({ type: sharedSchemas.BadRequest })
+	@ApiConflictResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiNotFoundResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiInternalServerErrorResponse({ type: sharedSchemas.ErrorResponseDto })
+	@ApiOperation({
+		summary: 'Update a movement',
+		description: 'Update a movement that belongs to the user.',
+	})
+	@UseGuards(AccessJwtAuthGuard)
+	@Put(':id')
+	update(
+		@UserFromReq() user: User,
+		@Body() movementUpdate: movementsSchemas.MovementUpdate,
+	) {
+		return this.movementsService.update(movementUpdate, user);
 	}
 }

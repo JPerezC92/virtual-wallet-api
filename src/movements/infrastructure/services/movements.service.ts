@@ -15,13 +15,16 @@ import {
 	CreatePayment,
 	CreateTopup,
 	CreateTransference,
+	MovementUpdate,
 } from '@/Movements/application';
 import { MovementFindByCriteria } from '@/Movements/application/MovementFindAll';
 import {
 	AccountNotFound,
 	AccountSenderAndRecieverAreEqual,
+	MovementNotFound,
 	MovementType,
 } from '@/Movements/domain';
+import { MovementNotAllowedToEdit } from '@/Movements/domain/MovementNotAllowedToEdit.error';
 import { MovementModelToEndpoint } from '@/Movements/infrastructure/adapter';
 import { MovementsPrismaRepository } from '@/Movements/infrastructure/repos';
 import * as movementsSchemas from '@/Movements/infrastructure/schemas';
@@ -104,6 +107,33 @@ export class MovementsService {
 						limit: movementGetQueryDto.limit,
 						operation: movementGetQueryDto.operation,
 						concept: movementGetQueryDto.concept,
+					}),
+			);
+		} catch (error) {
+			const HttpException = ExceptionHandler(exceptionMap).find(error);
+
+			throw HttpException();
+		}
+	}
+
+	async update(
+		movement: movementsSchemas.MovementUpdate,
+		user: User,
+		exceptionMap: ExceptionMap = [
+			[MovementNotFound.name, NotFoundException],
+			[UserNotFound.name, NotFoundException],
+			[MovementNotAllowedToEdit.name, ConflictException],
+		],
+	) {
+		try {
+			return await this.prismaService.$transaction(
+				async (db) =>
+					await MovementUpdate(
+						MovementsPrismaRepository(db),
+						UsersPrismaRepository(db),
+					).execute({
+						movementUpdate: movement,
+						userId: user.id,
 					}),
 			);
 		} catch (error) {

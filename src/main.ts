@@ -16,7 +16,7 @@ async function bootstrap() {
 	app.enableCors({
 		origin: whitelist,
 		preflightContinue: false,
-		methods: ['GET', 'POST', 'PUT', 'DELETE', 'UPDATE', 'OPTIONS', 'PATCH'],
+		methods: ['*'],
 		optionsSuccessStatus: 204,
 		allowedHeaders: [
 			'Access-Control-Allow-Origin',
@@ -24,7 +24,7 @@ async function bootstrap() {
 			'Accept',
 			'Origin',
 			'x-refresh-token',
-			'Authorization ',
+			'Authorization',
 		],
 		credentials: true,
 	});

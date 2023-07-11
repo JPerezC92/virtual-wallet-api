@@ -1,7 +1,5 @@
 # Virtual Wallet - **[Go to the App](https://challenge-full-stack-alkemy-backend.vercel.app/swagger#/)**
 
-Esta es una solución para el cuarto reto de Mouredev. **[Más información](https://github.com/mouredev/Monthly-App-Challenge-2022)**.
-
 <img src="./virtual-wallet-preview.png" alt="drawing" width="500"/>
 
 ## Cosas que puse en practica

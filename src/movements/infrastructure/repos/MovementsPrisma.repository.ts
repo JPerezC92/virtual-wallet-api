@@ -60,5 +60,24 @@ export const MovementsPrismaRepository: Repository<MovementsRepository> = (
 				pagination: pagination.calculate({ page, limit }, movementCount),
 			};
 		},
+
+		findById: async (movementId) => {
+			const result = await db.movementDB.findUnique({
+				where: { id: movementId },
+				include: { account: true, toAccount: true },
+			});
+
+			if (!result) return;
+
+			return MovementDbToModel(result);
+		},
+
+		update: async (movement) => {
+			await db.movementDB.update({
+				where: { id: movement.id },
+				data: { ...MovementModelToDB(movement) },
+				include: { account: true, toAccount: true },
+			});
+		},
 	};
 };
