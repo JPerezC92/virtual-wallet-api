@@ -1,4 +1,4 @@
-# Virtual Wallet - **[Go to the App](https://challenge-full-stack-alkemy-backend.vercel.app/swagger#/)**
+# Virtual Wallet - **[Go to the App](https://virtual-wallet-api.vercel.app/swagger)**
 
 <img src="./virtual-wallet-preview.png" alt="drawing" width="500"/>
 
